@@ -25,7 +25,7 @@ function getActiveNegativePrompt() {
 
 
 //button's click function
-function open_model_url(event, model_type, model_name){
+function open_model_url(event, model_type, search_term){
     console.log("start open_model_url");
 
     //get hidden components of extension 
@@ -37,7 +37,7 @@ function open_model_url(event, model_type, model_name){
     let msg = {
         "action": "",
         "model_type": "",
-        "model_name": "",
+        "search_term": "",
         "prompt": "",
         "neg_prompt": "",
     }
@@ -45,7 +45,7 @@ function open_model_url(event, model_type, model_name){
 
     msg["action"] = "open_url";
     msg["model_type"] = model_type;
-    msg["model_name"] = model_name;
+    msg["search_term"] = search_term;
     msg["prompt"] = "";
     msg["neg_prompt"] = "";
 
@@ -64,7 +64,7 @@ function open_model_url(event, model_type, model_name){
 
 }
 
-function add_trigger_words(event, model_type, model_name){
+function add_trigger_words(event, model_type, search_term){
     console.log("start add_trigger_words");
 
     //get hidden components of extension 
@@ -77,14 +77,14 @@ function add_trigger_words(event, model_type, model_name){
     let msg = {
         "action": "",
         "model_type": "",
-        "model_name": "",
+        "search_term": "",
         "prompt": "",
         "neg_prompt": "",
     }
 
     msg["action"] = "add_trigger_words";
     msg["model_type"] = model_type;
-    msg["model_name"] = model_name;
+    msg["search_term"] = search_term;
     msg["neg_prompt"] = "";
 
     // get active prompt
@@ -106,7 +106,7 @@ function add_trigger_words(event, model_type, model_name){
     
 }
 
-function use_preview_prompt(event, model_type, model_name){
+function use_preview_prompt(event, model_type, search_term){
     console.log("start use_preview_prompt");
 
     //get hidden components of extension 
@@ -119,14 +119,14 @@ function use_preview_prompt(event, model_type, model_name){
     let msg = {
         "action": "",
         "model_type": "",
-        "model_name": "",
+        "search_term": "",
         "prompt": "",
         "neg_prompt": "",
     }
 
     msg["action"] = "use_preview_prompt";
     msg["model_type"] = model_type;
-    msg["model_name"] = model_name;
+    msg["search_term"] = search_term;
 
     // get active prompt
     prompt = getActivePrompt();
@@ -178,8 +178,8 @@ onUiLoaded(() => {
         let addtional_nodes = null;
         let replace_preview_btn = null;
         let ul_node = null;
-        let model_name_node = null;
-        let model_name = "";
+        let search_term_node = null;
+        let search_term = "";
         let model_type = "";
         let cards = null;
         let need_to_add_buttons = false;
@@ -233,17 +233,19 @@ onUiLoaded(() => {
                         continue;
                     }
 
-                    //get model name node
-                    model_name_node = card.querySelector(".actions .name");
-                    if (!model_name_node){
-                        console.log("can not find model name node for cards in " + extra_network_id);
+
+                    // search_term node
+                    // search_term = subfolder path + model name + ext
+                    search_term_node = card.querySelector(".actions .additional .search_term");
+                    if (!search_term_node){
+                        console.log("can not find search_term node for cards in " + extra_network_id);
                         continue;
                     }
 
-                    // get model name
-                    model_name = model_name_node.innerHTML;
-                    if (!model_name) {
-                        console.log("model name is empty for cards in " + extra_network_id);
+                    // get search_term
+                    search_term = search_term_node.innerHTML;
+                    if (!search_term) {
+                        console.log("search_term is empty for cards in " + extra_network_id);
                         continue;
                     }
 
@@ -257,21 +259,21 @@ onUiLoaded(() => {
                     open_url_node.style.fontSize = "200%";
                     open_url_node.title = "Open this model's civitai url";
                     open_url_node.style.margin = "0px 5px";
-                    open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+model_name+"')");
+                    open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
 
                     let add_trigger_words_node = document.createElement("button");
                     add_trigger_words_node.innerHTML = "💡";
                     add_trigger_words_node.style.fontSize = "200%";
                     add_trigger_words_node.title = "Add trigger words to prompt";
                     add_trigger_words_node.style.margin = "0px 5px";
-                    add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+model_name+"')");
+                    add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+search_term+"')");
 
                     let use_preview_prompt_node = document.createElement("button");
                     use_preview_prompt_node.innerHTML = "🏷";
                     use_preview_prompt_node.style.fontSize = "200%";
                     use_preview_prompt_node.title = "Use promt from preview image";
                     use_preview_prompt_node.style.margin = "0px 5px";
-                    use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+model_name+"')");
+                    use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
 
                     //add to card
                     ul_node.appendChild(open_url_node);
@@ -279,9 +281,6 @@ onUiLoaded(() => {
                     ul_node.appendChild(use_preview_prompt_node);
 
 
-                    
-                    
-                    
 
 
                 }
