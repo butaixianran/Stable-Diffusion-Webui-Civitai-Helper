@@ -61,7 +61,12 @@ If you click Refresh Button of extra network, those additional buttons will be r
 
 Enjoy!
 
+# Known Issue
+* It does not support subfolders for now. Will add this later.
+* It can not force a model link to civitai by model id for now, will add this later.
+* If you did not refresh your extra network cards, but still keep clicking "Refresh Civitai Helper", you'll get more icons. It's a bug, will be fixed.
 
+All 3 issues above is already in development plan.
 
 
 
