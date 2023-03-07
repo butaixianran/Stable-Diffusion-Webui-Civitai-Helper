@@ -25,7 +25,7 @@ function getActiveNegativePrompt() {
 
 
 //button's click function
-function open_model_url(model_type, model_name){
+function open_model_url(event, model_type, model_name){
     console.log("start open_model_url");
 
     //get hidden components of extension 
@@ -59,9 +59,12 @@ function open_model_url(model_type, model_name){
     console.log("end open_model_url");
 
 
+    event.stopPropagation()
+    event.preventDefault()
+
 }
 
-function add_trigger_words(model_type, model_name){
+function add_trigger_words(event, model_type, model_name){
     console.log("start add_trigger_words");
 
     //get hidden components of extension 
@@ -96,10 +99,14 @@ function add_trigger_words(model_type, model_name){
     js_add_trigger_words_btn.click();
 
     console.log("end add_trigger_words");
+
+    event.stopPropagation()
+    event.preventDefault()
+
     
 }
 
-function use_preview_prompt(model_type, model_name){
+function use_preview_prompt(event, model_type, model_name){
     console.log("start use_preview_prompt");
 
     //get hidden components of extension 
@@ -137,7 +144,10 @@ function use_preview_prompt(model_type, model_name){
     js_use_preview_prompt_btn.click();
 
     console.log("end use_preview_prompt");
-    
+
+    event.stopPropagation()
+    event.preventDefault()
+
 }
 
 
@@ -209,10 +219,11 @@ onUiLoaded(() => {
                 for (let card of cards) {
                     // replace preview text button into icon
                     replace_preview_btn = card.querySelector(".actions .additional a");
-                    replace_preview_btn.style.margin = "0px 10px";
                     if (replace_preview_btn) {
                         if (replace_preview_btn.innerHTML == "replace preview") {
                             replace_preview_btn.innerHTML = "🖼";
+                            replace_preview_btn.style.margin = "0px 5px";
+                            replace_preview_btn.style.fontSize = "200%";
                         }
                     }
 
@@ -237,21 +248,24 @@ onUiLoaded(() => {
                     // then we need to add 3 buttons to each ul node:
                     let open_url_node = document.createElement("button");
                     open_url_node.innerHTML = "🌐";
+                    open_url_node.style.fontSize = "200%";
                     open_url_node.title = "Open this model's civitai url";
-                    open_url_node.style.margin = "0px 10px";
-                    open_url_node.setAttribute("onclick","open_model_url('"+model_type+"', '"+model_name+"')");
+                    open_url_node.style.margin = "0px 5px";
+                    open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+model_name+"')");
 
                     let add_trigger_words_node = document.createElement("button");
                     add_trigger_words_node.innerHTML = "💡";
+                    add_trigger_words_node.style.fontSize = "200%";
                     add_trigger_words_node.title = "Add trigger words to prompt";
-                    add_trigger_words_node.style.margin = "0px 10px";
-                    add_trigger_words_node.setAttribute("onclick","add_trigger_words('"+model_type+"', '"+model_name+"')");
+                    add_trigger_words_node.style.margin = "0px 5px";
+                    add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+model_name+"')");
 
                     let use_preview_prompt_node = document.createElement("button");
                     use_preview_prompt_node.innerHTML = "🏷";
+                    use_preview_prompt_node.style.fontSize = "200%";
                     use_preview_prompt_node.title = "Use promt from preview image";
-                    use_preview_prompt_node.style.margin = "0px 10px";
-                    use_preview_prompt_node.setAttribute("onclick","use_preview_prompt('"+model_type+"', '"+model_name+"')");
+                    use_preview_prompt_node.style.margin = "0px 5px";
+                    use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+model_name+"')");
 
                     //add to card
                     ul_node.appendChild(open_url_node);
