@@ -14,7 +14,7 @@ import hashlib
 import json
 import shutil
 import modules
-from modules import script_callbacks
+from modules import script_callbacks, shared
 
 # from modules import images
 # from modules.processing import process_images, Processed
@@ -24,10 +24,10 @@ from modules import script_callbacks
 
 # init
 model_folders = {
-    "ti": "embeddings",
-    "hyper": os.path.join("models", "hypernetworks"),
-    "ckp": os.path.join("models", "Stable-diffusion"),
-    "lora": os.path.join("models", "Lora"),
+    "ti": shared.cmd_opts.embeddings_dir,
+    "hyper": shared.cmd_opts.hypernetwork_dir,
+    "ckp": shared.cmd_opts.ckpt_dir,
+    "lora": shared.cmd_opts.lora_dir,
 }
 
 model_exts = (".bin", ".pt", ".safetensors", ".ckpt")
