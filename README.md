@@ -40,6 +40,7 @@ If a model info file is already exists, it will skip this model. If a model can 
 When you have some new models, just click this button again, to get new model's information and preview images.  
 
 ## Model Card
+**(Use this only after you scaned your models!)**  
 Open SD webui's build-in "Extra Network" tab, to show model cards.  
 
 ![](img/extra_network.jpg)  
@@ -70,5 +71,5 @@ Enjoy!
 * Support subfolders
 * Check if refresh is needed when clicking "Refresh Civitai Helper"
 * Add space when adding trigger words
-* Add memory optimised shad256 as an option
+* Add memory optimised sha256 as an option
 

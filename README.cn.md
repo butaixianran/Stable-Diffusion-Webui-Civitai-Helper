@@ -33,6 +33,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 当你下载了新模型之后，只要再次点击扫描按钮即可。已经扫描过的文件不会重复扫描，会自动得到新模型的信息和预览图。无须重启SD webui。 
 
 ## 模型卡片
+**(先完成扫描，再使用卡片功能)**  
 打开SD webui's 内置的 "Extra Network" 页面，显示模型卡片  
 
 ![](img/extra_network.jpg)  

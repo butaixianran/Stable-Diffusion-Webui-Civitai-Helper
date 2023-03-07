@@ -15,11 +15,43 @@ import json
 import shutil
 import modules
 from modules import script_callbacks
+from modules import shared
 
 # from modules import images
 # from modules.processing import process_images, Processed
 # from modules.processing import Processed
 # from modules.shared import opts, cmd_opts, state
+
+# print for debugging
+def printD(msg):
+    print(f"Civitai Helper: {msg}")
+
+
+
+# printD("Current Model folder:")
+# if shared.cmd_opts.embeddings_dir:
+#     printD("ti: " + shared.cmd_opts.embeddings_dir)
+# else:
+#     printD("shared.cmd_opts.embeddings_dir is None")
+
+# if shared.cmd_opts.hypernetwork_dir:
+#     printD("hypernetwork_dir: " + shared.cmd_opts.hypernetwork_dir)
+# else:
+#     printD("shared.cmd_opts.embeddings_dir is None")
+
+
+# if shared.cmd_opts.ckpt_dir:
+#     printD("ckpt_dir: " + shared.cmd_opts.ckpt_dir)
+# else:
+#     printD("shared.cmd_opts.ckpt_dir is None")
+
+
+# if shared.cmd_opts.lora_dir:
+#     printD("lora_dir: " + shared.cmd_opts.lora_dir)
+# else:
+#     printD("shared.cmd_opts.lora_dir is None")
+
+
 
 
 # init
@@ -39,10 +71,6 @@ civitai_hash_api_url = "https://civitai.com/api/v1/model-versions/by-hash/"
 js_actions = ("open_url", "add_trigger_words", "use_preview_prompt")
 
 root_path = os.getcwd()
-
-# print for debugging
-def printD(msg):
-    print(f"Civitai Helper: {msg}")
 
 
 def gen_file_sha256(filname):
@@ -432,14 +460,14 @@ def on_ui_tabs():
 
     # ====UI====
     with gr.Blocks(analytics_enabled=False) as civitai_helper:
-        # info
-        gr.Markdown("Civitai Helper's extension tab")
-        
+        # info        
         with gr.Row():
             skip_nsfw_preview_ckb = gr.Checkbox(label="SKip NSFW Preview images", value=False, elem_id="ch_skip_nsfw_preview_ckb")
             low_memory_sha_ckb = gr.Checkbox(label="Memory Optimised SHA256", value=False, elem_id="ch_low_memory_sha_ckb")
 
         scan_model_btn = gr.Button(value="Scan model", elem_id="ch_scan_model_btn")
+
+        gr.Markdown("Check console log window for detail, after clicking Scan button")
 
         # hidden component for js
         js_msg_txtbox = gr.Textbox(label="Request Msg From Js", visible=False, lines=1, value="", elem_id="ch_js_msg_txtbox")
