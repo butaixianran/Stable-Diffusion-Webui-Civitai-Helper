@@ -182,6 +182,7 @@ onUiLoaded(() => {
         let model_name = "";
         let model_type = "";
         let cards = null;
+        let need_to_add_buttons = false;
         for (const tab_prefix of tab_prefix_list) {
             for (const js_model_type of model_type_list) {
                 //get model_type for python side
@@ -221,10 +222,15 @@ onUiLoaded(() => {
                     replace_preview_btn = card.querySelector(".actions .additional a");
                     if (replace_preview_btn) {
                         if (replace_preview_btn.innerHTML == "replace preview") {
+                            need_to_add_buttons = true;
                             replace_preview_btn.innerHTML = "🖼";
                             replace_preview_btn.style.margin = "0px 5px";
                             replace_preview_btn.style.fontSize = "200%";
                         }
+                    }
+
+                    if (!need_to_add_buttons) {
+                        continue;
                     }
 
                     //get model name node
