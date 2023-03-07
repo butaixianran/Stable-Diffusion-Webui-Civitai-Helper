@@ -1,3 +1,6 @@
+### Lanuage
+[中文](README.cn.md)
+
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
 
