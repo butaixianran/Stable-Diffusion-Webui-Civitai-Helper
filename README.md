@@ -66,7 +66,7 @@ Enjoy!
 
 
 # Change Log
-## v0.2
+## v1.1
 * Support subfolders
 * Check if refresh is needed when clicking "Refresh Civitai Helper"
 * Add space when adding trigger words
