@@ -315,8 +315,6 @@ onUiLoaded(() => {
 
     }
 
-    //run it once
-    update_card_for_civitai();
 
     let tab_id = ""
     let extra_tab = null;
@@ -346,6 +344,8 @@ onUiLoaded(() => {
     }
 
 
+    //run it once
+    update_card_for_civitai();
 
 
 });

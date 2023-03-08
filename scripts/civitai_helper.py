@@ -27,34 +27,6 @@ from modules import shared
 def printD(msg):
     print(f"Civitai Helper: {msg}")
 
-# printD("Current Model folder:")
-# if shared.cmd_opts.embeddings_dir:
-#     printD("ti: " + shared.cmd_opts.embeddings_dir)
-# else:
-#     printD("shared.cmd_opts.embeddings_dir is None")
-
-# if shared.cmd_opts.hypernetwork_dir:
-#     printD("hypernetwork_dir: " + shared.cmd_opts.hypernetwork_dir)
-# else:
-#     printD("shared.cmd_opts.embeddings_dir is None")
-
-
-# if shared.cmd_opts.ckpt_dir:
-#     printD("ckpt_dir: " + shared.cmd_opts.ckpt_dir)
-# else:
-#     printD("shared.cmd_opts.ckpt_dir is None")
-
-
-# if shared.cmd_opts.lora_dir:
-#     printD("lora_dir: " + shared.cmd_opts.lora_dir)
-# else:
-#     printD("shared.cmd_opts.lora_dir is None")
-
-
-
-
-# init
-config_file_name = os.path.join(scripts.basedir(), "setting.json")
 
 # this is the default root path
 root_path = os.getcwd()
