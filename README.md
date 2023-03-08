@@ -24,11 +24,13 @@ Done.
 
 # How to Use
 ## Scanning Models
-Go to extension tab "Civitai Helper". There is a button called "Scan model".
+Go to extension tab "Civitai Helper". There is a button called "Scan model".  
 
 ![](img/extension_tab.jpg)
 
 Click it and the extension will scan all your models to generate SHA256 hashes, using them to retreive model information and preview images from Civitai.
+
+**Scanning takes time, just wait it finish**
 
 For each model, it will create a json file to save all model info from Civitai. This model info file will be "Your_model_name.civitai.info" in your model folder.
 
@@ -37,10 +39,10 @@ For each model, it will create a json file to save all model info from Civitai. 
 If a model info file already exists, it will be skipped. If a model cannot be found in Civitai, it will create an empty model info file, so the model won't be scanned twice.
 
 ### Adding New Models
-When you have some new models, just click this button again, to get new model's information and preview images.
+When you have some new models, just click scan button again, to get new model's information and preview images. It won't scan the same model twice. 
 
 ## Model Card
-**(Use this only after you scanned your models!)**
+**(Use this only after you scanned your models!)** 
 Open SD webui's build-in "Extra Network" tab, to show model cards.
 
 ![](img/extra_network.jpg)
@@ -54,10 +56,20 @@ Move your mouse on to the bottom of a model card. It will show 4 icon buttons:
 
 ![](img/model_card.jpg)
 
-If you click the Refresh Button of extra network, those additional buttons will be removed. You can click the `Refresh Civitai Helper` button to bring them back.
+If these additional buttons are not there, click the `Refresh Civitai Helper` button to bring them back.  
 
 ![](img/refresh_ch.jpg)  
+Everytime after Extra Network tab refreshed, it will remove all these additional buttons. So, you need to click `Refresh Civitai Helper` button to bring them back.  
 
+## Preview Image
+Extra network uses both `model_file.png` and `model_file.preview.png` as preview image. But `model_file.png` has higher priority, because it is created by yourself.  
+
+When you don't have the higher priority one, it will use the other automatically.  
+
+## Prompt
+When you click the button "Use prompt from preview image", it does not use the prompt from your own preview image. It uses the one from civitai's  preview image.  
+
+On civitai, a model's preview images may not has prompt. This extension will check this model's all civitai preview images' information and use the first one has prompt in it.  
 
 
 Enjoy!
@@ -66,6 +78,9 @@ Enjoy!
 * It cannot force a model link to Civitai by model ID for now. This will be added later.
 
 # Change Log
+## v1.2.1
+* Add more error checking to work with different versions of SD webui. 
+
 ## v1.2
 * Support customer model folder
 * Support readable model info file

@@ -21,7 +21,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 ![](img/extension_tab.jpg)  
 
-点击，就会扫描所有模型，生成SHA256码，用于从civitai获取模型信息和预览图。  
+点击，就会扫描所有模型，生成SHA256码，用于从civitai获取模型信息和预览图。**扫描需要很久，耐心等待**。
 
 每个模型，本扩展都会创建一个json文件，用来保存从civitai得到的模型信息。这个文件会保存在模型同目录下，名称为："模型名字.civitai.info"。  
 
@@ -47,10 +47,23 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
   
 ![](img/model_card.jpg)  
 
-如果你刷新了卡片页面，这些额外的功能按钮就会消失。这时只要点击`Refresh Civitai Helper`，他们就会被重新添加到卡片上。  
+如果你没有看到这些额外的按钮，只要点击`Refresh Civitai Helper`，他们就会被重新添加到卡片上。  
 
 ![](img/refresh_ch.jpg)  
 
+每次当Extra Network刷新，他都会删除掉额外的修改，我们的按钮就会消失。这时你就需要点击`Refresh Civitai Helper`把这些功能添加回去。
+
+## 预览图
+Extra Network支持两种预览图命名：`model_name.png` 和 `model_name.preview.png`。其中，`model_name.png`优先级较高。
+
+当优先级较高的预览图不存在，他就会自动使用`model_name.preview.png`。
+
+这样，你自己创建的预览图 和 网络下载的预览图，能够同时存在，并优先使用你自己创建的。
+
+## 关键词
+卡片上，添加关键词按钮，是添加从civitai预览图中得到的关键词，而不是你自己创建的图片的关键词。
+
+civitai不是每个图片都有关键词，一个模型中，也不是所有预览图关键词都一样。所以这里是遍历所有civitai预览图信息，加载第一个有关键词的。
 
 
 Enjoy! 
