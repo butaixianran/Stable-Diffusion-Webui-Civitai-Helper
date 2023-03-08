@@ -13,7 +13,7 @@ from . import msg
 
 
 # scan model to generate SHA256, then use this SHA256 to get model info from civitai
-def scan_model(low_memory_sha, max_size_preview, readable_model_info, skip_nsfw_preview):
+def scan_model(low_memory_sha, max_size_preview, skip_nsfw_preview):
     util.printD("Start scan_model")
 
     model_count = 0

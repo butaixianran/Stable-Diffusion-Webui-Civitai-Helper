@@ -13,7 +13,6 @@ data = {
     "model":{
         "low_memory_sha": True,
         "max_size_preview": True,
-        "readable_model_info": True,
         "skip_nsfw_preview": False
     },
     "general":{
@@ -72,3 +71,35 @@ def load():
     data = json_data
 
     return
+
+# save setting from parameter
+def save_from_input(low_memory_sha, max_size_preview, skip_nsfw_preview, open_url_with_js, check_model_version_at_startup):
+    global data
+    data = {
+        "model":{
+            "low_memory_sha": low_memory_sha,
+            "max_size_preview": max_size_preview,
+            "skip_nsfw_preview": skip_nsfw_preview
+        },
+        "general":{
+            "open_url_with_js": open_url_with_js,
+            "check_model_version_at_startup": check_model_version_at_startup,
+        },
+        "tool":{
+        }
+    }
+
+    save()
+
+# load to output
+def load_to_output():
+    load()
+
+    low_memory_sha = data["model"]["low_memory_sha"]
+    max_size_preview = data["model"]["max_size_preview"]
+    skip_nsfw_preview = data["model"]["skip_nsfw_preview"]
+    open_url_with_js = data["general"]["open_url_with_js"]
+    check_model_version_at_startup = data["general"]["check_model_version_at_startup"]
+
+
+    return [low_memory_sha, max_size_preview, skip_nsfw_preview, open_url_with_js, check_model_version_at_startup]

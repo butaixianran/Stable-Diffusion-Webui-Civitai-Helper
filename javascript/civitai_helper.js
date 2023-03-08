@@ -212,15 +212,14 @@ onUiLoaded(() => {
                 extra_network_node = gradioApp().getElementById(extra_network_id);
                 // check if extr network is under thumbnail mode
                 is_thumb_mode = false
-                if (extra_network_node.className.indexOf("extra-network-thumbs") != -1) {
-                    console.log(extra_network_id + " is in thumbnail mode");
-                    is_thumb_mode = true;
-                    // won't work good in thumb mode, skip it for now
-                    continue;
-                }
-
-
-                if (!extra_network_node) {
+                if (extra_network_node) {
+                    if (extra_network_node.className == "extra-network-thumbs") {
+                        console.log(extra_network_id + " is in thumbnail mode");
+                        is_thumb_mode = true;
+                        // won't work good in thumb mode, skip it for now
+                        continue;
+                    }
+                } else {
                     console.log("can not find extra_network_node: " + extra_network_id);
                     continue;
                 }
