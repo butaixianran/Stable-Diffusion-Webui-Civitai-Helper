@@ -2,17 +2,15 @@
 # This extension can help you manage your models from civitai. It can download preview, add trigger words, open model page and use the prompt from preview image
 # repo: https://github.com/butaixianran/
 
-
-
-import modules.scripts as scripts
-import gradio as gr
-import os
-import webbrowser
-import requests
-import random
 import hashlib
 import json
+import os
 import shutil
+import webbrowser
+
+import gradio as gr
+import requests
+
 import modules
 from modules import script_callbacks
 from modules import shared
@@ -27,39 +25,36 @@ def printD(msg):
     print(f"Civitai Helper: {msg}")
 
 
+printD("Current Model folder:")
+if shared.cmd_opts.embeddings_dir:
+    printD("ti: " + shared.cmd_opts.embeddings_dir)
+else:
+    printD("shared.cmd_opts.embeddings_dir is None")
 
-# printD("Current Model folder:")
-# if shared.cmd_opts.embeddings_dir:
-#     printD("ti: " + shared.cmd_opts.embeddings_dir)
-# else:
-#     printD("shared.cmd_opts.embeddings_dir is None")
-
-# if shared.cmd_opts.hypernetwork_dir:
-#     printD("hypernetwork_dir: " + shared.cmd_opts.hypernetwork_dir)
-# else:
-#     printD("shared.cmd_opts.embeddings_dir is None")
-
-
-# if shared.cmd_opts.ckpt_dir:
-#     printD("ckpt_dir: " + shared.cmd_opts.ckpt_dir)
-# else:
-#     printD("shared.cmd_opts.ckpt_dir is None")
+if shared.cmd_opts.hypernetwork_dir:
+    printD("hypernetwork_dir: " + shared.cmd_opts.hypernetwork_dir)
+else:
+    printD("shared.cmd_opts.embeddings_dir is None")
 
 
-# if shared.cmd_opts.lora_dir:
-#     printD("lora_dir: " + shared.cmd_opts.lora_dir)
-# else:
-#     printD("shared.cmd_opts.lora_dir is None")
+if shared.cmd_opts.ckpt_dir:
+    printD("ckpt_dir: " + shared.cmd_opts.ckpt_dir)
+else:
+    printD("shared.cmd_opts.ckpt_dir is None")
 
 
+if shared.cmd_opts.lora_dir:
+    printD("lora_dir: " + shared.cmd_opts.lora_dir)
+else:
+    printD("shared.cmd_opts.lora_dir is None")
 
 
 # init
 model_folders = {
-    "ti": "embeddings",
-    "hyper": os.path.join("models", "hypernetworks"),
-    "ckp": os.path.join("models", "Stable-diffusion"),
-    "lora": os.path.join("models", "Lora"),
+    "ti": shared.cmd_opts.embeddings_dir or "embeddings",
+    "hyper": shared.cmd_opts.hypernetwork_dir or os.path.join("models", "hypernetworks"),
+    "ckp": shared.cmd_opts.ckpt_dir or os.path.join("models", "Stable-diffusion"),
+    "lora": shared.cmd_opts.lora_dir or os.path.join("models", "Lora"),
 }
 
 model_exts = (".bin", ".pt", ".safetensors", ".ckpt")
@@ -73,10 +68,10 @@ js_actions = ("open_url", "add_trigger_words", "use_preview_prompt")
 root_path = os.getcwd()
 
 
-def gen_file_sha256(filname):
+def gen_file_sha256(filename):
     ''' calculate file sha256 '''
     hash_value = ""
-    with open(filname, "rb") as f:
+    with open(filename, "rb") as f:
         sha256obj = hashlib.sha256()
         sha256obj.update(f.read())
         hash_value = sha256obj.hexdigest()
@@ -84,10 +79,10 @@ def gen_file_sha256(filname):
     printD("sha256: " + hash_value)
     return hash_value
 
-def gen_file_sha256_low_memory(filname):
+def gen_file_sha256_low_memory(filename):
     printD("Using Memory Optimised SHA256")
     hash_sha256 = hashlib.sha256()
-    with open(filname, "rb") as f:
+    with open(filename, "rb") as f:
         for chunk in iter(lambda: f.read(4096), b""):
             hash_sha256.update(chunk)
 
@@ -110,7 +105,6 @@ def scan_model(skip_nsfw_preview, low_memory_sha):
                 if ext in model_exts:
                     # find a model
                     # get preview image
-                    first_preview = base+".png"
                     sec_preview = base+".preview.png"
                     # get info file
                     info_file = base + civitai_info_suffix + model_info_exts
@@ -136,10 +130,8 @@ def scan_model(skip_nsfw_preview, low_memory_sha):
                                 # this is not a civitai model
                                 printD("Civitai does not have this model")
                                 printD("Write empty model info file")
-                                empty_info = {}
                                 with open(info_file, 'w') as f:
-                                    data = json.dumps(empty_info)
-                                    f.write(data)
+                                    f.write(json.dumps({}))
                                 # go to next file
                                 continue
                             else:
@@ -254,11 +246,11 @@ def parse_js_msg(msg):
     
 
     if action not in js_actions:
-        printD("Unknow action: " + action)
+        printD("Unknown action: " + action)
         return
 
     if model_type not in model_folders.keys():
-        printD("Unknow model_type: " + model_type)
+        printD("Unknown model_type: " + model_type)
         return
     
     printD("End parse js msg")
@@ -271,7 +263,7 @@ def parse_js_msg(msg):
 # return: model_info_dict
 def get_model_info(model_type, search_term):
     if model_type not in model_folders.keys():
-        printD("unknow model type: " + model_type)
+        printD("unknown model type: " + model_type)
         return None
     
     # search_term = subfolderpath + model name + ext. And it always start with a / even there is no sub folder
