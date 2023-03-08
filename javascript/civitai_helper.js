@@ -183,6 +183,7 @@ onUiLoaded(() => {
         let model_type = "";
         let cards = null;
         let need_to_add_buttons = false;
+        let is_thumb_mode = false;
         for (const tab_prefix of tab_prefix_list) {
             for (const js_model_type of model_type_list) {
                 //get model_type for python side
@@ -209,6 +210,16 @@ onUiLoaded(() => {
                 extra_network_id = tab_prefix+"_"+js_model_type+"_"+cardid_suffix;
                 // console.log("searching extra_network_node: " + extra_network_id);
                 extra_network_node = gradioApp().getElementById(extra_network_id);
+                // check if extr network is under thumbnail mode
+                is_thumb_mode = false
+                if (extra_network_node.className.indexOf("extra-network-thumbs") != -1) {
+                    console.log(extra_network_id + " is in thumbnail mode");
+                    is_thumb_mode = true;
+                    // won't work good in thumb mode, skip it for now
+                    continue;
+                }
+
+
                 if (!extra_network_node) {
                     console.log("can not find extra_network_node: " + extra_network_id);
                     continue;
@@ -224,8 +235,11 @@ onUiLoaded(() => {
                         if (replace_preview_btn.innerHTML == "replace preview") {
                             need_to_add_buttons = true;
                             replace_preview_btn.innerHTML = "🖼";
-                            replace_preview_btn.style.margin = "0px 5px";
-                            replace_preview_btn.style.fontSize = "200%";
+                            if (!is_thumb_mode) {
+                                replace_preview_btn.style.margin = "0px 5px";
+                                replace_preview_btn.style.fontSize = "200%";
+                            }
+
                         }
                     }
 
@@ -255,24 +269,33 @@ onUiLoaded(() => {
 
                     // then we need to add 3 buttons to each ul node:
                     let open_url_node = document.createElement("button");
+                    // open_url_node.href = "#";
                     open_url_node.innerHTML = "🌐";
-                    open_url_node.style.fontSize = "200%";
+                    if (!is_thumb_mode) {
+                        open_url_node.style.fontSize = "200%";
+                        open_url_node.style.margin = "0px 5px";
+                    }
                     open_url_node.title = "Open this model's civitai url";
-                    open_url_node.style.margin = "0px 5px";
                     open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
 
                     let add_trigger_words_node = document.createElement("button");
+                    // add_trigger_words_node.href = "#";
                     add_trigger_words_node.innerHTML = "💡";
-                    add_trigger_words_node.style.fontSize = "200%";
+                    if (!is_thumb_mode) {
+                        add_trigger_words_node.style.fontSize = "200%";
+                        add_trigger_words_node.style.margin = "0px 5px";
+                    }
                     add_trigger_words_node.title = "Add trigger words to prompt";
-                    add_trigger_words_node.style.margin = "0px 5px";
                     add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+search_term+"')");
 
                     let use_preview_prompt_node = document.createElement("button");
+                    // use_preview_prompt_node.href = "#";
                     use_preview_prompt_node.innerHTML = "🏷";
-                    use_preview_prompt_node.style.fontSize = "200%";
-                    use_preview_prompt_node.title = "Use promt from preview image";
-                    use_preview_prompt_node.style.margin = "0px 5px";
+                    if (!is_thumb_mode) {
+                        use_preview_prompt_node.style.fontSize = "200%";
+                        use_preview_prompt_node.style.margin = "0px 5px";
+                    }
+                    use_preview_prompt_node.title = "Use prompt from preview image";
                     use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
 
                     //add to card

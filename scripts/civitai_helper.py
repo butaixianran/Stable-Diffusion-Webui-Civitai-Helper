@@ -13,6 +13,7 @@ import random
 import hashlib
 import json
 import shutil
+import re
 import modules
 from modules import script_callbacks
 from modules import shared
@@ -25,8 +26,6 @@ from modules import shared
 # print for debugging
 def printD(msg):
     print(f"Civitai Helper: {msg}")
-
-
 
 # printD("Current Model folder:")
 # if shared.cmd_opts.embeddings_dir:
@@ -55,12 +54,36 @@ def printD(msg):
 
 
 # init
+config_file_name = os.path.join(scripts.basedir(), "setting.json")
+
+# this is the default root path
+root_path = os.getcwd()
+
+# if command line arguement is used to change model folder, 
+# then model folder is in absolute path, not based on this root path anymore.
+# so to make extension work with those absolute model folder paths, model folder also need to be in absolute path
 model_folders = {
-    "ti": "embeddings",
-    "hyper": os.path.join("models", "hypernetworks"),
-    "ckp": os.path.join("models", "Stable-diffusion"),
-    "lora": os.path.join("models", "Lora"),
+    "ti": os.path.join(root_path, "embeddings"),
+    "hyper": os.path.join(root_path, "models", "hypernetworks"),
+    "ckp": os.path.join(root_path, "models", "Stable-diffusion"),
+    "lora": os.path.join(root_path, "models", "Lora"),
 }
+
+
+# get cusomter model path
+# will be modified when refactoring 
+if shared.cmd_opts.embeddings_dir and os.path.isdir(shared.cmd_opts.embeddings_dir):
+    model_folders["ti"] = shared.cmd_opts.embeddings_dir
+
+if shared.cmd_opts.hypernetwork_dir and os.path.isdir(shared.cmd_opts.hypernetwork_dir):
+    model_folders["hyper"] = shared.cmd_opts.hypernetwork_dir
+
+if shared.cmd_opts.ckpt_dir and os.path.isdir(shared.cmd_opts.ckpt_dir):
+    model_folders["ckp"] = shared.cmd_opts.ckpt_dir
+
+if shared.cmd_opts.lora_dir and os.path.isdir(shared.cmd_opts.lora_dir):
+    model_folders["lora"] = shared.cmd_opts.lora_dir
+
 
 model_exts = (".bin", ".pt", ".safetensors", ".ckpt")
 model_info_exts = ".info"
@@ -70,7 +93,6 @@ civitai_hash_api_url = "https://civitai.com/api/v1/model-versions/by-hash/"
 # js action list
 js_actions = ("open_url", "add_trigger_words", "use_preview_prompt")
 
-root_path = os.getcwd()
 
 
 def gen_file_sha256(filname):
@@ -95,20 +117,34 @@ def gen_file_sha256_low_memory(filname):
     printD("sha256: " + hash_value)
     return hash_value
 
+
+# get image with full size
+# width is in number, not string
+def get_full_size_image_url(image_url, width):
+    return re.sub('/width=\d+/', '/width=' + str(width) + '/', image_url)
+
+
 # scan model to generate SHA256, then use this SHA256 to get model info from civitai
-def scan_model(skip_nsfw_preview, low_memory_sha):
+def scan_model(low_memory_sha, max_size_preview, readable_model_info, skip_nsfw_preview):
     printD("Start scan_model")
 
+    
+    count = 0
+    scan_log = ""
     for model_type, model_folder in model_folders.items():
-        folder_path = os.path.join(root_path, model_folder)
-        printD("Scanning path: " + folder_path)
-        for root, dirs, files in os.walk(folder_path):
+        printD("Scanning path: " + model_folder)
+        for root, dirs, files in os.walk(model_folder):
             for filename in files:
                 # check ext
                 item = os.path.join(root, filename)
                 base, ext = os.path.splitext(item)
                 if ext in model_exts:
                     # find a model
+                    # set a Progress log
+                    scan_log = "Scanned: " + str(count) + ", Scanning: "+ filename
+                    # try to update to UI Here
+                    # Is still trying to find a way
+
                     # get preview image
                     first_preview = base+".png"
                     sec_preview = base+".preview.png"
@@ -165,7 +201,11 @@ def scan_model(skip_nsfw_preview, low_memory_sha):
                         # write model info to file
                         printD("Write model info to file: " + info_file)
                         with open(info_file, 'w') as f:
-                            data = json.dumps(content)
+                            data = None
+                            if readable_model_info:
+                                data = json.dumps(content, indent=4)
+                            else:
+                                data = json.dumps(content)
                             f.write(data)
 
                         # check preview image
@@ -182,11 +222,18 @@ def scan_model(skip_nsfw_preview, low_memory_sha):
                                                 continue
                                     
                                     if "url" in img_dict.keys():
-                                        printD("Sending request for image: " + img_dict["url"])
+                                        img_url = img_dict["url"]
+                                        if max_size_preview:
+                                            # use max width
+                                            if "width" in img_dict.keys():
+                                                if img_dict["width"]:
+                                                    img_url = get_full_size_image_url(img_url, img_dict["width"])
+
+                                        printD("Sending request for image: " + img_url)
                                         # get image
-                                        img_r = requests.get(img_dict["url"], stream=True)
+                                        img_r = requests.get(img_url, stream=True)
                                         if not img_r.ok:
-                                            printD("Get errorcode: " + str(r.status_code))
+                                            printD("Get error code: " + str(r.status_code))
                                             printD(r.text)
                                             return
                                         
@@ -200,8 +247,13 @@ def scan_model(skip_nsfw_preview, low_memory_sha):
                                         # we only need 1 preview image
                                         break
 
+                    # set counter
+                    count = count+1
+
                 # for testing, we only check 1 model for each type
                 # break
+
+    scan_log = "Done"
 
     printD("End scan_model")
 
@@ -283,7 +335,7 @@ def get_model_info(model_type, search_term):
 
     model_folder = model_folders[model_type]
     model_info_filename = model_info_base + civitai_info_suffix + model_info_exts
-    model_info_filepath = os.path.join(root_path, model_folder, model_info_filename)
+    model_info_filepath = os.path.join(model_folder, model_info_filename)
 
     if not os.path.isfile(model_info_filepath):
         printD("Can not find model info file: " + model_info_filepath)
@@ -458,25 +510,38 @@ def on_ui_tabs():
     img2img_prompt = modules.ui.img2img_paste_fields[0][0]
     img2img_neg_prompt = modules.ui.img2img_paste_fields[1][0]
 
+
     # ====UI====
-    with gr.Blocks(analytics_enabled=False) as civitai_helper:
-        # info        
-        with gr.Row():
-            skip_nsfw_preview_ckb = gr.Checkbox(label="SKip NSFW Preview images", value=False, elem_id="ch_skip_nsfw_preview_ckb")
-            low_memory_sha_ckb = gr.Checkbox(label="Memory Optimised SHA256", value=False, elem_id="ch_low_memory_sha_ckb")
+    # with gr.Blocks(analytics_enabled=False) as civitai_helper:
+    with gr.Blocks() as civitai_helper:
+        # UI will have 3 tabs: 
+        # Model Info: Scan model or force a model link to civitai model info by model id or url
+        # Settging: Setting for general use, also can save setting for all tabs
+        # Tool: handy functions, like making all model info readable.
+        with gr.Tab("Model"):
+            with gr.Row():
+                low_memory_sha_ckb = gr.Checkbox(label="Memory Optimised SHA256", value=True, elem_id="ch_low_memory_sha_ckb")
+                max_size_preview_ckb = gr.Checkbox(label="Download Max Size Preview", value=True, elem_id="ch_max_size_preview_ckb")
+                readable_model_info_ckb = gr.Checkbox(label="Readable Model Info file", value=True, elem_id="ch_readable_model_info_ckb")
+                skip_nsfw_preview_ckb = gr.Checkbox(label="SKip NSFW Preview images", value=False, elem_id="ch_skip_nsfw_preview_ckb")
 
-        scan_model_btn = gr.Button(value="Scan model", elem_id="ch_scan_model_btn")
+            scan_model_btn = gr.Button(value="Scan model", elem_id="ch_scan_model_btn")
 
-        gr.Markdown("Check console log window for detail, after clicking Scan button")
+            gr.Markdown("Check console log window for detail, after clicking Scan button")
 
-        # hidden component for js
+
+        # with gr.Tab("Settging"):
+
+        # with gr.Tab("Tool"):
+
+        # hidden component for js, not in any tab
         js_msg_txtbox = gr.Textbox(label="Request Msg From Js", visible=False, lines=1, value="", elem_id="ch_js_msg_txtbox")
         js_open_url_btn = gr.Button(value="Open Model Url", visible=False, elem_id="ch_js_open_url_btn")
         js_add_trigger_words_btn = gr.Button(value="Add Trigger Words", visible=False, elem_id="ch_js_add_trigger_words_btn")
         js_use_preview_prompt_btn = gr.Button(value="Use Prompt from Preview Image", visible=False, elem_id="ch_js_use_preview_prompt_btn")
 
         # ====events====
-        scan_model_btn.click(scan_model, inputs=[skip_nsfw_preview_ckb, low_memory_sha_ckb])
+        scan_model_btn.click(scan_model, inputs=[low_memory_sha_ckb, max_size_preview_ckb, readable_model_info_ckb, skip_nsfw_preview_ckb])
         js_open_url_btn.click(open_model_url, inputs=[js_msg_txtbox])
         js_add_trigger_words_btn.click(add_trigger_words, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, img2img_prompt])
         js_use_preview_prompt_btn.click(use_preview_image_prompt, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, txt2img_neg_prompt, img2img_prompt, img2img_neg_prompt])
@@ -485,3 +550,5 @@ def on_ui_tabs():
     return (civitai_helper , "Civitai Helper", "civitai_helper"),
 
 script_callbacks.on_ui_tabs(on_ui_tabs)
+
+

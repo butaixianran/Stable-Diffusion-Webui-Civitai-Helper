@@ -65,8 +65,13 @@ Enjoy!
 # Known Issue
 * It can not force a model link to civitai by model id for now, will add this later.
 
-
 # Change Log
+## v1.2
+* Support customer model folder
+* Support readable model info file
+* Support download preview image with max size
+* Remove card buttons when extra network is in thumbnail mode
+
 ## v1.1
 * Support subfolders
 * Check if refresh is needed when clicking "Refresh Civitai Helper"
