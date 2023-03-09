@@ -13,7 +13,7 @@ def gen_file_sha256(filname, is_low_memory=True):
     hash_sha256 = hashlib.sha256()
     with open(filname, "rb") as f:
         if is_low_memory:
-            printD("Using Memory Optimised SHA256")
+            printD("Using Memory Optimized SHA256")
             for chunk in iter(lambda: f.read(4096), b""):
                 hash_sha256.update(chunk)
         else:
@@ -27,7 +27,7 @@ def gen_file_sha256(filname, is_low_memory=True):
 
 # get preview image
 def download_file(url, path):
-    printD("Download file from: " + url)
+    printD("Downloading file from: " + url)
     # get file
     r = requests.get(url, stream=True)
     if not r.ok:

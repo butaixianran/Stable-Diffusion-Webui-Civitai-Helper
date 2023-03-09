@@ -1,6 +1,9 @@
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Civitai模型。
 
+## 注意
+最新的v1.3版本，强大，但是是实验性质的。如果碰到问题，可以去Civitai下载1.2.1老版本: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
+
 # 功能
 * 扫描所有模型，从Civitai下载模型信息和预览图 
 * 修改了内置的"Extra Network"模型卡片，每个卡片增加了如下功能按钮:

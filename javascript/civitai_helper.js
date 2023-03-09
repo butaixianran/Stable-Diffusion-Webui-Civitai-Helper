@@ -1,5 +1,55 @@
 "use strict";
 
+// get msg from python side from a hidden textbox
+// normally this is an old msg, need to wait for a new msg
+function get_ch_py_msg(){
+    console.log("run get_ch_py_msg")
+    const py_msg_txtbox = gradioApp().querySelector("#ch_py_msg_txtbox textarea");
+    if (py_msg_txtbox && py_msg_txtbox.value) {
+        console.log("find py_msg_txtbox");
+        console.log("py_msg_txtbox value: ");
+        console.log(py_msg_txtbox.value)
+        return py_msg_txtbox.value
+    } else {
+        return ""
+    }
+}
+
+
+// get msg from python side from a hidden textbox
+// if textbox's value is different from old value then it will consider it is a new msg
+// it will try once in every sencond, until it reach the max try times
+const get_new_ch_py_msg = (old_value, max_count=3) => new Promise((resolve, reject) => {
+    console.log("run get_new_ch_py_msg")
+
+    let count = 0;
+    let new_msg = "";
+    let find_msg = false;
+    const interval = setInterval(() => {
+        const py_msg_txtbox = gradioApp().querySelector("#ch_py_msg_txtbox textarea");
+        count++;
+
+        if (py_msg_txtbox && py_msg_txtbox.value) {
+            console.log("find py_msg_txtbox");
+            console.log("py_msg_txtbox value: ");
+            console.log(py_msg_txtbox.value)
+
+            new_msg = py_msg_txtbox.value
+            if (new_msg != old_value) {
+                find_msg=true
+            }
+        }
+
+        if (find_msg) {
+            resolve(new_msg);
+            clearInterval(interval);
+        } else if (count > max_count) {
+            reject('');
+            clearInterval(interval);
+        }
+
+    }, 1000);
+})
 
 function getActivePrompt() {
     const currentTab = get_uiCurrentTabContent();
@@ -25,7 +75,7 @@ function getActiveNegativePrompt() {
 
 
 //button's click function
-function open_model_url(event, model_type, search_term){
+async function open_model_url(event, model_type, search_term){
     console.log("start open_model_url");
 
     //get hidden components of extension 
@@ -53,14 +103,38 @@ function open_model_url(event, model_type, search_term){
     js_msg_txtbox.value = JSON.stringify(msg);
     js_msg_txtbox.dispatchEvent(new Event("input"));
 
+    //get old py msg
+    let py_msg = get_ch_py_msg();
+
     //click hidden button
     js_open_url_btn.click();
 
-    console.log("end open_model_url");
-
-
+    // stop parent event
     event.stopPropagation()
     event.preventDefault()
+
+    //check response msg from python
+    let new_py_msg = await get_new_ch_py_msg("");
+    console.log("new_py_msg:");
+    console.log(new_py_msg);
+
+    //check msg
+    if (new_py_msg) {
+        let py_msg_json = JSON.parse(new_py_msg);
+        //check for url
+        if (py_msg_json && py_msg_json.content) {
+            if (py_msg_json.content.url) {
+                window.open(py_msg_json.content.url, "_blank");
+            }
+
+        }
+
+
+    }
+
+    
+    console.log("end open_model_url");
+
 
 }
 

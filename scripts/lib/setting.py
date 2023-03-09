@@ -16,7 +16,7 @@ data = {
         "skip_nsfw_preview": False
     },
     "general":{
-        "open_url_with_js": False,
+        "open_url_with_js": True,
         "check_model_version_at_startup": False,
     },
     "tool":{
@@ -26,15 +26,13 @@ data = {
 
 
 # save setting
+# return output msg for log
 def save():
-    print("Saving tranlation service setting...")
-    # write data into globel trans_setting
-    global trans_setting
+    print("Saving setting to: " + path)
 
-    
+    json_data = json.dumps(data, indent=4)
 
-    # to json
-    json_data = json.dumps(data)
+    output = ""
 
     #write to file
     try:
@@ -42,10 +40,14 @@ def save():
             f.write(json_data)
     except Exception as e:
         util.printD("Error when writing file:"+path)
+        output = str(e)
         util.printD(str(e))
-        return
+        return output
 
-    util.printD("Setting saved to: " + path)
+    output = "Setting saved to: " + path
+    util.printD(output)
+
+    return output
 
 
 # load setting to global data
@@ -89,7 +91,12 @@ def save_from_input(low_memory_sha, max_size_preview, skip_nsfw_preview, open_ur
         }
     }
 
-    save()
+    output = save()
+
+    if not output:
+        output = ""
+
+    return output
 
 # load to output
 def load_to_output():

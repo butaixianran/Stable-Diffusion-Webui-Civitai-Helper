@@ -26,6 +26,8 @@ info_ext = ".info"
 
 # get cusomter model path
 def get_custom_model_folder():
+    util.printD("Get Custom Model Folder")
+
     global folders
 
     if shared.cmd_opts.embeddings_dir and os.path.isdir(shared.cmd_opts.embeddings_dir):
@@ -40,7 +42,7 @@ def get_custom_model_folder():
     if shared.cmd_opts.lora_dir and os.path.isdir(shared.cmd_opts.lora_dir):
         folders["lora"] = shared.cmd_opts.lora_dir
 
-get_custom_model_folder()
+
 
 
 
@@ -63,4 +65,56 @@ def load_model_info(path):
             return
         
     return model_info
+
+
+# get model file names by model type
+# parameter: model_type - string
+# return: model name list
+def get_model_names_by_type(model_type:str) -> list:
+    
+    model_folder = folders[model_type]
+
+    # get information from filter
+    # only get those model names don't have a civitai model info file
+    model_names = []
+    for root, dirs, files in os.walk(model_folder):
+        for filename in files:
+            item = os.path.join(root, filename)
+            # check extension
+            base, ext = os.path.splitext(item)
+            if ext in exts:
+                # find a model
+                model_names.append(filename)
+
+
+    return model_names
+
+
+# return 2 values: (model_root, model_path)
+def get_model_path_by_type_and_name(model_type:str, model_name:str) -> str:
+    util.printD("Run get_model_path_by_type_and_name")
+    if model_type not in folders.keys():
+        util.printD("unknown model_type: " + model_type)
+        return
+    
+    if not model_name:
+        util.printD("model name can not be empty")
+        return
+    
+    folder = folders[model_type]
+
+    # model could be in subfolder, need to walk.
+    model_root = ""
+    model_path = ""
+    for root, dirs, files in os.walk(folder):
+        for filename in files:
+            if filename == model_name:
+                # find model
+                model_root = root
+                model_path = os.path.join(root, filename)
+                return (model_root, model_path)
+
+    return
+
+
 

@@ -4,6 +4,9 @@
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
 
+## Notice
+Latest v1.3 is powerful but experimental. If you have issue, you can go back to 1.2.1 by download old version from Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
+
 # Features
 * Scans all models to download model information and preview images from Civitai.  
 * Modified Built-in "Extra Network" cards, to add the following buttons on each card:
@@ -78,6 +81,13 @@ Enjoy!
 * It cannot force a model link to Civitai by model ID for now. This will be added later.
 
 # Change Log
+## v1.3
+* Open url at client side
+* Link selected model to civitai by url or model id
+* Save and load extension setting to file
+* Show button action's output to UI
+* Code refactoring
+
 ## v1.2.1
 * Add more error checking to work with different versions of SD webui. 
 
@@ -91,4 +101,4 @@ Enjoy!
 * Support subfolders
 * Check if refresh is needed when clicking "Refresh Civitai Helper"
 * Add space when adding trigger words
-* Add memory optimised sha256 as an option
+* Add memory Optimized sha256 as an option

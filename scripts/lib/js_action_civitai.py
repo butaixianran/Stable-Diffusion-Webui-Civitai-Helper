@@ -3,110 +3,23 @@
 import os
 import json
 import requests
-import shutil
 import webbrowser
 from . import util
 from . import model
 from . import civitai
-from . import msg
+from . import msg_handler
 
-
-
-# scan model to generate SHA256, then use this SHA256 to get model info from civitai
-def scan_model(low_memory_sha, max_size_preview, skip_nsfw_preview):
-    util.printD("Start scan_model")
-
-    model_count = 0
-    image_count = 0
-    scan_log = ""
-    for model_type, model_folder in model.folders.items():
-        util.printD("Scanning path: " + model_folder)
-        for root, dirs, files in os.walk(model_folder):
-            for filename in files:
-                # check ext
-                item = os.path.join(root, filename)
-                base, ext = os.path.splitext(item)
-                if ext in model.exts:
-                    # find a model
-                    # set a Progress log
-                    scan_log = "Scanned: " + str(model_count) + ", Scanning: "+ filename
-                    # try to update to UI Here
-                    # Is still trying to find a way
-
-                    # get preview image
-                    first_preview = base+".png"
-                    sec_preview = base+".preview.png"
-                    # get info file
-                    info_file = base + civitai.suffix + model.info_ext
-                    # check info file
-                    if not os.path.isfile(info_file):
-                        # get model's sha256
-                        util.printD("Generate SHA256 for model: " + filename)
-                        hash = util.gen_file_sha256(item, low_memory_sha)
-
-                        if not hash:
-                            util.printD("failed generate SHA256 for this file.")
-                            return
-                        
-                        # use this sha256 to get model info from civitai
-                        model_info = civitai.get_model_info_by_hash(hash)
-                        if model_info is None:
-                            util.printD("Fail to get model_info")
-                            return
-                        
-                        # write model info to file
-                        model.write_model_info(info_file, model_info)
-
-                    # set model_count
-                    model_count = model_count+1
-
-                    # check preview image
-                    if not os.path.isfile(sec_preview):
-                        # need to download preview image
-                        util.printD("Need preview image for this model")
-                        # load model_info file
-                        if os.path.isfile(info_file):
-                            model_info = model.load_model_info(info_file)
-                            if not model_info:
-                                util.printD("Model Info is empty")
-                                continue
-
-                            if "images" in model_info.keys():
-                                if model_info["images"]:
-                                    for img_dict in model_info["images"]:
-                                        if "nsfw" in img_dict.keys():
-                                            if img_dict["nsfw"]:
-                                                util.printD("This image is NSFW")
-                                                if skip_nsfw_preview:
-                                                    util.printD("Skip NSFW image")
-                                                    continue
-                                        
-                                        if "url" in img_dict.keys():
-                                            img_url = img_dict["url"]
-                                            if max_size_preview:
-                                                # use max width
-                                                if "width" in img_dict.keys():
-                                                    if img_dict["width"]:
-                                                        img_url = civitai.get_full_size_image_url(img_url, img_dict["width"])
-
-                                            util.download_file(img_url, sec_preview)
-                                            image_count = image_count + 1
-                                            # we only need 1 preview image
-                                            break
-
-
-    scan_log = "Done"
-
-    util.printD("End scan_model")
 
 
 
 # get civitai's model url and open it in browser
 # parameter: model_type, search_term
-def open_model_url(msg):
+# output: python msg - will be sent to hidden textbox then picked by js side
+def open_model_url(msg, open_url_with_js):
     util.printD("Start open_model_url")
 
-    result = msg.parse_js_msg(msg)
+    output = ""
+    result = msg_handler.parse_js_msg(msg)
     if not result:
         util.printD("Parsing js ms failed")
         return
@@ -116,24 +29,36 @@ def open_model_url(msg):
     model_info = civitai.load_model_info_by_search_term(model_type, search_term)
     if not model_info:
         util.printD(f"Failed to get model info for {model_type} {search_term}")
-        return
+        return ""
 
     if "modelId" not in model_info.keys():
         util.printD(f"Failed to get model id from info file for {model_type} {search_term}")
-        return
+        return ""
 
     model_id = model_info["modelId"]
     if not model_id:
         util.printD(f"model id from info file of {model_type} {search_term} is None")
-        return
+        return ""
 
     url = civitai.url_dict["modelPage"]+str(model_id)
 
-    util.printD("Open Url: " + url)
-    # open url
-    webbrowser.open_new_tab(url)
+
+    # msg content for js
+    content = {
+        "url":""
+    }
+
+    if not open_url_with_js:
+        util.printD("Open Url: " + url)
+        # open url
+        webbrowser.open_new_tab(url)
+    else:
+        util.printD("Send Url to js")
+        content["url"] = url
+        output = msg_handler.build_py_msg("open_url", content)
 
     util.printD("End open_model_url")
+    return output
 
 
 
@@ -143,7 +68,7 @@ def open_model_url(msg):
 def add_trigger_words(msg):
     util.printD("Start add_trigger_words")
 
-    result = msg.parse_js_msg(msg)
+    result = msg_handler.parse_js_msg(msg)
     if not result:
         util.printD("Parsing js ms failed")
         return
@@ -192,7 +117,7 @@ def add_trigger_words(msg):
 def use_preview_image_prompt(msg):
     util.printD("Start use_preview_image_prompt")
 
-    result = msg.parse_js_msg(msg)
+    result = msg_handler.parse_js_msg(msg)
     if not result:
         util.printD("Parsing js ms failed")
         return
