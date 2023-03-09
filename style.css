@@ -1,0 +1,45 @@
+.additional div{
+	display: flex;
+}
+
+.additional span.hidden{
+	display: none;
+}
+
+.additional .weightAndPrompt {
+	flex-direction: column;
+}
+
+.additional .weightAndPrompt span {
+	align-self: end;
+}
+
+.additional .weightAndPrompt .weightValueText {
+	width: 25%;
+	margin-left: auto;
+}
+
+.additional .weightAndPrompt .weightValue {
+	width: 87%;
+	justify-self: start;
+	margin: 0;
+}
+
+.additional .weightAndPrompt .weightActive {
+	float: right;
+	align-self: center;
+	margin-left: 10px;
+}
+
+.additional .promptValue {
+	width: 87%;
+}
+
+.additional .promptActive {
+	margin-left: 10px;
+	align-self: center;
+}
+
+.additional .textright {
+	float: right;
+}

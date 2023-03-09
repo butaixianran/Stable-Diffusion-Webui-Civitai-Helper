@@ -306,20 +306,15 @@ onUiLoaded(() => {
                     replace_preview_btn = card.querySelector(".actions .additional a");
                     if (replace_preview_btn) {
                         if (replace_preview_btn.innerHTML == "replace preview") {
+							let additionalDiv = card.querySelector(".actions .additional ul");
                             need_to_add_buttons = true;
-                            replace_preview_btn.innerHTML = "🖼";
-                            if (!is_thumb_mode) {
-                                replace_preview_btn.style.margin = "0px 5px";
-                                replace_preview_btn.style.fontSize = "200%";
-                            }
-
+                            additionalDiv.innerHTML = '<li><div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" /><input class="weightActive" type="checkbox" /></div></div></li><li><div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div></li><li><a href="#" title="replace preview image with currently selected in gallery" onclick="return saveCardPreview(event, \''+model_type+'\', \''+search_term+'\')" target="_blank">replace preview</a><a class="textright" href="#" title="replace preview image with currently selected in gallery" onclick="return use_preview_prompt(event, \''+model_type+'\', \''+search_term+'\')" target="_blank">save</a></li>';
                         }
                     }
 
                     if (!need_to_add_buttons) {
                         continue;
                     }
-
 
                     // search_term node
                     // search_term = subfolder path + model name + ext
@@ -335,57 +330,9 @@ onUiLoaded(() => {
                         console.log("search_term is empty for cards in " + extra_network_id);
                         continue;
                     }
-
-
-                    //get ul node, which is the parent of all buttons
-                    ul_node = card.querySelector(".actions .additional ul");
-
-                    // then we need to add 3 buttons to each ul node:
-                    let open_url_node = document.createElement("button");
-                    // open_url_node.href = "#";
-                    open_url_node.innerHTML = "🌐";
-                    if (!is_thumb_mode) {
-                        open_url_node.style.fontSize = "200%";
-                        open_url_node.style.margin = "0px 5px";
-                    }
-                    open_url_node.title = "Open this model's civitai url";
-                    open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
-
-                    let add_trigger_words_node = document.createElement("button");
-                    // add_trigger_words_node.href = "#";
-                    add_trigger_words_node.innerHTML = "💡";
-                    if (!is_thumb_mode) {
-                        add_trigger_words_node.style.fontSize = "200%";
-                        add_trigger_words_node.style.margin = "0px 5px";
-                    }
-                    add_trigger_words_node.title = "Add trigger words to prompt";
-                    add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+search_term+"')");
-
-                    let use_preview_prompt_node = document.createElement("button");
-                    // use_preview_prompt_node.href = "#";
-                    use_preview_prompt_node.innerHTML = "🏷";
-                    if (!is_thumb_mode) {
-                        use_preview_prompt_node.style.fontSize = "200%";
-                        use_preview_prompt_node.style.margin = "0px 5px";
-                    }
-                    use_preview_prompt_node.title = "Use prompt from preview image";
-                    use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
-
-                    //add to card
-                    ul_node.appendChild(open_url_node);
-                    ul_node.appendChild(add_trigger_words_node);
-                    ul_node.appendChild(use_preview_prompt_node);
-
-
-
-
-                }
-
-                
+                }       
             }
         }
-
-
     }
 
 
@@ -413,7 +360,6 @@ onUiLoaded(() => {
         ch_refresh.onclick = update_card_for_civitai;
 
         extra_toolbar.appendChild(ch_refresh);
-
     }
 
 
