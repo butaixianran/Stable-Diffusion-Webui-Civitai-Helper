@@ -57,6 +57,8 @@ def on_ui_tabs():
         max_size_preview = setting.data["model"]["max_size_preview"]
         skip_nsfw_preview = setting.data["model"]["skip_nsfw_preview"]
         open_url_with_js = setting.data["general"]["open_url_with_js"]
+        min_weight_js = setting.data["jokker"]["min_weight"]
+        max_weight_js = setting.data["jokker"]["max_weight"]
         check_model_version_at_startup = setting.data["general"]["check_model_version_at_startup"]
 
         model_types = list(model.folders.keys())
@@ -96,9 +98,19 @@ def on_ui_tabs():
 
 
         with gr.Tab("General"):
-            with gr.Row():
-                open_url_with_js_ckb = gr.Checkbox(label="Open Url At Client Side", value=open_url_with_js, elem_id="ch_open_url_with_js_ckb")
-                check_model_version_at_startup_ckb = gr.Checkbox(label="Check Model Version At Startup", value=open_url_with_js, visible=False, elem_id="ch_check_model_version_at_startup_ckb")
+            with gr.Box():
+                with gr.Column():
+                    gr.Markdown("### Lora Card Extra Network UI")
+                    with gr.Row():
+                        min_weight_js_cb = gr.Number(label="Minimum value for weight slider", value=min_weight_js, elem_id="ch_min_weight_js_cb")
+                        max_weight_js_cb = gr.Number(label="Maximum value for weight slider", value=max_weight_js, elem_id="ch_max_weight_js_cb")
+
+            with gr.Box():
+                with gr.Column():
+                    gr.Markdown("### Original Settings")
+                    with gr.Row():
+                        open_url_with_js_ckb = gr.Checkbox(label="Open Url At Client Side", value=open_url_with_js, elem_id="ch_open_url_with_js_ckb")
+                        check_model_version_at_startup_ckb = gr.Checkbox(label="Check Model Version At Startup", value=open_url_with_js, visible=False, elem_id="ch_check_model_version_at_startup_ckb")
 
             save_setting_btn = gr.Button(value="Save Setting", variant="primary", elem_id="ch_save_setting_btn")
             general_log_md = gr.Markdown(value="", elem_id="ch_general_log_md")
@@ -123,7 +135,7 @@ def on_ui_tabs():
 
 
         # General
-        save_setting_btn.click(setting.save_from_input, inputs=[low_memory_sha_ckb, max_size_preview_ckb, skip_nsfw_preview_ckb, open_url_with_js_ckb, check_model_version_at_startup_ckb], outputs=general_log_md)
+        save_setting_btn.click(setting.save_from_input, inputs=[low_memory_sha_ckb, max_size_preview_ckb, skip_nsfw_preview_ckb, open_url_with_js_ckb, check_model_version_at_startup_ckb,min_weight_js_cb,max_weight_js_cb], outputs=general_log_md)
 
         # js action
         js_open_url_btn.click(js_action_civitai.open_model_url, inputs=[js_msg_txtbox, open_url_with_js_ckb], outputs=py_msg_txtbox)

@@ -20,7 +20,11 @@ data = {
         "check_model_version_at_startup": False,
     },
     "tool":{
-    }
+    },
+	"jokker":{
+		"min_weight": 1,
+		"max_weight": 10
+	}
 }
 
 
@@ -75,7 +79,7 @@ def load():
     return
 
 # save setting from parameter
-def save_from_input(low_memory_sha, max_size_preview, skip_nsfw_preview, open_url_with_js, check_model_version_at_startup):
+def save_from_input(low_memory_sha, max_size_preview, skip_nsfw_preview, open_url_with_js, check_model_version_at_startup, minWeight, maxWeight):
     global data
     data = {
         "model":{
@@ -88,7 +92,11 @@ def save_from_input(low_memory_sha, max_size_preview, skip_nsfw_preview, open_ur
             "check_model_version_at_startup": check_model_version_at_startup,
         },
         "tool":{
-        }
+        },
+		"jokker":{
+			"min_weight": minWeight,
+			"max_weight": maxWeight
+		}
     }
 
     output = save()
