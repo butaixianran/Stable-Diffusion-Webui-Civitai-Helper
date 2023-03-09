@@ -5,7 +5,7 @@ from . import util
 
 # action list
 js_actions = ("open_url", "add_trigger_words", "use_preview_prompt")
-py_actions = ("open_url", "scan_log", "model_new_version")
+py_actions = ("load_lora_configs","open_url", "scan_log", "model_new_version")
 
 
 # handle request from javascript

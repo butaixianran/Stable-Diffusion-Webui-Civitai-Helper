@@ -19,6 +19,7 @@ from modules import script_callbacks
 from modules import shared
 from scripts.lib import model
 from scripts.lib import js_action_civitai
+from scripts.lib import js_action_jokker
 from scripts.lib import model_action_civitai
 from scripts.lib import setting
 from scripts.lib import civitai
@@ -123,6 +124,7 @@ def on_ui_tabs():
         js_open_url_btn = gr.Button(value="Open Model Url", visible=False, elem_id="ch_js_open_url_btn")
         js_add_trigger_words_btn = gr.Button(value="Add Trigger Words", visible=False, elem_id="ch_js_add_trigger_words_btn")
         js_use_preview_prompt_btn = gr.Button(value="Use Prompt from Preview Image", visible=False, elem_id="ch_js_use_preview_prompt_btn")
+        js_load_lora_configs_btn = gr.Button(value="Load lora configs", visible=False, elem_id="ch_js_load_lora_configs_btn")
 
         # ====events====
         # Model
@@ -141,6 +143,7 @@ def on_ui_tabs():
         js_open_url_btn.click(js_action_civitai.open_model_url, inputs=[js_msg_txtbox, open_url_with_js_ckb], outputs=py_msg_txtbox)
         js_add_trigger_words_btn.click(js_action_civitai.add_trigger_words, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, img2img_prompt])
         js_use_preview_prompt_btn.click(js_action_civitai.use_preview_image_prompt, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, txt2img_neg_prompt, img2img_prompt, img2img_neg_prompt])
+        js_load_lora_configs_btn.click(js_action_jokker.load_lora_configs, inputs=[js_msg_txtbox], outputs=py_msg_txtbox)
 
     # the third parameter is the element id on html, with a "tab_" as prefix
     return (civitai_helper , "Civitai Helper", "civitai_helper"),

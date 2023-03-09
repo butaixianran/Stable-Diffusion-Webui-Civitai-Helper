@@ -21,10 +21,12 @@ data = {
     },
     "tool":{
     },
-	"jokker":{
-		"min_weight": 1,
-		"max_weight": 10
-	}
+    "jokker":{
+        "min_weight": 1,
+        "max_weight": 10,
+        "lora_configs":{
+        }
+    }
 }
 
 
@@ -81,6 +83,7 @@ def load():
 # save setting from parameter
 def save_from_input(low_memory_sha, max_size_preview, skip_nsfw_preview, open_url_with_js, check_model_version_at_startup, minWeight, maxWeight):
     global data
+    lora_configs = data["jokker"]["lora_configs"]
     data = {
         "model":{
             "low_memory_sha": low_memory_sha,
@@ -93,10 +96,11 @@ def save_from_input(low_memory_sha, max_size_preview, skip_nsfw_preview, open_ur
         },
         "tool":{
         },
-		"jokker":{
-			"min_weight": minWeight,
-			"max_weight": maxWeight
-		}
+        "jokker":{
+            "min_weight": minWeight,
+            "max_weight": maxWeight,
+            "lora_configs": lora_configs
+        }
     }
 
     output = save()

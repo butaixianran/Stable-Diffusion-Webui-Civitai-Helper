@@ -1,0 +1,42 @@
+{
+    "model": {
+        "low_memory_sha": true,
+        "max_size_preview": true,
+        "skip_nsfw_preview": false
+    },
+    "general": {
+        "open_url_with_js": true,
+        "check_model_version_at_startup": true
+    },
+    "tool": {},
+    "jokker": {
+        "min_weight": 1.0,
+        "max_weight": 10.0,
+        "lora_configs": {
+            "animeLineartStyle_v20Offset": {
+                "min_weight": 1.0,
+                "max_weight": 2.0,
+                "weight": 1.5,
+                "prompt": "monochrome, lineart",
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "japaneseDollLikeness_v10": {
+                "min_weight": -1.0,
+                "max_weight": 3.0,
+                "weight": 2.0,
+                "prompt": "monochrome, lineart",
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "koreanDollLikeness_v10": {
+                "min_weight": -1.0,
+                "max_weight": 3.0,
+                "weight": 3.0,
+                "prompt": "123",
+                "weight_active": true,
+                "prompt_active": true
+            }
+        }
+    }
+}
