@@ -12,12 +12,17 @@ def gen_file_sha256(filname, is_low_memory=True):
     printD("Calculate SHA256")
     hash_sha256 = hashlib.sha256()
     with open(filname, "rb") as f:
-        if is_low_memory:
-            printD("Using Memory Optimized SHA256")
-            for chunk in iter(lambda: f.read(4096), b""):
-                hash_sha256.update(chunk)
-        else:
-            hash_sha256.update(f.read())
+        # force to use Memory Optimized SHA256
+        # In case people don't understand this and uncheck it then stuck their system
+        printD("Using Memory Optimized SHA256")
+        for chunk in iter(lambda: f.read(4096), b""):
+            hash_sha256.update(chunk)
+        # if is_low_memory:
+        #     printD("Using Memory Optimized SHA256")
+        #     for chunk in iter(lambda: f.read(4096), b""):
+        #         hash_sha256.update(chunk)
+        # else:
+        #     hash_sha256.update(f.read())
 
 
     hash_value =  hash_sha256.hexdigest()

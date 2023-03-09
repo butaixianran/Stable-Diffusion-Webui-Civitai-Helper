@@ -72,7 +72,7 @@ def on_ui_tabs():
                 with gr.Column():
                     gr.Markdown("### Scan Models for Civitai")
                     with gr.Row():
-                        low_memory_sha_ckb = gr.Checkbox(label="Memory Optimized SHA256", value=low_memory_sha, elem_id="ch_low_memory_sha_ckb")
+                        low_memory_sha_ckb = gr.Checkbox(label="Memory Optimized SHA256", value=low_memory_sha, visible=False, elem_id="ch_low_memory_sha_ckb")
                         max_size_preview_ckb = gr.Checkbox(label="Download Max Size Preview", value=max_size_preview, elem_id="ch_max_size_preview_ckb")
                         skip_nsfw_preview_ckb = gr.Checkbox(label="SKip NSFW Preview images", value=skip_nsfw_preview, elem_id="ch_skip_nsfw_preview_ckb")
 

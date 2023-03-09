@@ -26,6 +26,11 @@ Then reload UI with "Reload UI" Button in Setting tab.
 Done.
 
 # How to Use
+## Update Your SD Webui
+This extension need to get extra network's cards id. **Which is added to SD webui since 2023-02-06.** 
+
+So, if you are using a version older than this, you need to update your SD Webui! 
+
 ## Scanning Models
 Go to extension tab "Civitai Helper". There is a button called "Scan model".  
 

@@ -29,6 +29,7 @@ def scan_model(low_memory_sha, max_size_preview, skip_nsfw_preview):
                     info_file = base + civitai.suffix + model.info_ext
                     # check info file
                     if not os.path.isfile(info_file):
+                        util.printD("Creating model info for: " + filename)
                         # get model's sha256
                         hash = util.gen_file_sha256(item, low_memory_sha)
 

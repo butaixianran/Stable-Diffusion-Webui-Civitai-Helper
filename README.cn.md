@@ -19,6 +19,12 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 
 # 使用方法
+## 更新你的SD webui
+本扩展需要取到 Extra Network的卡片列表id。**这个是从2023-02-06，才添加到SD webui里面的。**  
+
+所以，如果你用的版本比这个早，你就需要先更新你的SD Webui！
+
+
 ## 扫描模型
 前往扩展页面"Civitai Helper"，有个按钮叫："Scan Model"  
 
