@@ -77,7 +77,7 @@ On civitai, a model's preview images may not has prompt. This extension will che
 ## SHA256
 To create a file SHA256, it need to read the whole file to generate a hash code. It gonna be slow for big files. 
 
-Default, it uses a Memory Optimized SHA256 which won't stuck your system. So, do not uncheck it if you want to use your compute when scanning.  
+Default, it uses a Memory Optimized SHA256 which won't stuck your system. So, do not uncheck it if you want to use your computer when scanning.  
 
 There are 2 cases this hash code can not find the model on civitai:
 * Some old models, which do not have SHA256 code on civitai.
