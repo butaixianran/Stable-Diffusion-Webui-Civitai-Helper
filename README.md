@@ -74,11 +74,20 @@ When you click the button "Use prompt from preview image", it does not use the p
 
 On civitai, a model's preview images may not has prompt. This extension will check this model's all civitai preview images' information and use the first one has prompt in it.  
 
+## SHA256
+To create a file SHA256, it need to read the whole file to generate a hash code. It gonna be slow for big files. 
+
+Default, it uses a Memory Optimized SHA256 which won't stuck your system. So, do not uncheck it if you want to use your compute when scanning.  
+
+There are 2 cases this hash code can not find the model on civitai:
+* Some old models, which do not have SHA256 code on civitai.
+* The model's owner changed file on civitai, but does not change version number and description. So, the file on civitai is actually not the one on your manchine.  
+
+In these cases, you can always link a model to civitai by filling its URL in this extension from v1.3.
+
 
 Enjoy!
 
-# Known Issues
-* It cannot force a model link to Civitai by model ID for now. This will be added later.
 
 # Change Log
 ## v1.3
