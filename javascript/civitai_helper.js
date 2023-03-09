@@ -186,7 +186,7 @@ function use_preview_prompt(event, model_type, search_term){
 }
 
 
-onUiLoaded(() => {
+onUiLoaded(async () => {
 
 
 
@@ -204,7 +204,7 @@ onUiLoaded(() => {
     // notice: javascript can not get response from python side
     // so, these buttons just sent request to python
     // then, python side gonna open url and update prompt text box, without telling js side.
-    function update_card_for_civitai(){
+    async function update_card_for_civitai(){
 
 
         //change all "replace preview" into an icon
@@ -219,7 +219,28 @@ onUiLoaded(() => {
         let cards = null;
         let need_to_add_buttons = false;
         let is_thumb_mode = false;
+
+		console.log("start load_lora_configs");
+
+		//get hidden components of extension 
+		let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
+		//let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
+		let js_load_lora_configs_btn = gradioApp().getElementById("ch_js_load_lora_configs_btn");
+
+		//click hidden button
+		js_load_lora_configs_btn.click();
+
+		// stop parent event
+		//event.stopPropagation()
+		//event.preventDefault()
+
+		//check response msg from python
+		let new_py_msg = await get_new_ch_py_msg("");
+		let lora_confs = JSON.parse(new_py_msg);
+		lora_confs = JSON.parse(lora_confs["content"]["lora_configs"]);
+
         for (const tab_prefix of tab_prefix_list) {
+
             for (const js_model_type of model_type_list) {
                 //get model_type for python side
                 switch (js_model_type) {
@@ -269,9 +290,24 @@ onUiLoaded(() => {
                         if (replace_preview_btn.innerHTML == "replace preview") {
 							let additionalDiv = card.querySelector(".actions .additional ul");
                             need_to_add_buttons = true;
-                            additionalDiv.innerHTML = '<li><div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" /><input class="weightActive" type="checkbox" /></div></div></li><li><div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div></li><li><a href="#" title="replace preview image with currently selected in gallery" onclick="return saveCardPreview(event, \''+model_type+'\', \''+search_term+'\')" target="_blank">replace preview</a><a class="textright" href="#" title="replace preview image with currently selected in gallery" onclick="return open_model_url(event)" target="_blank">save</a></li>';
+                            additionalDiv.innerHTML = '<li><div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.1" min="0" max="2" /><input class="weightActive" type="checkbox" /></div></div></li><li><div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div></li><li><a href="#" title="replace preview image with currently selected in gallery" onclick="return saveCardPreview(event, \''+model_type+'\', \''+search_term+'\')" target="_blank">replace preview</a><a class="textright" href="#" title="replace preview image with currently selected in gallery" onclick="return open_model_url(event)" target="_blank">save</a></li>';
                         }
                     }
+					
+					let nameSpan = card.querySelector(".actions .name");
+					let weightValueInput = card.querySelector(".actions .weightValueText");
+					let weightInput = card.querySelector(".actions .weightValue");
+					let promptInput = card.querySelector(".actions .promptValue");
+					let weightActive = card.querySelector(".actions .weightActive");
+					let promptActive = card.querySelector(".actions .promptActive");
+					let loraCardName = nameSpan.innerHTML;
+					if (loraCardName in lora_confs === true) {
+						weightValueInput.value = lora_confs[loraCardName]["weight"];
+						weightInput.value = lora_confs[loraCardName]["weight"];
+						promptInput.value = lora_confs[loraCardName]["prompt"];
+						weightActive.checked = lora_confs[loraCardName]["weight_active"];
+						promptActive.checked = lora_confs[loraCardName]["prompt_active"];
+					}
 
                     if (!need_to_add_buttons) {
                         continue;
@@ -325,7 +361,7 @@ onUiLoaded(() => {
 
 
     //run it once
-    update_card_for_civitai();
+    await update_card_for_civitai();
 
 
 });

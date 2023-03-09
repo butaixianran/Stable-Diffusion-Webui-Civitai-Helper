@@ -10,30 +10,95 @@
     },
     "tool": {},
     "jokker": {
-        "min_weight": 1.0,
-        "max_weight": 10.0,
+        "min_weight": 0.0,
+        "max_weight": 2.0,
         "lora_configs": {
             "animeLineartStyle_v20Offset": {
-                "min_weight": 1.0,
-                "max_weight": 2.0,
-                "weight": 1.5,
-                "prompt": "monochrome, lineart",
+                "weight": 1.0,
+                "prompt": [
+                    "monochrome",
+                    "lineart"
+                ],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "arcaneStyleLora_offset": {
+                "weight": 1.0,
+                "prompt": [
+                    "arcane style"
+                ],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "goutouLora_v20": {
+                "weight": 1.0,
+                "prompt": [
+                    "goutou"
+                ],
                 "weight_active": true,
                 "prompt_active": true
             },
             "japaneseDollLikeness_v10": {
-                "min_weight": -1.0,
-                "max_weight": 3.0,
-                "weight": 2.0,
-                "prompt": "monochrome, lineart",
+                "weight": 1.0,
+                "prompt": [],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "jinxLeagueOfLegends_v10": {
+                "weight": 1.0,
+                "prompt": [
+                    "jinxlol"
+                ],
                 "weight_active": true,
                 "prompt_active": true
             },
             "koreanDollLikeness_v10": {
-                "min_weight": -1.0,
-                "max_weight": 3.0,
-                "weight": 3.0,
-                "prompt": "123",
+                "weight": 1.0,
+                "prompt": [
+                    "123"
+                ],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "liuyifei_10": {
+                "weight": 1.0,
+                "prompt": [
+                    "liuyifei"
+                ],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "liyuuLora_liyuuV1": {
+                "weight": 1.0,
+                "prompt": [],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "raidenShogunRealistic_raidenshogunHandsfix": {
+                "weight": 1.0,
+                "prompt": [],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "samdoesartsSamYang_offsetRightFilesize": {
+                "weight": 1.0,
+                "prompt": [
+                    "sam yang"
+                ],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "studioGhibliStyle_offset": {
+                "weight": 1.0,
+                "prompt": [
+                    "ghibli style"
+                ],
+                "weight_active": true,
+                "prompt_active": true
+            },
+            "yaeMikoRealistic_yaemikoMixed": {
+                "weight": 1.0,
+                "prompt": [],
                 "weight_active": true,
                 "prompt_active": true
             }
