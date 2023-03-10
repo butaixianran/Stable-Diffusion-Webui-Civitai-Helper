@@ -4,7 +4,7 @@ import os
 from . import util
 from . import model
 from . import civitai
-
+from markdownify import markdownify as md
 
 
 # scan model to generate SHA256, then use this SHA256 to get model info from civitai
@@ -27,6 +27,8 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                     # find a model
                     # get info file
                     info_file = base + civitai.suffix + model.info_ext
+                    model_info_file = base + civitai.suffix + '.main' + model.info_ext
+                    md_info_file = base + civitai.suffix + '.md'
                     # check info file
                     if not os.path.isfile(info_file):
                         util.printD("Creating model info for: " + filename)
@@ -47,6 +49,20 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                         
                         # write model info to file
                         model.write_model_info(info_file, model_info)
+                        
+                        main_model_info = civitai.get_model_info_by_id(model_info['id'])
+                        if main_model_info is None:
+                            output = "Failed to get main_model_info"
+                            util.printD(output)
+                            return output+", check console log for detail"
+                        
+                        # write main model info to file
+                        model.write_model_info(model_info_file, main_model_info)
+                        
+                        with open(md_info_file, 'w') as f:
+                            f.write(md(model_info['description']))
+                            f.write('\n\n---\n\n')
+                            f.write(md(main_model_info['description']))
 
                     # set model_count
                     model_count = model_count+1
