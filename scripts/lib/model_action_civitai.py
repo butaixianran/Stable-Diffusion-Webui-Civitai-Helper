@@ -50,7 +50,7 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                         # write model info to file
                         model.write_model_info(info_file, model_info)
                         
-                        main_model_info = civitai.get_model_info_by_id(model_info['id'])
+                        main_model_info = civitai.get_model_info_by_id(model_info['modelId'])
                         if main_model_info is None:
                             output = "Failed to get main_model_info"
                             util.printD(output)
@@ -60,9 +60,11 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                         model.write_model_info(model_info_file, main_model_info)
                         
                         with open(md_info_file, 'w') as f:
-                            f.write(md(model_info['description']))
+                            if model_info['description']:
+                                f.write(md(model_info['description']))
                             f.write('\n\n---\n\n')
-                            f.write(md(main_model_info['description']))
+                            if main_model_info['description']:
+                                f.write(md(main_model_info['description']))
 
                     # set model_count
                     model_count = model_count+1
