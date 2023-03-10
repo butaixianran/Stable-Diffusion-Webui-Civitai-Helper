@@ -18,7 +18,7 @@ def scan_model(max_size_preview, skip_nsfw_preview):
     # scan_log = ""
     for model_type, model_folder in model.folders.items():
         util.printD("Scanning path: " + model_folder)
-        for root, dirs, files in os.walk(model_folder):
+        for root, dirs, files in os.walk(model_folder, followlinks=True):
             for filename in files:
                 # check ext
                 item = os.path.join(root, filename)
