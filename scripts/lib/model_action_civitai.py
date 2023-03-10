@@ -61,10 +61,10 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                         
                         with open(md_info_file, 'w') as f:
                             if model_info['description']:
-                                f.write(md(model_info['description']))
+                                f.write(md(str(model_info['description'].encode('utf-8'))))
                             f.write('\n\n---\n\n')
                             if main_model_info['description']:
-                                f.write(md(main_model_info['description']))
+                                f.write(md(str(main_model_info['description'].encode('utf-8'))))
 
                     # set model_count
                     model_count = model_count+1
