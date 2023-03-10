@@ -30,7 +30,7 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                     model_info_file = base + civitai.suffix + '.main' + model.info_ext
                     md_info_file = base + civitai.suffix + '.md'
                     # check info file
-                    if not os.path.isfile(info_file):
+                    if not os.path.isfile(info_file) or not os.path.isfile(model_info_file):
                         util.printD("Creating model info for: " + filename)
                         # get model's sha256
                         hash = util.gen_file_sha256(item)
