@@ -470,7 +470,6 @@ def check_model_new_version_by_path(model_path:str) -> tuple:
 def check_models_new_version_by_model_types(model_types:list, delay:float=0.5) -> list:
     util.printD("Checking models' new version")
 
-
     if not model_types:
         return []
 
@@ -504,13 +503,15 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=0.5) -
                 if ext in model.exts:
                     # find a model
                     r = check_model_new_version_by_path(item)
+                    # delay before next request, to prevent to be treat as DDoS 
+                    util.printD(f"delay:{delay} second")
+                    time.sleep(delay)
+
                     if not r:
                         continue
 
                     # add to list
                     new_versions.append(r)
-                    # delay before next request, to prevent to be treat as DDoS 
-                    util.printD(f"delay:{delay}")
-                    time.sleep(delay)
+
 
     return new_versions
