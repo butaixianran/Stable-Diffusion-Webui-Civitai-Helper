@@ -1,11 +1,12 @@
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Civitai模型。
 
-## 关于版本
-最新版本功能更强大，但是是实验性质的。如果碰到问题，可以去Civitai下载1.2.1老版本: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
+[Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
 
 # 功能
 * 扫描所有模型，从Civitai下载模型信息和预览图 
+* 通过civitai模型的页面url，连接一个本地模型和civitai模型的信息
+* 批量检查本地模型，在civitai上的新版本
 * 修改了内置的"Extra Network"模型卡片，每个卡片增加了如下功能按钮:
   - 🖼: 修改文字"replace preview"为这个图标
   - 🌐: 在新标签页打开这个模型的Civitai页面
@@ -20,7 +21,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 # 使用方法
 ## 更新你的SD webui
-本扩展需要取到 Extra Network的卡片列表id。**这个是从2023-02-06，才添加到SD webui里面的。**  
+本扩展需要取到 Extra Network的卡片列表id。**这个是2023-02-06，才添加到SD webui里面的。**  
 
 所以，如果你用的版本比这个早，你就需要先更新你的SD Webui！
 
@@ -62,6 +63,29 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 每次当Extra Network刷新，他都会删除掉额外的修改，我们的按钮就会消失。这时你就需要点击`Refresh Civitai Helper`把这些功能添加回去。
 
+
+## 根据URL获取1个模型信息
+如果无法在civitai上找到你的模型的SHA256，但你还是希望能把你的模型连接到一个civitai模型，你可以在本扩展页面，从列表中选择你的模型，并提供一个civitai模型页面的url。
+
+点击按钮之后，扩展就会下载那个civitai模型的信息，作为你这个本地模型的信息使用。  
+
+![](img/get_one_model_info.jpg)  
+
+
+## 批量检查模型新版本
+你可以按照模型类型，批量检查你的本地模型，在civitai上的新版本。你可以选择多个模型类型。  
+![](img/check_model_new_version.jpg)  
+
+检查新版本的时候，每检查完一个模型，都会有一个1秒的延迟，所以速度有点慢。
+
+这是为了保护Civitai避免因为本插件而短暂陷入类似DDos的局面。有些云服务商，有类似“免费用户每秒API请求不能超过1次”的保护机制。Civitai还没有这种设置。但我们还是得自觉保护它。因为如果它挂了，对大家都没有好处。    
+
+**检查完毕之后**，就会如下图，在UI上显示所有找到的新版本的信息。  
+
+每个模型新版本，都有2个链接。第一个是这个模型的网页。第二个是这个新版本的下载地址。   
+![](img/check_model_new_version_output.jpg)
+
+
 ## 预览图
 Extra Network支持两种预览图命名：`model_name.png` 和 `model_name.preview.png`。其中，`model_name.png`优先级较高。
 
@@ -87,10 +111,6 @@ civitai不是每个图片都有关键词，一个模型中，也不是所有预�
 这些情况下，你可以在插件上，通过提供模型页面的url，来获取模型信息文件。（v1.3新功能）
 
 
-## 检查模型新版本
-在每一个检查模型新版本的请求之后，都会有一个1秒的延迟，所以速度有点慢。
-
-这是为了保护Civitai避免因为本插件而短暂陷入类似DDos的局面。有些云服务商，有类似“免费用户每秒的API请求不能超过1次”的保护机制。Civitai还没有这种设置。但我们还是得自觉保护它的服务器。因为如果它挂了，对大家都没有好处。  
 
 
 ## Civitai本身挂掉
