@@ -84,14 +84,15 @@ def on_ui_tabs():
                     model_name_drop = gr.Dropdown(choices=no_info_model_names, label="Model", value="ckp", multiselect=False)
 
                 model_url_or_id = gr.Textbox(label="Civitai URL or Model ID", lines=1, value="")
-                get_civitai_model_info_by_id_btn = gr.Button(value="Get 1 Model Info from Civitai")
+                get_civitai_model_info_by_id_btn = gr.Button(value="Get 1 Model Info from Civitai", variant="primary")
                 get_model_by_id_log_md = gr.Markdown("")
 
         with gr.Box():
             with gr.Column():
                 gr.Markdown("### Check models' new version")
-                model_types_ckbg = gr.CheckboxGroup(choices=model_types, label="Model Types", value=["lora"])
-                check_models_new_version_btn = gr.Button(value="Check New Version from Civitai")
+                with gr.Row():
+                    model_types_ckbg = gr.CheckboxGroup(choices=model_types, label="Model Types", value=["lora"])
+                    check_models_new_version_btn = gr.Button(value="Check New Version from Civitai", variant="primary")
 
                 check_models_new_version_log_md = gr.Markdown("It takes time, just wait. Check console log for detail")
 
@@ -101,7 +102,7 @@ def on_ui_tabs():
                 with gr.Row():
                     open_url_with_js_ckb = gr.Checkbox(label="Open Url At Client Side", value=open_url_with_js, elem_id="ch_open_url_with_js_ckb")
 
-                save_setting_btn = gr.Button(value="Save Setting", variant="primary", elem_id="ch_save_setting_btn")
+                save_setting_btn = gr.Button(value="Save Setting", elem_id="ch_save_setting_btn")
                 general_log_md = gr.Markdown(value="", elem_id="ch_general_log_md")
 
         # hidden component for js, not in any tab

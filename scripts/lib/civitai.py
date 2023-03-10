@@ -503,6 +503,7 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=0.5) -
                 if ext in model.exts:
                     # find a model
                     r = check_model_new_version_by_path(item)
+
                     # delay before next request, to prevent to be treat as DDoS 
                     util.printD(f"delay:{delay} second")
                     time.sleep(delay)
@@ -512,6 +513,8 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=0.5) -
 
                     # add to list
                     new_versions.append(r)
+
+
 
 
     return new_versions
