@@ -9,7 +9,7 @@ from . import civitai
 
 # scan model to generate SHA256, then use this SHA256 to get model info from civitai
 # return output msg
-def scan_model(low_memory_sha, max_size_preview, skip_nsfw_preview):
+def scan_model(max_size_preview, skip_nsfw_preview):
     util.printD("Start scan_model")
 
     output = ""
@@ -31,7 +31,7 @@ def scan_model(low_memory_sha, max_size_preview, skip_nsfw_preview):
                     if not os.path.isfile(info_file):
                         util.printD("Creating model info for: " + filename)
                         # get model's sha256
-                        hash = util.gen_file_sha256(item, low_memory_sha)
+                        hash = util.gen_file_sha256(item)
 
                         if not hash:
                             output = "failed generating SHA256 for model:" + filename
@@ -68,7 +68,7 @@ def scan_model(low_memory_sha, max_size_preview, skip_nsfw_preview):
 
 # Get model info by model type, name and url
 # output is log info to display on markdown component
-def get_model_info_by_id(model_type, model_name, model_url_or_id, max_size_preview, skip_nsfw_preview):
+def get_model_info_by_input(model_type, model_name, model_url_or_id, max_size_preview, skip_nsfw_preview):
     output = ""
     # parse model id
     model_id = civitai.get_model_id_from_url(model_url_or_id)
@@ -114,3 +114,47 @@ def get_model_info_by_id(model_type, model_name, model_url_or_id, max_size_previ
 
     output = "Model Info saved to: " + info_file
     return output
+
+
+
+# check models' new version and output to UI as markdown doc
+def check_models_new_version_to_md(model_types:list) -> str:
+    new_versions = civitai.check_models_new_version_by_model_types(model_types, 1)
+
+    count = 0
+    output = ""
+    if not new_versions:
+        output = "No model has new version"
+    else:
+        output = "Found new version for following models:  <br>"
+        for new_version in new_versions:
+            count = count+1
+            model_path, model_id, model_name, new_verion_id, new_version_name, description, download_url, img_url = new_version
+            # in md, each part is something like this:
+            # [model_name](model_url)
+            # version description
+            url = civitai.url_dict["modelPage"]+str(model_id)
+
+            part = f'<b>Model: <a href="{url}" target="_blank">{model_name}</a></b> <br>'
+            part = part + f"File: {model_path}  <br>"
+            if download_url:
+                part = part + f'New Version: <a href="{download_url}" target="_blank">{new_version_name}</a>'
+            else:
+                part = part + f"New Version: {new_version_name}"
+            part = part + "  <br>"
+
+            # description
+            if description:
+                part = part + description
+
+            # preview image            
+            if img_url:
+                part = part + f"![]({img_url})  <br>"
+
+            output = output + part
+
+    util.printD(f"Done. Find {count} models have new version. Check UI for detail.")
+
+    return output
+
+

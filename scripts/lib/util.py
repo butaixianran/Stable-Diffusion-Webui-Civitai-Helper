@@ -8,7 +8,7 @@ def printD(msg):
     print(f"Civitai Helper: {msg}")
 
 
-def gen_file_sha256(filname, is_low_memory=True):
+def gen_file_sha256(filname):
     printD("Calculate SHA256")
     hash_sha256 = hashlib.sha256()
     with open(filname, "rb") as f:
@@ -17,13 +17,6 @@ def gen_file_sha256(filname, is_low_memory=True):
         printD("Using Memory Optimized SHA256")
         for chunk in iter(lambda: f.read(4096), b""):
             hash_sha256.update(chunk)
-        # if is_low_memory:
-        #     printD("Using Memory Optimized SHA256")
-        #     for chunk in iter(lambda: f.read(4096), b""):
-        #         hash_sha256.update(chunk)
-        # else:
-        #     hash_sha256.update(f.read())
-
 
     hash_value =  hash_sha256.hexdigest()
     printD("sha256: " + hash_value)

@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 # handle msg between js and python side
 import os
+import time
 import json
 import re
 import requests
@@ -281,8 +282,8 @@ def get_model_id_from_url(url:str) -> str:
 
     if url.isnumeric():
         # is already an id
-        id = url
-        return ""
+        id = str(url)
+        return id
     
     s = url.split("/")
     if len(s) < 2:
@@ -308,7 +309,7 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
         return
 
     if not os.path.isfile(model_path):
-        util.printD("model_path is not a file")
+        util.printD("model_path is not a file: "+model_path)
         return
 
     base, ext = os.path.splitext(model_path)
@@ -349,3 +350,167 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
                             # we only need 1 preview image
                             break
 
+
+# check new version for a model by model path
+# return (model_path, model_id, model_name, new_verion_id, new_version_name, description, download_url, img_url)
+def check_model_new_version_by_path(model_path:str) -> tuple:
+    if not model_path:
+        util.printD("model_path is empty")
+        return
+
+    if not os.path.isfile(model_path):
+        util.printD("model_path is not a file: "+model_path)
+        return
+    
+    # get model info file name
+    base, ext = os.path.splitext(model_path)
+    info_file = base + suffix + model.info_ext
+    
+    if not os.path.isfile(info_file):
+        return
+    
+    # get model info
+    model_info_file = model.load_model_info(info_file)
+    if not model_info_file:
+        return
+
+    if "id" not in model_info_file.keys():
+        return
+    
+    local_version_id = model_info_file["id"]
+    if not local_version_id:
+        return
+
+    if "modelId" not in model_info_file.keys():
+        return
+    
+    model_id = model_info_file["modelId"]
+    if not model_id:
+        return
+    
+    # get model info by id from civitai
+    model_info = get_model_info_by_id(model_id)
+    if not model_info:
+        return
+    
+    if "modelVersions" not in model_info.keys():
+        return
+    
+    modelVersions = model_info["modelVersions"]
+    if not modelVersions:
+        return
+    
+    if not len(modelVersions):
+        return
+    
+    current_version = modelVersions[0]
+    if not current_version:
+        return
+    
+    if "id" not in current_version.keys():
+        return
+    
+    current_version_id = current_version["id"]
+    if not current_version_id:
+        return
+
+    util.printD(f"Compare version id, local: {local_version_id}, remote: {current_version_id} ")
+    if current_version_id == local_version_id:
+        return
+
+    model_name = ""
+    if "name" in model_info.keys():
+        model_name = model_info["name"]
+    
+    if not model_name:
+        model_name = ""
+
+
+    new_version_name = ""
+    if "name" in current_version.keys():
+        new_version_name = current_version["name"]
+    
+    if not new_version_name:
+        new_version_name = ""
+
+    description = ""
+    if "description" in current_version.keys():
+        description = current_version["description"]
+    
+    if not description:
+        description = ""
+
+    downloadUrl = ""
+    if "downloadUrl" in current_version.keys():
+        downloadUrl = current_version["downloadUrl"]
+    
+    if not downloadUrl:
+        downloadUrl = ""
+
+    # get 1 preview image
+    img_url = ""
+    if "images" in current_version.keys():
+        if current_version["images"]:
+            if current_version["images"][0]:
+                if "url" in current_version["images"][0].keys():
+                    img_url = current_version["images"][0]["url"]
+                    if not img_url:
+                        img_url = ""
+
+
+    
+    return (model_path, model_id, model_name, current_version_id, new_version_name, description, downloadUrl, img_url)
+
+
+
+
+# check model's new version
+# parameter: delay - float, how many seconds to delay between each request to civitai
+# return: new_versions - a list for all new versions, each one is (model_path, model_id, model_name, new_verion_id, new_version_name, description, download_url, img_url)
+def check_models_new_version_by_model_types(model_types:list, delay:float=0.5) -> list:
+    util.printD("Checking models' new version")
+
+
+    if not model_types:
+        return []
+
+    # check model types, which cloud be a string as 1 type
+    mts = []
+    if type(model_types) == str:
+        mts.append(model_types)
+    elif type(model_types) == list:
+        mts = model_types
+    else:
+        util.printD("Unknow model types:")
+        util.printD(model_types)
+        return []
+
+    # output is a markdown document string to show a list of new versions on UI
+    output = ""
+    # new version list
+    new_versions = []
+
+    # walk all models
+    for model_type, model_folder in model.folders.items():
+        if model_type not in mts:
+            continue
+
+        util.printD("Scanning path: " + model_folder)
+        for root, dirs, files in os.walk(model_folder):
+            for filename in files:
+                # check ext
+                item = os.path.join(root, filename)
+                base, ext = os.path.splitext(item)
+                if ext in model.exts:
+                    # find a model
+                    r = check_model_new_version_by_path(item)
+                    if not r:
+                        continue
+
+                    # add to list
+                    new_versions.append(r)
+                    # delay before next request, to prevent to be treat as DDoS 
+                    util.printD(f"delay:{delay}")
+                    time.sleep(delay)
+
+    return new_versions

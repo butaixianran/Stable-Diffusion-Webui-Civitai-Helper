@@ -53,57 +53,56 @@ def on_ui_tabs():
     with gr.Blocks(css="button {background-color: #228be6}") as civitai_helper:
 
         # init
-        low_memory_sha = setting.data["model"]["low_memory_sha"]
         max_size_preview = setting.data["model"]["max_size_preview"]
         skip_nsfw_preview = setting.data["model"]["skip_nsfw_preview"]
         open_url_with_js = setting.data["general"]["open_url_with_js"]
-        check_model_version_at_startup = setting.data["general"]["check_model_version_at_startup"]
 
         model_types = list(model.folders.keys())
         no_info_model_names = civitai.get_model_names_by_input("ckp", False)
 
 
-        # UI will have 3 tabs: 
-        # Model Info: Scan model or force a model link to civitai model info by model id or url
-        # General: Setting for general use, also can save setting for all tabs
-        # Tool: handy functions, like making all model info readable.
-        with gr.Tab("Model"):
-            with gr.Box():
-                with gr.Column():
-                    gr.Markdown("### Scan Models for Civitai")
-                    with gr.Row():
-                        low_memory_sha_ckb = gr.Checkbox(label="Memory Optimized SHA256", value=low_memory_sha, visible=False, elem_id="ch_low_memory_sha_ckb")
-                        max_size_preview_ckb = gr.Checkbox(label="Download Max Size Preview", value=max_size_preview, elem_id="ch_max_size_preview_ckb")
-                        skip_nsfw_preview_ckb = gr.Checkbox(label="SKip NSFW Preview images", value=skip_nsfw_preview, elem_id="ch_skip_nsfw_preview_ckb")
+        # with gr.Tab("Model"):
+        with gr.Box():
+            with gr.Column():
+                gr.Markdown("### Scan Models for Civitai")
+                with gr.Row():
+                    max_size_preview_ckb = gr.Checkbox(label="Download Max Size Preview", value=max_size_preview, elem_id="ch_max_size_preview_ckb")
+                    skip_nsfw_preview_ckb = gr.Checkbox(label="SKip NSFW Preview images", value=skip_nsfw_preview, elem_id="ch_skip_nsfw_preview_ckb")
 
-                    # with gr.Row():
-                    scan_model_civitai_btn = gr.Button(value="Scan", variant="primary", elem_id="ch_scan_model_civitai_btn")
-                    # with gr.Row():
-                    scan_model_log_md = gr.Markdown(value="Scanning takes time, just wait. Check console log for detail", elem_id="ch_scan_model_log_md")
+                # with gr.Row():
+                scan_model_civitai_btn = gr.Button(value="Scan", variant="primary", elem_id="ch_scan_model_civitai_btn")
+                # with gr.Row():
+                scan_model_log_md = gr.Markdown(value="Scanning takes time, just wait. Check console log for detail", elem_id="ch_scan_model_log_md")
 
-            
-            with gr.Box():
-                with gr.Column():
-                    gr.Markdown("### Get Civitai Model Info by Model ID")
-                    with gr.Row():
-                        model_type_drop = gr.Dropdown(choices=model_types, label="Model Type", value="ckp", multiselect=False)
-                        empty_info_only_ckb = gr.Checkbox(label="Only Show Models have no Info file", value=False, elem_id="cn_empty_info_only_ckb")
-                        model_name_drop = gr.Dropdown(choices=no_info_model_names, label="Model", value="ckp", multiselect=False)
+        
+        with gr.Box():
+            with gr.Column():
+                gr.Markdown("### Get Civitai Model Info by Model ID")
+                with gr.Row():
+                    model_type_drop = gr.Dropdown(choices=model_types, label="Model Type", value="ckp", multiselect=False)
+                    empty_info_only_ckb = gr.Checkbox(label="Only Show Models have no Info file", value=False, elem_id="cn_empty_info_only_ckb")
+                    model_name_drop = gr.Dropdown(choices=no_info_model_names, label="Model", value="ckp", multiselect=False)
 
-                    model_url_or_id = gr.Textbox(label="Civitai URL or Model ID", lines=1, value="")
-                    get_civitai_model_info_by_id_btn = gr.Button(value="Get 1 Model Info from Civitai")
-                    get_model_by_id_log_md = gr.Markdown("")
+                model_url_or_id = gr.Textbox(label="Civitai URL or Model ID", lines=1, value="")
+                get_civitai_model_info_by_id_btn = gr.Button(value="Get 1 Model Info from Civitai")
+                get_model_by_id_log_md = gr.Markdown("")
+
+        with gr.Box():
+            with gr.Column():
+                gr.Markdown("### Check models' new version")
+                model_types_ckbg = gr.CheckboxGroup(choices=model_types, label="Model Types", value=["lora"])
+                check_models_new_version_btn = gr.Button(value="Check New Version from Civitai")
+
+                check_models_new_version_log_md = gr.Markdown("It takes time, just wait. Check console log for detail")
 
 
-        with gr.Tab("General"):
-            with gr.Row():
-                open_url_with_js_ckb = gr.Checkbox(label="Open Url At Client Side", value=open_url_with_js, elem_id="ch_open_url_with_js_ckb")
-                check_model_version_at_startup_ckb = gr.Checkbox(label="Check Model Version At Startup", value=open_url_with_js, visible=False, elem_id="ch_check_model_version_at_startup_ckb")
+        with gr.Box():
+            with gr.Column():
+                with gr.Row():
+                    open_url_with_js_ckb = gr.Checkbox(label="Open Url At Client Side", value=open_url_with_js, elem_id="ch_open_url_with_js_ckb")
 
-            save_setting_btn = gr.Button(value="Save Setting", variant="primary", elem_id="ch_save_setting_btn")
-            general_log_md = gr.Markdown(value="", elem_id="ch_general_log_md")
-
-        # with gr.Tab("Tool"):
+                save_setting_btn = gr.Button(value="Save Setting", variant="primary", elem_id="ch_save_setting_btn")
+                general_log_md = gr.Markdown(value="", elem_id="ch_general_log_md")
 
         # hidden component for js, not in any tab
         js_msg_txtbox = gr.Textbox(label="Request Msg From Js", visible=False, lines=1, value="", elem_id="ch_js_msg_txtbox")
@@ -114,16 +113,18 @@ def on_ui_tabs():
 
         # ====events====
         # Model
-        scan_model_civitai_btn.click(model_action_civitai.scan_model, inputs=[low_memory_sha_ckb, max_size_preview_ckb, skip_nsfw_preview_ckb], outputs=scan_model_log_md)
+        scan_model_civitai_btn.click(model_action_civitai.scan_model, inputs=[max_size_preview_ckb, skip_nsfw_preview_ckb], outputs=scan_model_log_md)
         
         model_type_drop.change(get_model_names_by_input, inputs=[model_type_drop, empty_info_only_ckb], outputs=model_name_drop)
         empty_info_only_ckb.change(get_model_names_by_input, inputs=[model_type_drop, empty_info_only_ckb], outputs=model_name_drop)
         
-        get_civitai_model_info_by_id_btn.click(model_action_civitai.get_model_info_by_id, inputs=[model_type_drop, model_name_drop, model_url_or_id, max_size_preview_ckb, skip_nsfw_preview_ckb], outputs=get_model_by_id_log_md)
+        get_civitai_model_info_by_id_btn.click(model_action_civitai.get_model_info_by_input, inputs=[model_type_drop, model_name_drop, model_url_or_id, max_size_preview_ckb, skip_nsfw_preview_ckb], outputs=get_model_by_id_log_md)
+
+        check_models_new_version_btn.click(model_action_civitai.check_models_new_version_to_md, inputs=model_types_ckbg, outputs=check_models_new_version_log_md)
 
 
         # General
-        save_setting_btn.click(setting.save_from_input, inputs=[low_memory_sha_ckb, max_size_preview_ckb, skip_nsfw_preview_ckb, open_url_with_js_ckb, check_model_version_at_startup_ckb], outputs=general_log_md)
+        save_setting_btn.click(setting.save_from_input, inputs=[max_size_preview_ckb, skip_nsfw_preview_ckb, open_url_with_js_ckb], outputs=general_log_md)
 
         # js action
         js_open_url_btn.click(js_action_civitai.open_model_url, inputs=[js_msg_txtbox, open_url_with_js_ckb], outputs=py_msg_txtbox)

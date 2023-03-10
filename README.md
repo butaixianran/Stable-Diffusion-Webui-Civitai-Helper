@@ -5,7 +5,12 @@
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
 
 ## Notice
-Latest v1.3 is powerful but experimental. If you have issue, you can go back to 1.2.1 by download old version from Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
+From today(2023-02-10), Civitai is redirecting it's API request to Cloudflare's real human checking page. Which makes this extension can not get any information back from civitai.  
+
+If you have this issue. You have to wait for civitai to update its API usage. If you don't have this issue, you are luckier than me.  
+
+## About Version
+Latest version is powerful but experimental. If you have issue, you can go back to 1.2.1 by download old version from Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
 
 # Features
 * Scans all models to download model information and preview images from Civitai.  

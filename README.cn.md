@@ -2,7 +2,12 @@
 Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Civitai模型。
 
 ## 注意
-最新的v1.3版本，强大，但是是实验性质的。如果碰到问题，可以去Civitai下载1.2.1老版本: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
+从今天开始(2023-03-10)，Civitai开始把对他的API调用，强制转移到Cloudflare的真人验证页面。导致本扩展暂时从Civitai取不到任何信息。  
+
+如果你有这个问题，只能等Civitai官方取消这个真人验证。如果你没有这个问题，你比我运气好。   
+
+## 关于版本
+最新版本功能更强大，但是是实验性质的。如果碰到问题，可以去Civitai下载1.2.1老版本: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
 
 # 功能
 * 扫描所有模型，从Civitai下载模型信息和预览图 
