@@ -87,7 +87,7 @@ On civitai, a model's preview images may not has prompt. This extension will che
 ## SHA256
 To create a file SHA256, it need to read the whole file to generate a hash code. It gonna be slow for big files. 
 
-Default, it uses a Memory Optimized SHA256 which won't stuck your system. So, do not uncheck it if you want to use your computer when scanning.  
+Default, it uses a Memory Optimized SHA256 which won't stuck your system.(It is the only choice in latest version). So, do not uncheck it if you want to use your computer when scanning.  
 
 There are 2 cases this hash code can not find the model on civitai:
 * Some old models, which do not have SHA256 code on civitai.
@@ -95,6 +95,16 @@ There are 2 cases this hash code can not find the model on civitai:
 
 In these cases, you can always link a model to civitai by filling its URL in this extension from v1.3.
 
+## Checking Model's New Version
+It has 1 second delay after each model's new version checking request. So it is a little slow. 
+
+This is to protect Civitai from facing issue like DDos from this extension. Some cloud service provider has a rule as "no more than 1 API request in a second for free user". Civitai doesn't have it yet, but we still need to protect its server. If it is down, then this extension is no good for you anyway.  
+
+
+## Civitai down
+When Civitai is facing some issue like DDos, it gonna put civitai under Cloudflare's protection, which gonna re-direct our API request to a real human checking page. Then this extension can not get any information back.  
+
+In that case, juse wait for civitai's recovering. It cloud take 6-8 hours.  
 
 Enjoy!
 
