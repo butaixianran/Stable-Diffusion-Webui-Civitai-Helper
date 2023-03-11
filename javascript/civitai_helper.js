@@ -186,7 +186,7 @@ function use_preview_prompt(event, model_type, search_term){
 }
 
 
-onUiLoaded(async () => {
+onUiLoaded(() => {
 
 
 
@@ -361,9 +361,7 @@ onUiLoaded(async () => {
 
 
     //run it once
-    await update_card_for_civitai();
-
-
+    setTimeout(function() { update_card_for_civitai(); }, 10000);
 });
 
 

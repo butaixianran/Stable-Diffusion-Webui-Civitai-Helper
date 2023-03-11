@@ -40,6 +40,7 @@ def scan_model(max_size_preview, skip_nsfw_preview):
 
                     # find a model
                     # get info file
+                    model_info = None
                     info_file = base + civitai.suffix + model.info_ext
                     # check info file
                     if not os.path.isfile(info_file):
@@ -62,13 +63,16 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                         # write model info to file
                         model.write_model_info(info_file, model_info)
                         util.printD("---------- check if lora config is present")
-                        modelname = os.path.basename(base)
-                        if modelname not in lora_configs:
-                            util.printD("---------- it's not, saving lora config")
-                            lora_configs[modelname] = default_lora_config.copy()
-                            if "trainedWords" in model_info:
-                                lora_configs[modelname]["prompt"] = model_info["trainedWords"]
-
+                        
+                    else:
+                        model_info = model.load_model_info(info_file)
+                        
+                    modelname = os.path.basename(base)
+                    if modelname not in lora_configs:
+                        util.printD("---------- it's not, saving lora config")
+                        lora_configs[modelname] = default_lora_config.copy()
+                        if "trainedWords" in model_info:
+                            lora_configs[modelname]["prompt"] = model_info["trainedWords"]
                     # set model_count
                     model_count = model_count+1
 
@@ -77,6 +81,7 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                     image_count = image_count+1
 
     setting.data["jokker"]["lora_configs"] = lora_configs
+    setting.save()
     # scan_log = "Done"
 
     output = f"Done. Scanned {model_count} models, checked {image_count} images"
