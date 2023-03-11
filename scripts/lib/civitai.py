@@ -235,7 +235,7 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
     # get information from filter
     # only get those model names don't have a civitai model info file
     model_names = []
-    for root, dirs, files in os.walk(model_folder):
+    for root, dirs, files in os.walk(model_folder, followlinks=True):
         for filename in files:
             item = os.path.join(root, filename)
             # check extension
@@ -555,7 +555,7 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> 
             continue
 
         util.printD("Scanning path: " + model_folder)
-        for root, dirs, files in os.walk(model_folder):
+        for root, dirs, files in os.walk(model_folder, followlinks=True):
             for filename in files:
                 # check ext
                 item = os.path.join(root, filename)

@@ -77,7 +77,7 @@ def get_model_names_by_type(model_type:str) -> list:
     # get information from filter
     # only get those model names don't have a civitai model info file
     model_names = []
-    for root, dirs, files in os.walk(model_folder):
+    for root, dirs, files in os.walk(model_folder, followlinks=True):
         for filename in files:
             item = os.path.join(root, filename)
             # check extension
@@ -106,7 +106,7 @@ def get_model_path_by_type_and_name(model_type:str, model_name:str) -> str:
     # model could be in subfolder, need to walk.
     model_root = ""
     model_path = ""
-    for root, dirs, files in os.walk(folder):
+    for root, dirs, files in os.walk(folder, followlinks=True):
         for filename in files:
             if filename == model_name:
                 # find model
