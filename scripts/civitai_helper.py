@@ -24,7 +24,7 @@ from scripts.lib import setting
 from scripts.lib import civitai
 
 # init
-version = "1.4.1"
+version = "1.4.2"
 model.get_custom_model_folder()
 setting.load()
 

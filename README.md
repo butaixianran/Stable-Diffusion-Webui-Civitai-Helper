@@ -125,6 +125,9 @@ Enjoy!
 
 
 # Change Log
+## v1.4.2
+* ignore .vae file in model folder when scanning
+
 ## v1.4.1
 * When checking new versions, also searching and ignore already existed ones.
 * Add version number to the bottom of this extension's tab
