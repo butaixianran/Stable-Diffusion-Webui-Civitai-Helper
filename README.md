@@ -1,6 +1,9 @@
 ### Language
 [中文](README.cn.md)
 
+# Notice
+After updating to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
+
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
 
@@ -15,7 +18,7 @@ Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-
   - 🌐: Open this model's Civitai url in a new tab
   - 💡: Add this model's trigger words to prompt
   - 🏷: Use this model's preview image's prompt
- 
+
 
 # Install
 Go to SD webui's extension tab, go to `Install from url` sub-tab.
