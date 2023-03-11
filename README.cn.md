@@ -18,6 +18,9 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 然后使用设置页面的"Reload UI"按钮重新加载UI。  
 
+(不了解git的国内用户，请勿通过SD webui的插件界面安装或升级。  
+它安装的时候，是调用你本地的git命令行工具来下载，不是通过浏览器下载。你的git工具没有配置过代理和SSL的话，就会下载失败)  
+
 
 # 使用方法
 ## 更新你的SD webui
