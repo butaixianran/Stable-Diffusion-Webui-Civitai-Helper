@@ -75,67 +75,28 @@ function getActiveNegativePrompt() {
 
 
 //button's click function
-async function open_model_url(event, model_type, search_term){
+async function open_model_url(event){
     console.log("start open_model_url");
 
     //get hidden components of extension 
     let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
-    let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
-
-
-    //msg to python side
-    let msg = {
-        "action": "",
-        "model_type": "",
-        "search_term": "",
-        "prompt": "",
-        "neg_prompt": "",
-    }
-
-
-    msg["action"] = "open_url";
-    msg["model_type"] = model_type;
-    msg["search_term"] = search_term;
-    msg["prompt"] = "";
-    msg["neg_prompt"] = "";
-
-    // fill to msg box
-    js_msg_txtbox.value = JSON.stringify(msg);
-    js_msg_txtbox.dispatchEvent(new Event("input"));
-
-    //get old py msg
-    let py_msg = get_ch_py_msg();
-
-    //click hidden button
-    js_open_url_btn.click();
+    //let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
+	let js_load_lora_configs_btn = gradioApp().getElementById("ch_js_load_lora_configs_btn");
+	
+	//click hidden button
+    js_load_lora_configs_btn.click();
 
     // stop parent event
     event.stopPropagation()
     event.preventDefault()
-
-    //check response msg from python
+	
+	//check response msg from python
     let new_py_msg = await get_new_ch_py_msg("");
     console.log("new_py_msg:");
     console.log(new_py_msg);
-
-    //check msg
-    if (new_py_msg) {
-        let py_msg_json = JSON.parse(new_py_msg);
-        //check for url
-        if (py_msg_json && py_msg_json.content) {
-            if (py_msg_json.content.url) {
-                window.open(py_msg_json.content.url, "_blank");
-            }
-
-        }
-
-
-    }
-
-    
-    console.log("end open_model_url");
-
-
+	
+	console.log("end open_model_url");
+	return;
 }
 
 function add_trigger_words(event, model_type, search_term){
@@ -225,7 +186,7 @@ function use_preview_prompt(event, model_type, search_term){
 }
 
 
-onUiLoaded(() => {
+onUiLoaded(async () => {
 
 
 
@@ -243,7 +204,7 @@ onUiLoaded(() => {
     // notice: javascript can not get response from python side
     // so, these buttons just sent request to python
     // then, python side gonna open url and update prompt text box, without telling js side.
-    function update_card_for_civitai(){
+    async function update_card_for_civitai(){
 
 
         //change all "replace preview" into an icon
@@ -258,7 +219,28 @@ onUiLoaded(() => {
         let cards = null;
         let need_to_add_buttons = false;
         let is_thumb_mode = false;
+
+		console.log("start load_lora_configs");
+
+		//get hidden components of extension 
+		let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
+		//let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
+		let js_load_lora_configs_btn = gradioApp().getElementById("ch_js_load_lora_configs_btn");
+
+		//click hidden button
+		js_load_lora_configs_btn.click();
+
+		// stop parent event
+		//event.stopPropagation()
+		//event.preventDefault()
+
+		//check response msg from python
+		let new_py_msg = await get_new_ch_py_msg("");
+		let lora_confs = JSON.parse(new_py_msg);
+		lora_confs = JSON.parse(lora_confs["content"]["lora_configs"]);
+
         for (const tab_prefix of tab_prefix_list) {
+
             for (const js_model_type of model_type_list) {
                 //get model_type for python side
                 switch (js_model_type) {
@@ -306,20 +288,30 @@ onUiLoaded(() => {
                     replace_preview_btn = card.querySelector(".actions .additional a");
                     if (replace_preview_btn) {
                         if (replace_preview_btn.innerHTML == "replace preview") {
+							let additionalDiv = card.querySelector(".actions .additional ul");
                             need_to_add_buttons = true;
-                            replace_preview_btn.innerHTML = "🖼";
-                            if (!is_thumb_mode) {
-                                replace_preview_btn.style.margin = "0px 5px";
-                                replace_preview_btn.style.fontSize = "200%";
-                            }
-
+                            additionalDiv.innerHTML = '<li><div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.1" min="0" max="2" /><input class="weightActive" type="checkbox" /></div></div></li><li><div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div></li><li><a href="#" title="replace preview image with currently selected in gallery" onclick="return saveCardPreview(event, \''+model_type+'\', \''+search_term+'\')" target="_blank">replace preview</a><a class="textright" href="#" title="replace preview image with currently selected in gallery" onclick="return open_model_url(event)" target="_blank">save</a></li>';
                         }
                     }
+					
+					let nameSpan = card.querySelector(".actions .name");
+					let weightValueInput = card.querySelector(".actions .weightValueText");
+					let weightInput = card.querySelector(".actions .weightValue");
+					let promptInput = card.querySelector(".actions .promptValue");
+					let weightActive = card.querySelector(".actions .weightActive");
+					let promptActive = card.querySelector(".actions .promptActive");
+					let loraCardName = nameSpan.innerHTML;
+					if (loraCardName in lora_confs === true) {
+						weightValueInput.value = lora_confs[loraCardName]["weight"];
+						weightInput.value = lora_confs[loraCardName]["weight"];
+						promptInput.value = lora_confs[loraCardName]["prompt"];
+						weightActive.checked = lora_confs[loraCardName]["weight_active"];
+						promptActive.checked = lora_confs[loraCardName]["prompt_active"];
+					}
 
                     if (!need_to_add_buttons) {
                         continue;
                     }
-
 
                     // search_term node
                     // search_term = subfolder path + model name + ext
@@ -335,57 +327,9 @@ onUiLoaded(() => {
                         console.log("search_term is empty for cards in " + extra_network_id);
                         continue;
                     }
-
-
-                    //get ul node, which is the parent of all buttons
-                    ul_node = card.querySelector(".actions .additional ul");
-
-                    // then we need to add 3 buttons to each ul node:
-                    let open_url_node = document.createElement("button");
-                    // open_url_node.href = "#";
-                    open_url_node.innerHTML = "🌐";
-                    if (!is_thumb_mode) {
-                        open_url_node.style.fontSize = "200%";
-                        open_url_node.style.margin = "0px 5px";
-                    }
-                    open_url_node.title = "Open this model's civitai url";
-                    open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
-
-                    let add_trigger_words_node = document.createElement("button");
-                    // add_trigger_words_node.href = "#";
-                    add_trigger_words_node.innerHTML = "💡";
-                    if (!is_thumb_mode) {
-                        add_trigger_words_node.style.fontSize = "200%";
-                        add_trigger_words_node.style.margin = "0px 5px";
-                    }
-                    add_trigger_words_node.title = "Add trigger words to prompt";
-                    add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+search_term+"')");
-
-                    let use_preview_prompt_node = document.createElement("button");
-                    // use_preview_prompt_node.href = "#";
-                    use_preview_prompt_node.innerHTML = "🏷";
-                    if (!is_thumb_mode) {
-                        use_preview_prompt_node.style.fontSize = "200%";
-                        use_preview_prompt_node.style.margin = "0px 5px";
-                    }
-                    use_preview_prompt_node.title = "Use prompt from preview image";
-                    use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
-
-                    //add to card
-                    ul_node.appendChild(open_url_node);
-                    ul_node.appendChild(add_trigger_words_node);
-                    ul_node.appendChild(use_preview_prompt_node);
-
-
-
-
-                }
-
-                
+                }       
             }
         }
-
-
     }
 
 
@@ -413,12 +357,11 @@ onUiLoaded(() => {
         ch_refresh.onclick = update_card_for_civitai;
 
         extra_toolbar.appendChild(ch_refresh);
-
     }
 
 
     //run it once
-    update_card_for_civitai();
+    await update_card_for_civitai();
 
 
 });

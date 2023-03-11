@@ -18,6 +18,12 @@ data = {
         "open_url_with_js": True,
     },
     "tool":{
+    },
+    "jokker":{
+        "min_weight": 0,
+        "max_weight": 2,
+        "lora_configs":{
+        }
     }
 }
 
@@ -73,8 +79,9 @@ def load():
     return
 
 # save setting from parameter
-def save_from_input(max_size_preview, skip_nsfw_preview, open_url_with_js):
+def save_from_input(max_size_preview, skip_nsfw_preview, open_url_with_js, minWeight, maxWeight):
     global data
+    lora_configs = data["jokker"]["lora_configs"]
     data = {
         "model":{
             "max_size_preview": max_size_preview,
@@ -84,6 +91,11 @@ def save_from_input(max_size_preview, skip_nsfw_preview, open_url_with_js):
             "open_url_with_js": open_url_with_js,
         },
         "tool":{
+        },
+        "jokker":{
+            "min_weight": minWeight,
+            "max_weight": maxWeight,
+            "lora_configs": lora_configs
         }
     }
 

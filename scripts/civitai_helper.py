@@ -19,6 +19,7 @@ from modules import script_callbacks
 from modules import shared
 from scripts.lib import model
 from scripts.lib import js_action_civitai
+from scripts.lib import js_action_jokker
 from scripts.lib import model_action_civitai
 from scripts.lib import setting
 from scripts.lib import civitai
@@ -57,6 +58,8 @@ def on_ui_tabs():
         max_size_preview = setting.data["model"]["max_size_preview"]
         skip_nsfw_preview = setting.data["model"]["skip_nsfw_preview"]
         open_url_with_js = setting.data["general"]["open_url_with_js"]
+        min_weight_js = setting.data["jokker"]["min_weight"]
+        max_weight_js = setting.data["jokker"]["max_weight"]
 
         model_types = list(model.folders.keys())
         no_info_model_names = civitai.get_model_names_by_input("ckp", False)
@@ -106,6 +109,12 @@ def on_ui_tabs():
                 save_setting_btn = gr.Button(value="Save Setting", elem_id="ch_save_setting_btn")
                 general_log_md = gr.Markdown(value="", elem_id="ch_general_log_md")
 
+        with gr.Box():
+            with gr.Column():
+                gr.Markdown("### Lora Card Extra Network UI")
+                with gr.Row():
+                    min_weight_js_cb = gr.Number(label="Minimum value for weight slider", value=min_weight_js, elem_id="ch_min_weight_js_cb")
+                    max_weight_js_cb = gr.Number(label="Maximum value for weight slider", value=max_weight_js, elem_id="ch_max_weight_js_cb")
 
         # ====Footer====
         gr.Markdown(f"<center>version:{version}</center>")
@@ -116,6 +125,7 @@ def on_ui_tabs():
         js_open_url_btn = gr.Button(value="Open Model Url", visible=False, elem_id="ch_js_open_url_btn")
         js_add_trigger_words_btn = gr.Button(value="Add Trigger Words", visible=False, elem_id="ch_js_add_trigger_words_btn")
         js_use_preview_prompt_btn = gr.Button(value="Use Prompt from Preview Image", visible=False, elem_id="ch_js_use_preview_prompt_btn")
+        js_load_lora_configs_btn = gr.Button(value="Load lora configs", visible=False, elem_id="ch_js_load_lora_configs_btn")
 
         # ====events====
         # Model
@@ -130,12 +140,13 @@ def on_ui_tabs():
 
 
         # General
-        save_setting_btn.click(setting.save_from_input, inputs=[max_size_preview_ckb, skip_nsfw_preview_ckb, open_url_with_js_ckb], outputs=general_log_md)
+        save_setting_btn.click(setting.save_from_input, inputs=[max_size_preview_ckb, skip_nsfw_preview_ckb, open_url_with_js_ckb, min_weight_js_cb, max_weight_js_cb], outputs=general_log_md)
 
         # js action
         js_open_url_btn.click(js_action_civitai.open_model_url, inputs=[js_msg_txtbox, open_url_with_js_ckb], outputs=py_msg_txtbox)
         js_add_trigger_words_btn.click(js_action_civitai.add_trigger_words, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, img2img_prompt])
         js_use_preview_prompt_btn.click(js_action_civitai.use_preview_image_prompt, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, txt2img_neg_prompt, img2img_prompt, img2img_neg_prompt])
+        js_load_lora_configs_btn.click(js_action_jokker.load_lora_configs, inputs=[js_msg_txtbox], outputs=py_msg_txtbox)
 
     # the third parameter is the element id on html, with a "tab_" as prefix
     return (civitai_helper , "Civitai Helper", "civitai_helper"),

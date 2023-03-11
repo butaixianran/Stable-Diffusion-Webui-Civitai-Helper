@@ -4,13 +4,20 @@ import os
 from . import util
 from . import model
 from . import civitai
-
+from . import setting
 
 
 # scan model to generate SHA256, then use this SHA256 to get model info from civitai
 # return output msg
 def scan_model(max_size_preview, skip_nsfw_preview):
     util.printD("Start scan_model")
+    lora_configs = setting.data["jokker"]["lora_configs"]
+    default_lora_config = {
+        "weight": (setting.data["jokker"]["min_weight"]+setting.data["jokker"]["max_weight"])/2,
+        "prompt": [],
+        "weight_active": True,
+        "prompt_active": True
+    }
 
     output = ""
     model_count = 0
@@ -54,6 +61,13 @@ def scan_model(max_size_preview, skip_nsfw_preview):
 
                         # write model info to file
                         model.write_model_info(info_file, model_info)
+                        util.printD("---------- check if lora config is present")
+                        modelname = os.path.basename(base)
+                        if modelname not in lora_configs:
+                            util.printD("---------- it's not, saving lora config")
+                            lora_configs[modelname] = default_lora_config.copy()
+                            if "trainedWords" in model_info:
+                                lora_configs[modelname]["prompt"] = model_info["trainedWords"]
 
                     # set model_count
                     model_count = model_count+1
@@ -62,7 +76,7 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                     civitai.get_preview_image_by_model_path(item, max_size_preview, skip_nsfw_preview)
                     image_count = image_count+1
 
-
+    setting.data["jokker"]["lora_configs"] = lora_configs
     # scan_log = "Done"
 
     output = f"Done. Scanned {model_count} models, checked {image_count} images"
