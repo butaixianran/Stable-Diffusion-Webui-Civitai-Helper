@@ -22,9 +22,10 @@ from scripts.lib import js_action_civitai
 from scripts.lib import model_action_civitai
 from scripts.lib import setting
 from scripts.lib import civitai
+from scripts.lib import util
+
 
 # init
-version = "1.4.2"
 model.get_custom_model_folder()
 setting.load()
 
@@ -57,6 +58,8 @@ def on_ui_tabs():
         max_size_preview = setting.data["model"]["max_size_preview"]
         skip_nsfw_preview = setting.data["model"]["skip_nsfw_preview"]
         open_url_with_js = setting.data["general"]["open_url_with_js"]
+        always_display = setting.data["general"]["always_display"]
+        show_btn_on_thumb = setting.data["general"]["show_btn_on_thumb"]
 
         model_types = list(model.folders.keys())
         no_info_model_names = civitai.get_model_names_by_input("ckp", False)
@@ -78,14 +81,14 @@ def on_ui_tabs():
         
         with gr.Box():
             with gr.Column():
-                gr.Markdown("### Get Civitai Model Info by Model ID")
+                gr.Markdown("### Get Civitai Model Info by Model Page URL")
                 with gr.Row():
                     model_type_drop = gr.Dropdown(choices=model_types, label="Model Type", value="ckp", multiselect=False)
                     empty_info_only_ckb = gr.Checkbox(label="Only Show Models have no Info file", value=False, elem_id="cn_empty_info_only_ckb")
                     model_name_drop = gr.Dropdown(choices=no_info_model_names, label="Model", value="ckp", multiselect=False)
 
                 model_url_or_id = gr.Textbox(label="Civitai URL or Model ID", lines=1, value="")
-                get_civitai_model_info_by_id_btn = gr.Button(value="Get 1 Model Info from Civitai", variant="primary")
+                get_civitai_model_info_by_id_btn = gr.Button(value="Get Model Info from Civitai", variant="primary")
                 get_model_by_id_log_md = gr.Markdown("")
 
         with gr.Box():
@@ -100,15 +103,29 @@ def on_ui_tabs():
 
         with gr.Box():
             with gr.Column():
+                gr.Markdown("### Download Model")
+                with gr.Row():
+                    dl_model_type_drop = gr.Dropdown(choices=model_types, label="Model Type", value="ckp", multiselect=False)
+                    dl_subfolder_drop = gr.Dropdown(choices=model_types, label="Sub-folder", value="", multiselect=False)
+
+                dl_model_url_or_id = gr.Textbox(label="Civitai URL or Model ID", lines=1, value="")
+                dl_civitai_model_by_id_btn = gr.Button(value="Download Model from Civitai", variant="primary")
+
+
+        with gr.Box():
+            with gr.Column():
+                gr.Markdown("### Other Setting")
                 with gr.Row():
                     open_url_with_js_ckb = gr.Checkbox(label="Open Url At Client Side", value=open_url_with_js, elem_id="ch_open_url_with_js_ckb")
+                    always_display_ckb = gr.Checkbox(label="Always Display Buttons", value=always_display, elem_id="ch_always_display_ckb")
+                    show_btn_on_thumb_ckb = gr.Checkbox(label="Show Button On Thumb Mode", value=show_btn_on_thumb, elem_id="ch_show_btn_on_thumb_ckb")
 
                 save_setting_btn = gr.Button(value="Save Setting", elem_id="ch_save_setting_btn")
                 general_log_md = gr.Markdown(value="", elem_id="ch_general_log_md")
 
 
         # ====Footer====
-        gr.Markdown(f"<center>version:{version}</center>")
+        gr.Markdown(f"<center>version:{util.version}</center>")
 
         # ====hidden component for js, not in any tab====
         js_msg_txtbox = gr.Textbox(label="Request Msg From Js", visible=False, lines=1, value="", elem_id="ch_js_msg_txtbox")
@@ -130,7 +147,7 @@ def on_ui_tabs():
 
 
         # General
-        save_setting_btn.click(setting.save_from_input, inputs=[max_size_preview_ckb, skip_nsfw_preview_ckb, open_url_with_js_ckb], outputs=general_log_md)
+        save_setting_btn.click(setting.save_from_input, inputs=[max_size_preview_ckb, skip_nsfw_preview_ckb, open_url_with_js_ckb, always_display_ckb, show_btn_on_thumb_ckb], outputs=general_log_md)
 
         # js action
         js_open_url_btn.click(js_action_civitai.open_model_url, inputs=[js_msg_txtbox, open_url_with_js_ckb], outputs=py_msg_txtbox)

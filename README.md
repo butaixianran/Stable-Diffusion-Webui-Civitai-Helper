@@ -1,6 +1,9 @@
 ### Language
 [中文](README.cn.md)
 
+# Notice
+After updating to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
+
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
 
@@ -125,6 +128,12 @@ Enjoy!
 
 
 # Change Log
+## v1.5
+* Addtional button now works on thumbnail mode
+* Add option to always show addtion button, for touch screen.
+* Download a model by model page's url into SD webui's model folder
+* Display checking new version's result as gallery and download new version into SD Webui's model folder
+
 ## v1.4.2
 * ignore .vae file in model folder when scanning
 

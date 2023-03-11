@@ -3,6 +3,8 @@ import hashlib
 import requests
 import shutil
 
+version = "1.4.3"
+
 # print for debugging
 def printD(msg):
     print(f"Civitai Helper: {msg}")
