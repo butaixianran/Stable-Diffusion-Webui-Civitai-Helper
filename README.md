@@ -2,7 +2,7 @@
 [中文](README.cn.md)
 
 # Notice
-After updating to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
+After install or update to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
 
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
