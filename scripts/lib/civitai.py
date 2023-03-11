@@ -351,9 +351,65 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
                             break
 
 
+
+# search local model by version id in 1 folder, no subfolder
+# return - model_info
+def search_local_model_info_by_version_id(folder:str, version_id:int) -> dict:
+    util.printD("Searching local model by version id")
+    util.printD("folder: " + folder)
+    util.printD("version_id: " + str(version_id))
+
+    if not folder:
+        util.printD("folder is none")
+        return
+
+    if not os.path.isdir(folder):
+        util.printD("folder is not a dir")
+        return
+    
+    if not version_id:
+        util.printD("version_id is none")
+        return
+    
+    # search civitai model info file
+    for filename in os.listdir(folder):
+        # check ext
+        base, ext = os.path.splitext(filename)
+        if ext == model.info_ext:
+            # find info file
+            if len(base) < 9:
+                # not a civitai info file
+                continue
+
+            if base[-8:] == suffix:
+                # find a civitai info file
+                path = os.path.join(folder, filename)
+                model_info = model.load_model_info(path)
+                if not model_info:
+                    continue
+
+                if "id" not in model_info.keys():
+                    continue
+
+                id = model_info["id"]
+                if not id:
+                    continue
+
+                # util.printD(f"Compare version id, src: {id}, target:{version_id}")
+                if str(id) == str(version_id):
+                    # find the one
+                    return model_info
+                    
+
+    return
+
+
+
+
+
 # check new version for a model by model path
 # return (model_path, model_id, model_name, new_verion_id, new_version_name, description, download_url, img_url)
-def check_model_new_version_by_path(model_path:str) -> tuple:
+def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
     if not model_path:
         util.printD("model_path is empty")
         return
@@ -390,6 +446,10 @@ def check_model_new_version_by_path(model_path:str) -> tuple:
     
     # get model info by id from civitai
     model_info = get_model_info_by_id(model_id)
+    # delay before next request, to prevent to be treat as DDoS 
+    util.printD(f"delay:{delay} second")
+    time.sleep(delay)
+
     if not model_info:
         return
     
@@ -467,7 +527,7 @@ def check_model_new_version_by_path(model_path:str) -> tuple:
 # check model's new version
 # parameter: delay - float, how many seconds to delay between each request to civitai
 # return: new_versions - a list for all new versions, each one is (model_path, model_id, model_name, new_verion_id, new_version_name, description, download_url, img_url)
-def check_models_new_version_by_model_types(model_types:list, delay:float=0.5) -> list:
+def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> list:
     util.printD("Checking models' new version")
 
     if not model_types:
@@ -502,13 +562,32 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=0.5) -
                 base, ext = os.path.splitext(item)
                 if ext in model.exts:
                     # find a model
-                    r = check_model_new_version_by_path(item)
-
-                    # delay before next request, to prevent to be treat as DDoS 
-                    util.printD(f"delay:{delay} second")
-                    time.sleep(delay)
+                    r = check_model_new_version_by_path(item, delay)
 
                     if not r:
+                        continue
+
+                    model_path, model_id, model_name, current_version_id, new_version_name, description, downloadUrl, img_url = r
+                    # check exist
+                    if not current_version_id:
+                        continue
+
+                    # check this version id in list
+                    is_already_in_list = False
+                    for new_version in new_versions:
+                        if current_version_id == new_version[3]:
+                            # already in list
+                            is_already_in_list = True
+                            break
+
+                    if is_already_in_list:
+                        util.printD("New version is already in list")
+                        continue
+
+                    # search this new version id to check if this model is already downloaded
+                    target_model_info = search_local_model_info_by_version_id(root, current_version_id)
+                    if target_model_info:
+                        util.printD("New version is already existed")
                         continue
 
                     # add to list
@@ -518,3 +597,5 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=0.5) -
 
 
     return new_versions
+
+

@@ -54,7 +54,7 @@ def write_model_info(path, model_info):
 
 
 def load_model_info(path):
-    util.printD("Load model info from file: " + path)
+    # util.printD("Load model info from file: " + path)
     model_info = None
     with open(path, 'r') as f:
         try:

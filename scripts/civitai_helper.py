@@ -24,6 +24,7 @@ from scripts.lib import setting
 from scripts.lib import civitai
 
 # init
+version = "1.4.1"
 model.get_custom_model_folder()
 setting.load()
 
@@ -105,7 +106,11 @@ def on_ui_tabs():
                 save_setting_btn = gr.Button(value="Save Setting", elem_id="ch_save_setting_btn")
                 general_log_md = gr.Markdown(value="", elem_id="ch_general_log_md")
 
-        # hidden component for js, not in any tab
+
+        # ====Footer====
+        gr.Markdown(f"<center>version:{version}</center>")
+
+        # ====hidden component for js, not in any tab====
         js_msg_txtbox = gr.Textbox(label="Request Msg From Js", visible=False, lines=1, value="", elem_id="ch_js_msg_txtbox")
         py_msg_txtbox = gr.Textbox(label="Response Msg From Python", visible=False, lines=1, value="", elem_id="ch_py_msg_txtbox")
         js_open_url_btn = gr.Button(value="Open Model Url", visible=False, elem_id="ch_js_open_url_btn")

@@ -125,6 +125,10 @@ Enjoy!
 
 
 # Change Log
+## v1.4.1
+* When checking new versions, also searching and ignore already existed ones.
+* Add version number to the bottom of this extension's tab
+
 ## v1.4
 * Support checking model's new version, display the result in UI and offer download url
 * Remove addintional sub tabs on extension tab. make ui simpler.

@@ -44,7 +44,7 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                             output = "Failed to get model_info"
                             util.printD(output)
                             return output+", check console log for detail"
-                        
+
                         # write model info to file
                         model.write_model_info(info_file, model_info)
 
