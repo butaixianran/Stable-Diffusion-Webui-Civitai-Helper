@@ -75,28 +75,65 @@ function getActiveNegativePrompt() {
 
 
 //button's click function
-async function open_model_url(event){
+async function open_model_url(event, model_type, search_term){
     console.log("start open_model_url");
 
     //get hidden components of extension 
     let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
-    //let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
-	let js_load_lora_configs_btn = gradioApp().getElementById("ch_js_load_lora_configs_btn");
-	
-	//click hidden button
-    js_load_lora_configs_btn.click();
+    let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
+
+
+    //msg to python side
+    let msg = {
+        "action": "",
+        "model_type": "",
+        "search_term": "",
+        "prompt": "",
+        "neg_prompt": "",
+    }
+
+
+    msg["action"] = "open_url";
+    msg["model_type"] = model_type;
+    msg["search_term"] = search_term;
+    msg["prompt"] = "";
+    msg["neg_prompt"] = "";
+
+    // fill to msg box
+    js_msg_txtbox.value = JSON.stringify(msg);
+    js_msg_txtbox.dispatchEvent(new Event("input"));
+
+    //get old py msg
+    let py_msg = get_ch_py_msg();
+
+    //click hidden button
+    js_open_url_btn.click();
 
     // stop parent event
     event.stopPropagation()
     event.preventDefault()
-	
-	//check response msg from python
+
+    //check response msg from python
     let new_py_msg = await get_new_ch_py_msg("");
     console.log("new_py_msg:");
     console.log(new_py_msg);
-	
-	console.log("end open_model_url");
-	return;
+
+    //check msg
+    if (new_py_msg) {
+        let py_msg_json = JSON.parse(new_py_msg);
+        //check for url
+        if (py_msg_json && py_msg_json.content) {
+            if (py_msg_json.content.url) {
+                window.open(py_msg_json.content.url, "_blank");
+            }
+
+        }
+
+
+    }
+
+    
+    console.log("end open_model_url");
 }
 
 function add_trigger_words(event, model_type, search_term){
@@ -284,15 +321,101 @@ onUiLoaded(() => {
                 // get all card nodes
                 cards = extra_network_node.querySelectorAll(".card");
                 for (let card of cards) {
+					
                     // replace preview text button into icon
                     replace_preview_btn = card.querySelector(".actions .additional a");
                     if (replace_preview_btn) {
                         if (replace_preview_btn.innerHTML == "replace preview") {
-							let additionalDiv = card.querySelector(".actions .additional ul");
                             need_to_add_buttons = true;
-                            additionalDiv.innerHTML = '<li><div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.1" min="0" max="2" /><input class="weightActive" type="checkbox" /></div></div></li><li><div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div></li><li><a href="#" title="replace preview image with currently selected in gallery" onclick="return saveCardPreview(event, \''+model_type+'\', \''+search_term+'\')" target="_blank">replace preview</a><a class="textright" href="#" title="replace preview image with currently selected in gallery" onclick="return open_model_url(event)" target="_blank">save</a></li>';
+                            replace_preview_btn.innerHTML = "🖼";
+                            if (!is_thumb_mode) {
+								replace_preview_btn.className = "linkButton";
+                            }
                         }
                     }
+					
+					if (!need_to_add_buttons) {
+                        continue;
+                    }
+					
+					// search_term node
+                    // search_term = subfolder path + model name + ext
+                    search_term_node = card.querySelector(".actions .additional .search_term");
+                    if (!search_term_node){
+                        console.log("can not find search_term node for cards in " + extra_network_id);
+                        continue;
+                    }
+
+                    // get search_term
+                    search_term = search_term_node.innerHTML;
+                    if (!search_term) {
+                        console.log("search_term is empty for cards in " + extra_network_id);
+                        continue;
+                    }
+					
+					//get ul node, which is the parent of all buttons
+                    ul_node = card.querySelector(".actions .additional ul");
+					
+					// then we need to add 3 buttons to each ul node:
+                    let open_url_node = document.createElement("a");
+                    // open_url_node.href = "#";
+                    open_url_node.innerHTML = "🌐";
+                    if (!is_thumb_mode) {
+						open_url_node.className = "linkButton";
+                    }
+                    open_url_node.title = "Open this model's civitai url";
+                    open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
+
+                    let add_trigger_words_node = document.createElement("a");
+                    // add_trigger_words_node.href = "#";
+                    add_trigger_words_node.innerHTML = "💡";
+                    if (!is_thumb_mode) {
+						add_trigger_words_node.className = "linkButton";
+                    }
+                    add_trigger_words_node.title = "Add trigger words to prompt";
+                    add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+search_term+"')");
+
+                    let use_preview_prompt_node = document.createElement("a");
+                    // use_preview_prompt_node.href = "#";
+                    use_preview_prompt_node.innerHTML = "🏷";
+                    if (!is_thumb_mode) {
+                        use_preview_prompt_node.className = "linkButton";
+                    }
+                    use_preview_prompt_node.title = "Use prompt from preview image";
+                    use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
+					
+					let save_node = document.createElement("a");
+                    // use_preview_prompt_node.href = "#";
+                    save_node.innerHTML = "💾";
+                    if (!is_thumb_mode) {
+                        save_node.className = "linkButton";
+                    }
+                    save_node.title = "Save config";
+                    save_node.setAttribute("onclick","save_config(event, '"+model_type+"', '"+search_term+"')");
+					
+					let jokker_li = document.createElement("li");
+					let jokker_li2 = document.createElement("li");
+					let button_li = document.createElement("li");
+					
+					
+					jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.1" min="0" max="2" /><input class="weightActive" type="checkbox" /></div></div>';
+					
+					jokker_li2.innerHTML = '<div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div>'
+
+					button_li.appendChild(open_url_node);
+					button_li.appendChild(add_trigger_words_node);
+                    button_li.appendChild(use_preview_prompt_node);
+					button_li.appendChild(save_node);
+					open_url_node.parentNode.insertBefore(replace_preview_btn, open_url_node)
+					
+                    //add to card
+					ul_node.appendChild(jokker_li);
+					ul_node.appendChild(jokker_li2);
+                    ul_node.appendChild(button_li);
+                    
+					
+					
+					
 					
 					let nameSpan = card.querySelector(".actions .name");
 					let weightValueInput = card.querySelector(".actions .weightValueText");
@@ -308,25 +431,6 @@ onUiLoaded(() => {
 						weightActive.checked = lora_confs[loraCardName]["weight_active"];
 						promptActive.checked = lora_confs[loraCardName]["prompt_active"];
 					}
-
-                    if (!need_to_add_buttons) {
-                        continue;
-                    }
-
-                    // search_term node
-                    // search_term = subfolder path + model name + ext
-                    search_term_node = card.querySelector(".actions .additional .search_term");
-                    if (!search_term_node){
-                        console.log("can not find search_term node for cards in " + extra_network_id);
-                        continue;
-                    }
-
-                    // get search_term
-                    search_term = search_term_node.innerHTML;
-                    if (!search_term) {
-                        console.log("search_term is empty for cards in " + extra_network_id);
-                        continue;
-                    }
                 }       
             }
         }
