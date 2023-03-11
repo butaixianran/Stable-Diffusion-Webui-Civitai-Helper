@@ -24,6 +24,13 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                 item = os.path.join(root, filename)
                 base, ext = os.path.splitext(item)
                 if ext in model.exts:
+                    # ignore vae file
+                    if len(base) > 4:
+                        if base[-4:] == model.vae_suffix:
+                            # find .vae
+                            util.printD("This is a vae file: " + filename)
+                            continue
+
                     # find a model
                     # get info file
                     info_file = base + civitai.suffix + model.info_ext

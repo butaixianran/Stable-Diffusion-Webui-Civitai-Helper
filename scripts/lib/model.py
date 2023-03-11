@@ -21,7 +21,7 @@ folders = {
 
 exts = (".bin", ".pt", ".safetensors", ".ckpt")
 info_ext = ".info"
-
+vae_suffix = ".vae"
 
 
 # get cusomter model path
