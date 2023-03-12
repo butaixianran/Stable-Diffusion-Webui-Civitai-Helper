@@ -266,6 +266,62 @@ function save_lora_config(event, model_type, search_term){
 
 }
 
+function get_card_prompt(search_term_to_find) {
+	let extra_network_id = "txt2img_lora_cards";
+	let extra_network_node = gradioApp().getElementById(extra_network_id);
+	
+	let cards = extra_network_node.querySelectorAll(".card");
+	let foundCard = null;
+	for (let card of cards) {
+		
+		// search_term node
+		// search_term = subfolder path + model name + ext
+		let search_term_node = card.querySelector(".actions .additional .search_term");
+		if (!search_term_node){
+			console.log("can not find search_term node for cards in " + extra_network_id);
+			continue;
+		}
+
+		// get search_term
+		let search_term = search_term_node.innerHTML.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");;
+		if (!search_term) {
+			console.log("search_term is empty for cards in " + extra_network_id);
+			continue;
+		}
+
+		if (search_term.includes(search_term_to_find)) {
+			foundCard = card;
+			break;
+		}
+	}
+	if (foundCard) {
+		let weightValueInput = foundCard.querySelector(".actions .weightValueText");
+		let weightInput = foundCard.querySelector(".actions .weightValue");
+		let promptInput = foundCard.querySelector(".actions .promptValue");
+		let weightActive = foundCard.querySelector(".actions .weightActive");
+		let promptActive = foundCard.querySelector(".actions .promptActive");
+		
+		let finalPrompt = "";
+		let loraPrompt = "<lora:"+search_term_to_find+":";
+		if (weightActive.checked) {
+			loraPrompt += weightValueInput.value;
+			loraPrompt += ">";
+			finalPrompt += loraPrompt;
+		}
+		
+		if (promptActive.checked) {
+			if (weightActive.checked) {
+				finalPrompt += ", ";
+			}
+			finalPrompt += promptInput.value;
+		}
+
+		return finalPrompt;
+		
+	}
+	return null;
+}
+
 onUiLoaded(() => {
 
 
@@ -480,6 +536,14 @@ onUiLoaded(() => {
 						weightValueInput.onchange = function() {
 							weightInput.value = this.value;
 						}
+						
+						let onclickValue = card.getAttribute('onclick');
+						let regex = /\((.*?)\)/;
+						
+						let found = onclickValue.match(regex)[0];
+						
+						let splits = found.split(',');
+						card.setAttribute('onclick','if (event.currentTarget == event.explicitOriginalTarget) {return cardClicked'+splits[0]+',get_card_prompt("'+loraCardName+'"),'+splits[2]+"}");
 					}
 
                     //add to card
@@ -518,7 +582,8 @@ onUiLoaded(() => {
 
 
     //run it once
-    setTimeout(function() { update_card_for_civitai(); }, 10000);
+    setTimeout(function() { update_card_for_civitai(); }, 3000);
+	//update_card_for_civitai();
 });
 
 
