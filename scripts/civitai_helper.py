@@ -126,6 +126,7 @@ def on_ui_tabs():
         js_add_trigger_words_btn = gr.Button(value="Add Trigger Words", visible=False, elem_id="ch_js_add_trigger_words_btn")
         js_use_preview_prompt_btn = gr.Button(value="Use Prompt from Preview Image", visible=False, elem_id="ch_js_use_preview_prompt_btn")
         js_load_lora_configs_btn = gr.Button(value="Load lora configs", visible=False, elem_id="ch_js_load_lora_configs_btn")
+        js_save_lora_configs_btn = gr.Button(value="Save lora configs", visible=False, elem_id="ch_js_save_lora_configs_btn")
 
         # ====events====
         # Model
@@ -147,6 +148,7 @@ def on_ui_tabs():
         js_add_trigger_words_btn.click(js_action_civitai.add_trigger_words, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, img2img_prompt])
         js_use_preview_prompt_btn.click(js_action_civitai.use_preview_image_prompt, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, txt2img_neg_prompt, img2img_prompt, img2img_neg_prompt])
         js_load_lora_configs_btn.click(js_action_jokker.load_lora_configs, inputs=[js_msg_txtbox], outputs=py_msg_txtbox)
+        js_save_lora_configs_btn.click(js_action_jokker.save_lora_configs, inputs=[js_msg_txtbox], outputs=py_msg_txtbox)
 
     # the third parameter is the element id on html, with a "tab_" as prefix
     return (civitai_helper , "Civitai Helper", "civitai_helper"),
