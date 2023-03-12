@@ -1,6 +1,7 @@
 # -*- coding: UTF-8 -*-
 # handle msg between js and python side
 import os
+import time
 from . import util
 from . import model
 from . import civitai
@@ -47,6 +48,11 @@ def scan_model(max_size_preview, skip_nsfw_preview):
                         
                         # use this sha256 to get model info from civitai
                         model_info = civitai.get_model_info_by_hash(hash)
+                        # delay 1 second for ti
+                        if model_type == "ti":
+                            util.printD("Delay 1 second for TI")
+                            time.sleep(1)
+
                         if model_info is None:
                             output = "Failed to get model_info"
                             util.printD(output)
