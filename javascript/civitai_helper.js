@@ -222,6 +222,49 @@ function use_preview_prompt(event, model_type, search_term){
 
 }
 
+function save_lora_config(event, model_type, search_term){
+    console.log("start save lora config");
+
+    //get hidden components of extension 
+    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
+    let js_save_lora_configs_btn = gradioApp().getElementById("ch_js_save_lora_configs_btn");
+
+
+
+    //msg to python side
+    let msg = {
+        "action": "",
+        "model_type": "",
+        "search_term": "",
+        "prompt": "",
+        "neg_prompt": "",
+    }
+
+    msg["action"] = "save_lora_configs";
+    msg["model_type"] = model_type;
+	msg["search_term"] = search_term;
+
+	let card = event.srcElement.parentElement.parentElement;
+	let weightValue = card.querySelector(".weightValueText");
+	let promptValue = card.querySelector(".promptValue");
+	let weightActive = card.querySelector(".weightActive");
+	let promptActive = card.querySelector(".promptActive");
+
+    msg["prompt"] = weightValue.value + ";" + promptValue.value + ";" + weightActive.checked + ";" +promptActive.checked;
+
+    // fill to msg box
+    js_msg_txtbox.value = JSON.stringify(msg);
+    js_msg_txtbox.dispatchEvent(new Event("input"));
+
+    //click hidden button
+    js_save_lora_configs_btn.click();
+
+    console.log("end save lora config");
+
+    event.stopPropagation()
+    event.preventDefault()
+
+}
 
 onUiLoaded(() => {
 
@@ -384,53 +427,63 @@ onUiLoaded(() => {
                     use_preview_prompt_node.title = "Use prompt from preview image";
                     use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
 					
-					let save_node = document.createElement("a");
-                    // use_preview_prompt_node.href = "#";
-                    save_node.innerHTML = "💾";
-                    if (!is_thumb_mode) {
-                        save_node.className = "linkButton";
-                    }
-                    save_node.title = "Save config";
-                    save_node.setAttribute("onclick","save_config(event, '"+model_type+"', '"+search_term+"')");
-					
-					let jokker_li = document.createElement("li");
-					let jokker_li2 = document.createElement("li");
 					let button_li = document.createElement("li");
 					
-					
-					jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.1" min="0" max="2" /><input class="weightActive" type="checkbox" /></div></div>';
-					
-					jokker_li2.innerHTML = '<div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div>'
-
 					button_li.appendChild(open_url_node);
 					button_li.appendChild(add_trigger_words_node);
                     button_li.appendChild(use_preview_prompt_node);
-					button_li.appendChild(save_node);
+					
 					open_url_node.parentNode.insertBefore(replace_preview_btn, open_url_node)
 					
-                    //add to card
-					ul_node.appendChild(jokker_li);
-					ul_node.appendChild(jokker_li2);
-                    ul_node.appendChild(button_li);
-                    
+					if (model_type == "lora") {
+						let save_node = document.createElement("a");
+						// use_preview_prompt_node.href = "#";
+						save_node.innerHTML = "💾";
+						if (!is_thumb_mode) {
+							save_node.className = "linkButton";
+						}
+						
+						let modelname = search_term.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");
+						save_node.title = "Save config";
+						save_node.setAttribute("onclick","save_lora_config(event, '"+model_type+"', '"+modelname+"')");
+						
+						button_li.appendChild(save_node);
+						
+						let jokker_li = document.createElement("li");
+						let jokker_li2 = document.createElement("li");
+						// TODO: get min max from backend
+						jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.1" min="0" max="2" /><input class="weightActive" type="checkbox" /></div></div>';
 					
-					
-					
-					
-					let nameSpan = card.querySelector(".actions .name");
-					let weightValueInput = card.querySelector(".actions .weightValueText");
-					let weightInput = card.querySelector(".actions .weightValue");
-					let promptInput = card.querySelector(".actions .promptValue");
-					let weightActive = card.querySelector(".actions .weightActive");
-					let promptActive = card.querySelector(".actions .promptActive");
-					let loraCardName = nameSpan.innerHTML;
-					if (loraCardName in lora_confs === true) {
-						weightValueInput.value = lora_confs[loraCardName]["weight"];
-						weightInput.value = lora_confs[loraCardName]["weight"];
-						promptInput.value = lora_confs[loraCardName]["prompt"];
-						weightActive.checked = lora_confs[loraCardName]["weight_active"];
-						promptActive.checked = lora_confs[loraCardName]["prompt_active"];
+						jokker_li2.innerHTML = '<div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div>';
+						ul_node.appendChild(jokker_li);
+						ul_node.appendChild(jokker_li2);
+						
+						let nameSpan = card.querySelector(".actions .name");
+						let weightValueInput = card.querySelector(".actions .weightValueText");
+						let weightInput = card.querySelector(".actions .weightValue");
+						let promptInput = card.querySelector(".actions .promptValue");
+						let weightActive = card.querySelector(".actions .weightActive");
+						let promptActive = card.querySelector(".actions .promptActive");
+						let loraCardName = nameSpan.innerHTML;
+						if (loraCardName in lora_confs === true) {
+							weightValueInput.value = lora_confs[loraCardName]["weight"];
+							weightInput.value = lora_confs[loraCardName]["weight"];
+							promptInput.value = lora_confs[loraCardName]["prompt"];
+							weightActive.checked = lora_confs[loraCardName]["weight_active"];
+							promptActive.checked = lora_confs[loraCardName]["prompt_active"];
+						}
+						
+						weightInput.onchange = function() {
+							weightValueInput.value = this.value;
+						}
+						
+						weightValueInput.onchange = function() {
+							weightInput.value = this.value;
+						}
 					}
+
+                    //add to card
+                    ul_node.appendChild(button_li);
                 }       
             }
         }
