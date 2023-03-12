@@ -11,9 +11,9 @@ Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-
 
 # Features
 * Scans all models to download model information and preview images from Civitai.  
-* Link 1 model to a civitai model by civitai model's url
+* Link local model to a civitai model by civitai model's url
 * Download a model(with info+preview) by Civitai Url into SD's model folder or subfolder.
-* Downloading can resume from break-point, which is good for large file. 
+* Downloading can resume at break-point, which is good for large file. 
 * Checking all your local model's new version from Civitai
 * Download a new version directly into SD model folder (with info+preview)
 * Modified Built-in "Extra Network" cards, to add the following buttons on each card:
@@ -21,8 +21,8 @@ Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-
   - 🌐: Open this model's Civitai url in a new tab
   - 💡: Add this model's trigger words to prompt
   - 🏷: Use this model's preview image's prompt
-* Also support thumbnail mode of Extra Network
-* Option to always show addtional buttons, so now they work with touch screen.  
+* Above buttons support thumbnail mode of Extra Network
+* Option to always show additional buttons, to work with touchscreen.  
 
 
 # Install
