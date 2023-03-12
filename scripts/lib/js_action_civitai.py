@@ -8,7 +8,7 @@ from . import util
 from . import model
 from . import civitai
 from . import msg_handler
-
+from . import downloader
 
 
 
@@ -23,8 +23,9 @@ def open_model_url(msg, open_url_with_js):
     if not result:
         util.printD("Parsing js ms failed")
         return
-
-    action, model_type, search_term, prompt, neg_prompt = result
+    
+    model_type = result["model_type"]
+    search_term = result["search_term"]
 
     model_info = civitai.load_model_info_by_search_term(model_type, search_term)
     if not model_info:
@@ -73,7 +74,9 @@ def add_trigger_words(msg):
         util.printD("Parsing js ms failed")
         return
     
-    action, model_type, search_term, prompt, neg_prompt = result
+    model_type = result["model_type"]
+    search_term = result["search_term"]
+    prompt = result["prompt"]
 
 
     model_info = civitai.load_model_info_by_search_term(model_type, search_term)
@@ -122,7 +125,10 @@ def use_preview_image_prompt(msg):
         util.printD("Parsing js ms failed")
         return
     
-    action, model_type, search_term, prompt, neg_prompt = result
+    model_type = result["model_type"]
+    search_term = result["search_term"]
+    prompt = result["prompt"]
+    neg_prompt = result["neg_prompt"]
 
 
     model_info = civitai.load_model_info_by_search_term(model_type, search_term)
@@ -170,3 +176,73 @@ def use_preview_image_prompt(msg):
     return [preview_prompt, preview_neg_prompt, preview_prompt, preview_neg_prompt]
 
 
+# download model's new verson by model path, version id and download url
+# output is a md log
+def dl_model_new_version(msg, max_size_preview, skip_nsfw_preview):
+    util.printD("Start dl_model_new_version")
+
+    output = ""
+
+    result = msg_handler.parse_js_msg(msg)
+    if not result:
+        output = "Parsing js ms failed"
+        util.printD(output)
+        return output
+    
+    model_path = result["model_path"]
+    version_id = result["version_id"]
+    download_url = result["download_url"]
+
+    util.printD("model_path: " + model_path)
+    util.printD("version_id: " + str(version_id))
+    util.printD("download_url: " + download_url)
+
+    # check data
+    if not model_path:
+        output = "model_path is empty"
+        util.printD(output)
+        return output
+
+    if not version_id:
+        output = "version_id is empty"
+        util.printD(output)
+        return output
+    
+    if not download_url:
+        output = "download_url is empty"
+        util.printD(output)
+        return output
+
+    if not os.path.isfile(model_path):
+        output = "model_path is not a file: "+ model_path
+        util.printD(output)
+        return output
+
+    # get model folder from model path
+    model_folder = os.path.dirname(model_path)
+
+    # download file
+    new_model_path = downloader.dl(download_url, model_folder, None, None)
+    if not new_model_path:
+        output = "Download failed, check console log for detail. Download url: " + download_url
+        util.printD(output)
+        return output
+
+    # get version info
+    version_info = civitai.get_version_info_by_version_id(version_id)
+    if not version_info:
+        output = "Model downloaded, but failed to get version info, check console log for detail. Model saved to: " + new_model_path
+        util.printD(output)
+        return output
+
+    # now write version info to file
+    base, ext = os.path.splitext(new_model_path)
+    info_file = base + civitai.suffix + model.info_ext
+    model.write_model_info(info_file, version_info)
+
+    # then, get preview image
+    civitai.get_preview_image_by_model_path(new_model_path, max_size_preview, skip_nsfw_preview)
+    
+    output = "Done. Model downloaded to: " + new_model_path
+    util.printD(output)
+    return output

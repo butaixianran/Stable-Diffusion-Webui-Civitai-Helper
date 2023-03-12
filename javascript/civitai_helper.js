@@ -1,5 +1,19 @@
 "use strict";
 
+// send msg to python side by filling a hidden text box
+// then will click a button to trigger an action
+// msg is an object, not a string, will be stringify in this function
+function send_ch_py_msg(msg){
+    console.log("run send_ch_py_msg")
+    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
+    if (js_msg_txtbox && msg) {
+        // fill to msg box
+        js_msg_txtbox.value = JSON.stringify(msg);
+        js_msg_txtbox.dispatchEvent(new Event("input"));
+    }
+
+}
+
 // get msg from python side from a hidden textbox
 // normally this is an old msg, need to wait for a new msg
 function get_ch_py_msg(){
@@ -17,9 +31,8 @@ function get_ch_py_msg(){
 
 
 // get msg from python side from a hidden textbox
-// if textbox's value is different from old value then it will consider it is a new msg
 // it will try once in every sencond, until it reach the max try times
-const get_new_ch_py_msg = (old_value, max_count=3) => new Promise((resolve, reject) => {
+const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
     console.log("run get_new_ch_py_msg")
 
     let count = 0;
@@ -35,21 +48,32 @@ const get_new_ch_py_msg = (old_value, max_count=3) => new Promise((resolve, reje
             console.log(py_msg_txtbox.value)
 
             new_msg = py_msg_txtbox.value
-            if (new_msg != old_value) {
+            if (new_msg != "") {
                 find_msg=true
             }
         }
 
         if (find_msg) {
+            //clear msg in both sides
+            py_msg_txtbox.value = "";
+            py_msg_txtbox.dispatchEvent(new Event("input"));
+
             resolve(new_msg);
             clearInterval(interval);
         } else if (count > max_count) {
+            //clear msg in both sides
+            py_msg_txtbox.value = "";
+            py_msg_txtbox.dispatchEvent(new Event("input"));
+
             reject('');
             clearInterval(interval);
         }
 
     }, 1000);
 })
+
+
+
 
 function getActivePrompt() {
     const currentTab = get_uiCurrentTabContent();
@@ -79,8 +103,10 @@ async function open_model_url(event, model_type, search_term){
     console.log("start open_model_url");
 
     //get hidden components of extension 
-    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
     let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
+    if (!js_open_url_btn) {
+        return
+    }
 
 
     //msg to python side
@@ -100,11 +126,7 @@ async function open_model_url(event, model_type, search_term){
     msg["neg_prompt"] = "";
 
     // fill to msg box
-    js_msg_txtbox.value = JSON.stringify(msg);
-    js_msg_txtbox.dispatchEvent(new Event("input"));
-
-    //get old py msg
-    let py_msg = get_ch_py_msg();
+    send_ch_py_msg(msg)
 
     //click hidden button
     js_open_url_btn.click();
@@ -114,7 +136,7 @@ async function open_model_url(event, model_type, search_term){
     event.preventDefault()
 
     //check response msg from python
-    let new_py_msg = await get_new_ch_py_msg("");
+    let new_py_msg = await get_new_ch_py_msg();
     console.log("new_py_msg:");
     console.log(new_py_msg);
 
@@ -142,9 +164,10 @@ function add_trigger_words(event, model_type, search_term){
     console.log("start add_trigger_words");
 
     //get hidden components of extension 
-    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
     let js_add_trigger_words_btn = gradioApp().getElementById("ch_js_add_trigger_words_btn");
-
+    if (!js_add_trigger_words_btn) {
+        return
+    }
 
 
     //msg to python side
@@ -166,8 +189,7 @@ function add_trigger_words(event, model_type, search_term){
     msg["prompt"] = prompt.value;
 
     // fill to msg box
-    js_msg_txtbox.value = JSON.stringify(msg);
-    js_msg_txtbox.dispatchEvent(new Event("input"));
+    send_ch_py_msg(msg)
 
     //click hidden button
     js_add_trigger_words_btn.click();
@@ -184,10 +206,10 @@ function use_preview_prompt(event, model_type, search_term){
     console.log("start use_preview_prompt");
 
     //get hidden components of extension 
-    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
     let js_use_preview_prompt_btn = gradioApp().getElementById("ch_js_use_preview_prompt_btn");
-
-
+    if (!js_use_preview_prompt_btn) {
+        return
+    }
 
     //msg to python side
     let msg = {
@@ -211,8 +233,7 @@ function use_preview_prompt(event, model_type, search_term){
     msg["neg_prompt"] = neg_prompt.value;
 
     // fill to msg box
-    js_msg_txtbox.value = JSON.stringify(msg);
-    js_msg_txtbox.dispatchEvent(new Event("input"));
+    send_ch_py_msg(msg)
 
     //click hidden button
     js_use_preview_prompt_btn.click();
@@ -222,6 +243,51 @@ function use_preview_prompt(event, model_type, search_term){
     event.stopPropagation()
     event.preventDefault()
 
+}
+
+
+
+// download model's new version into SD at python side
+function ch_dl_model_new_version(event, model_path, version_id, download_url){
+    console.log("start ch_dl_model_new_version");
+
+    // must confirm before downloading
+    let dl_confirm = "\nConfirm to download.\n\nCheck Download Model Section's log and console log for detail.";
+    if (!confirm(dl_confirm)) {
+        return
+    }
+
+    //get hidden components of extension 
+    let js_dl_model_new_version_btn = gradioApp().getElementById("ch_js_dl_model_new_version_btn");
+    if (!js_dl_model_new_version_btn) {
+        return
+    }
+
+    //msg to python side
+    let msg = {
+        "action": "",
+        "model_path": "",
+        "version_id": "",
+        "download_url": "",
+    }
+
+    msg["action"] = "dl_model_new_version";
+    msg["model_path"] = model_path;
+    msg["version_id"] = version_id;
+    msg["download_url"] = download_url;
+
+    // fill to msg box
+    send_ch_py_msg(msg)
+
+    //click hidden button
+    js_dl_model_new_version_btn.click();
+
+    console.log("end dl_model_new_version");
+
+    event.stopPropagation()
+    event.preventDefault()
+
+    
 }
 
 

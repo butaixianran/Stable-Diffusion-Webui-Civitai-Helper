@@ -1,9 +1,10 @@
 # -*- coding: UTF-8 -*-
+import os
 import hashlib
 import requests
 import shutil
 
-version = "1.4.3"
+version = "1.5.0"
 
 # print for debugging
 def printD(msg):
@@ -41,3 +42,26 @@ def download_file(url, path):
         shutil.copyfileobj(r.raw, f)
 
     printD("File downloaded to: " + path)
+
+# get subfolder list
+def get_subfolders(folder:str) -> list:
+    printD("Get subfolder for: " + folder)
+    if not folder:
+        printD("folder can not be None")
+        return
+    
+    if not os.path.isdir(folder):
+        printD("path is not a folder")
+        return
+    
+    prefix_len = len(folder)
+    subfolders = []
+    for root, dirs, files in os.walk(folder, followlinks=True):
+        for dir in dirs:
+            full_dir_path = os.path.join(root, dir)
+            # get subfolder path from it
+            subfolder = full_dir_path[prefix_len:]
+            subfolders.append(subfolder)
+
+    return subfolders
+

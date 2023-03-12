@@ -1,0 +1,9 @@
+blockquote ul {
+    list-style:disc;
+    margin:4px 40px;
+}
+
+blockquote ol {
+    list-style:decimal;
+    margin:4px 40px;
+}

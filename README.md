@@ -2,7 +2,7 @@
 [中文](README.cn.md)
 
 # Notice
-After updating to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
+After install or update to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
 
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
@@ -12,21 +12,26 @@ Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-
 # Features
 * Scans all models to download model information and preview images from Civitai.  
 * Link 1 model to a civitai model by civitai model's url
-* Checking all your local model's new version from civitai
+* Download a model(with info+preview) by Civitai Url into SD's model folder or subfolder.
+* Downloading can resume from break-point, which is good for large file. 
+* Checking all your local model's new version from Civitai
+* Download a new version directly into SD model folder (with info+preview)
 * Modified Built-in "Extra Network" cards, to add the following buttons on each card:
   - 🖼: Modified "replace preview" text into this icon
   - 🌐: Open this model's Civitai url in a new tab
   - 💡: Add this model's trigger words to prompt
   - 🏷: Use this model's preview image's prompt
+* Also support thumbnail mode of Extra Network
+* Option to always show addtional buttons, so now they work with touch screen.  
 
 
 # Install
 Go to SD webui's extension tab, go to `Install from url` sub-tab.
-Copy this project's url into it, click install.
+Copy this project's url into it, click install.  
 
 Alternatively, download this project as a zip file, and unzip it to `Your SD webui folder/extensions`.
 
-Then reload UI with "Reload UI" Button in Setting tab.
+Then shutdown SD Webui and Relaunch it. Just "Reload UI" won't work for this extension.
 
 Done.
 
@@ -74,13 +79,20 @@ Move your mouse on to the bottom of a model card. It will show 4 icon buttons:
 ![](img/refresh_ch.jpg)  
 Everytime after Extra Network tab refreshed, it will remove all these additional buttons. So, you need to click `Refresh Civitai Helper` button to bring them back.  
 
-## Get 1 Model Info By Url
-If a model's SHA256 can not be found in civitai, but you still want to link it to a civitai model. You can choose this model from list, then offer a civitai model page's url you want to link.   
+### Thumbnail Mode
+Additional buttons work on thumbnail too, but due to SD webui's CSS issue, for now, they must be always displayed on thumbnail or don't display at all.   
+![](img/thumb_mode.jpg)
 
-After clicking button, extension will download that civitai model's model info for this local model file you picked.  
 
-![](img/get_one_model_info.jpg)  
+## Download 
+To download a model by Civitai Model Page's Url, you need 3 steps:
+* Fill url, click button to get model info
+* It will show model name and type automatically. Just choose sub-folder and model version
+* Click download.
+![](img/download_model.jpg)
 
+Detail will be displayed on console log, with a progress bar.  
+Downloading can resume from break-point, so no fear for large file.  
 
 ## Checking Model's New Version
 You can checking your local model's new version from civitai by model types. You can select multiple model types.   
@@ -92,9 +104,28 @@ This is to protect Civitai from facing issue like DDos from this extension. Some
 
 **After checking process done**, it will display all new version's information on UI.  
 
-There are 2 urls for each new version. First one is model's page. Second one is this version's download url.  
+There are 3 urls for each new version. 
+* First one is model's page.
+* Second one is new version's download url.    
+* Third one is a button to download it into your SD's model folder with python.  
+With this one, output information is on "Download Model" section's log and console log. One task at a time.  
 
 ![](img/check_model_new_version_output.jpg)
+
+
+## Get Model Info By Url
+If a model's SHA256 can not be found in civitai, but you still want to link it to a civitai model. You can choose this model from list, then offer a civitai model page's url you want to link.   
+
+After clicking button, extension will download that civitai model's model info for this local model file you picked.  
+
+![](img/get_one_model_info.jpg)  
+
+## Other Setting
+**The Save Setting button, will save both "Scan Model"'s setting and other setting.**  
+
+* "Always Display Button" is good for touch screen.  
+* "Show Buttons on Thumb Mode" will turn on/off additional Buttons on thumbnail.  
+![](img/other_setting.jpg)
 
 
 ## Preview Image
@@ -103,36 +134,44 @@ Extra network uses both `model_file.png` and `model_file.preview.png` as preview
 When you don't have the higher priority one, it will use the other automatically.  
 
 ## Prompt
-When you click the button "Use prompt from preview image", it does not use the prompt from your own preview image. It uses the one from civitai's  preview image.  
+When you click the button "Use prompt from preview image", it does not use the prompt from your own preview image. It uses the one from civitai's preview image.  
 
 On civitai, a model's preview images may not has prompt. This extension will check this model's all civitai preview images' information and use the first one has prompt in it.  
 
 ## SHA256
-To create a file SHA256, it need to read the whole file to generate a hash code. It gonna be slow for big files. 
+To create a file SHA256, it need to read the whole file to generate a hash code. It gonna be slow for large files. 
 
-Default, it uses a Memory Optimized SHA256 which won't stuck your system.(It is the only choice in latest version). So, do not uncheck it if you want to use your computer when scanning.  
+Also, extension uses Memory Optimized SHA256, which won't stuck your system and works with colab.  
 
 There are 2 cases this hash code can not find the model on civitai:
 * Some old models, which do not have SHA256 code on civitai.
-* The model's owner changed file on civitai, but does not change version number and description. So, the file on civitai is actually not the one on your manchine.  
+* The model's owner changed file on civitai, but does not change version name and description. So, the file on civitai is actually not the one on your manchine.  
 
 In these cases, you can always link a model to civitai by filling its URL in this extension.
 
 
-## Civitai down
+## Civitai API Fail
 When Civitai is facing some issue like DDos, it gonna put civitai under Cloudflare's protection, which gonna re-direct our API request to a real human checking page. Then this extension can not get any information back.  
 
 In that case, juse wait for civitai's recovering. It could take 6-8 hours.  
 
+
+## Feature Request
+No new feature for v1.x after v1.5. All new feature will go to 2.x.
+
+2.x will focus on custom model information and may change name to "Model Info Helper", because it is not just focus on Civitai anymore. 
+
+From v1.5, v1.x goes into maintenance phase. 
+
 Enjoy!
 
-
 # Change Log
-## v1.5
+## v1.5.0
+* Download a model by Civitai model page's url
+* Resume downloading from break-point
+* Download new version into SD Webui's model folder
 * Addtional button now works on thumbnail mode
-* Add option to always show addtion button, for touch screen.
-* Download a model by model page's url into SD webui's model folder
-* Display checking new version's result as gallery and download new version into SD Webui's model folder
+* Option to always show addtion button, for touch screen.
 
 ## v1.4.2
 * ignore .vae file in model folder when scanning
