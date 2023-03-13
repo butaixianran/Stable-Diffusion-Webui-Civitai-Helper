@@ -168,6 +168,9 @@ From v1.5, v1.x goes into maintenance phase.
 Enjoy!
 
 # Change Log
+## v1.5.3
+* When downloading a model by url, check if target model version is already existed in user selected sub-folder.
+
 ## v1.5.2
 * Support scanning only selected model types. 
 

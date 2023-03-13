@@ -401,6 +401,13 @@ def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, versio
         util.printD(output)
         return output
     
+    # check if this model is already existed
+    r = civitai.search_local_model_info_by_version_id(model_folder, version_id)
+    if r:
+        output = "This model version is already existed"
+        util.printD(output)
+        return output
+    
     # download
     filepath = downloader.dl(url, model_folder, None, None)
     if not filepath:
