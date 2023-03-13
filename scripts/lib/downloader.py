@@ -31,7 +31,7 @@ def dl(url, folder, filename, filepath):
             file_path = os.path.join(folder, filename)
 
     # first request for header
-    rh = requests.get(url, stream=True, verify=False)
+    rh = requests.get(url, stream=True, verify=False, headers=util.def_headers)
     # get file size
     total_size = 0
     total_size = int(rh.headers['Content-Length'])
@@ -76,6 +76,8 @@ def dl(url, folder, filename, filepath):
 
     # create header range
     headers = {'Range': 'bytes=%d-' % downloaded_size}
+    headers['User-Agent'] = util.def_headers['User-Agent']
+
     # download with header
     r = requests.get(url, stream=True, verify=False, headers=headers)
 
@@ -90,7 +92,8 @@ def dl(url, folder, filename, filepath):
 
                 # progress
                 progress = int(50 * downloaded_size / total_size)
-                sys.stdout.write("\r[%s%s] %d%%" % ('█' * progress, ' ' * (50 - progress), 100 * downloaded_size / total_size))
+                sys.stdout.reconfigure(encoding='utf-8')
+                sys.stdout.write("\r[%s%s] %d%%" % ('-' * progress, ' ' * (50 - progress), 100 * downloaded_size / total_size))
                 sys.stdout.flush()
 
     print()

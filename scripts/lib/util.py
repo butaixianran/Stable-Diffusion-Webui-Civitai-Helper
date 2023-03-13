@@ -6,6 +6,9 @@ import shutil
 
 version = "1.5.3"
 
+def_headers = {'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
+
+
 # print for debugging
 def printD(msg):
     print(f"Civitai Helper: {msg}")
@@ -30,7 +33,7 @@ def gen_file_sha256(filname):
 def download_file(url, path):
     printD("Downloading file from: " + url)
     # get file
-    r = requests.get(url, stream=True)
+    r = requests.get(url, stream=True, headers=def_headers)
     if not r.ok:
         printD("Get error code: " + str(r.status_code))
         printD(r.text)

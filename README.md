@@ -168,6 +168,9 @@ From v1.5, v1.x goes into maintenance phase.
 Enjoy!
 
 # Change Log
+## v1.5.4
+* set sys.stdout to utf-8
+
 ## v1.5.3
 * When downloading a model by url, check if target model version is already existed in user selected sub-folder.
 

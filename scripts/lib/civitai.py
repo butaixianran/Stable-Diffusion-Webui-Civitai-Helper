@@ -26,6 +26,7 @@ model_type_dict = {
 }
 
 
+
 # get image with full size
 # width is in number, not string
 # return: url str
@@ -42,7 +43,7 @@ def get_model_info_by_hash(hash:str):
         util.printD("hash is empty")
         return
 
-    r = requests.get(url_dict["hash"]+hash)
+    r = requests.get(url_dict["hash"]+hash, headers=util.def_headers)
     if not r.ok:
         if r.status_code == 404:
             # this is not a civitai model
@@ -79,7 +80,7 @@ def get_model_info_by_id(id:str) -> dict:
         util.printD("id is empty")
         return
 
-    r = requests.get(url_dict["modelId"]+str(id))
+    r = requests.get(url_dict["modelId"]+str(id), headers=util.def_headers)
     if not r.ok:
         if r.status_code == 404:
             # this is not a civitai model
@@ -115,7 +116,7 @@ def get_version_info_by_version_id(id:str) -> dict:
         util.printD("id is empty")
         return
 
-    r = requests.get(url_dict["modelVersionId"]+str(id))
+    r = requests.get(url_dict["modelVersionId"]+str(id), headers=util.def_headers)
     if not r.ok:
         if r.status_code == 404:
             # this is not a civitai model
