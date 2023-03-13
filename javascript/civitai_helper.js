@@ -185,8 +185,8 @@ function add_trigger_words(event, model_type, search_term){
     msg["neg_prompt"] = "";
 
     // get active prompt
-    let prompt = getActivePrompt();
-    msg["prompt"] = prompt.value;
+    let act_prompt = getActivePrompt();
+    msg["prompt"] = act_prompt.value;
 
     // fill to msg box
     send_ch_py_msg(msg)
@@ -225,8 +225,8 @@ function use_preview_prompt(event, model_type, search_term){
     msg["search_term"] = search_term;
 
     // get active prompt
-    prompt = getActivePrompt();
-    msg["prompt"] = prompt.value;
+    let act_prompt = getActivePrompt();
+    msg["prompt"] = act_prompt.value;
 
     // get active neg prompt
     let neg_prompt = getActiveNegativePrompt();
