@@ -4,55 +4,29 @@ import json
 from . import util
 
 # action list
-js_actions = ("save_lora_configs","open_url", "add_trigger_words", "use_preview_prompt")
-py_actions = ("load_lora_configs","open_url", "scan_log", "model_new_version")
+js_actions = ("save_lora_configs","open_url", "add_trigger_words", "use_preview_prompt", "dl_model_new_version")
+py_actions = ("load_lora_configs","open_url")
 
 
 # handle request from javascript
 # parameter: msg - msg from js as string in a hidden textbox
-# return: (action, model_type, search_term, prompt, neg_prompt)
+# return: dict for result
 def parse_js_msg(msg):
     util.printD("Start parse js msg")
     msg_dict = json.loads(msg)
 
+    # in case client side run JSON.stringify twice
+    if (type(msg_dict) == str):
+        msg_dict = json.loads(msg_dict)
+
     if "action" not in msg_dict.keys():
         util.printD("Can not find action from js request")
         return
-    
-    if "model_type" not in msg_dict.keys():
-        util.printD("Can not find model type from js request")
-        return
-    
-    if "search_term" not in msg_dict.keys():
-        util.printD("Can not find search_term from js request")
-        return
-    
-    if "prompt" not in msg_dict.keys():
-        util.printD("Can not find prompt from js request")
-        return
-    
-    if "neg_prompt" not in msg_dict.keys():
-        util.printD("Can not find neg_prompt from js request")
-        return
-    
-    action = msg_dict["action"]
-    model_type = msg_dict["model_type"]
-    search_term = msg_dict["search_term"]
-    prompt = msg_dict["prompt"]
-    neg_prompt = msg_dict["neg_prompt"]
 
+    action = msg_dict["action"]
     if not action:
         util.printD("Action from js request is None")
         return
-
-    if not model_type:
-        util.printD("model_type from js request is None")
-        return
-    
-    if not search_term:
-        util.printD("search_term from js request is None")
-        return
-    
 
     if action not in js_actions:
         util.printD("Unknow action: " + action)
@@ -60,7 +34,7 @@ def parse_js_msg(msg):
 
     util.printD("End parse js msg")
 
-    return (action, model_type, search_term, prompt, neg_prompt)
+    return msg_dict
 
 
 # build python side msg for sending to js

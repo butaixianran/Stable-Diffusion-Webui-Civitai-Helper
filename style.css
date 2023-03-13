@@ -13,6 +13,14 @@
 	height: 35px;
 }
 
+.extra-network-thumbs .actions .additional a.linkButtonThumb {
+	font-size: 100%;
+	display: inline;
+	position: static;
+	background-image: none;
+	background: rgba(0, 0, 0, 0.8)
+}
+
 .additional .weightAndPrompt {
 	flex-direction: column;
 }
@@ -50,4 +58,14 @@
 
 .additional .textright {
 	float: right;
+}
+
+blockquote ul {
+    list-style:disc;
+    margin:4px 40px;
+}
+
+blockquote ol {
+    list-style:decimal;
+    margin:4px 40px;
 }

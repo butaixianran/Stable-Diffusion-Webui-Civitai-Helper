@@ -18,6 +18,15 @@ url_dict = {
     "hash": "https://civitai.com/api/v1/model-versions/by-hash/"
 }
 
+model_type_dict = {
+    "Checkpoint": "ckp",
+    "TextualInversion": "ti",
+    "Hypernetwork": "hyper",
+    "LORA": "lora",
+}
+
+
+
 # get image with full size
 # width is in number, not string
 # return: url str
@@ -34,7 +43,7 @@ def get_model_info_by_hash(hash:str):
         util.printD("hash is empty")
         return
 
-    r = requests.get(url_dict["hash"]+hash)
+    r = requests.get(url_dict["hash"]+hash, headers=util.def_headers)
     if not r.ok:
         if r.status_code == 404:
             # this is not a civitai model
@@ -71,7 +80,7 @@ def get_model_info_by_id(id:str) -> dict:
         util.printD("id is empty")
         return
 
-    r = requests.get(url_dict["modelId"]+str(id))
+    r = requests.get(url_dict["modelId"]+str(id), headers=util.def_headers)
     if not r.ok:
         if r.status_code == 404:
             # this is not a civitai model
@@ -107,7 +116,7 @@ def get_version_info_by_version_id(id:str) -> dict:
         util.printD("id is empty")
         return
 
-    r = requests.get(url_dict["modelVersionId"]+id)
+    r = requests.get(url_dict["modelVersionId"]+str(id), headers=util.def_headers)
     if not r.ok:
         if r.status_code == 404:
             # this is not a civitai model
@@ -235,7 +244,7 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
     # get information from filter
     # only get those model names don't have a civitai model info file
     model_names = []
-    for root, dirs, files in os.walk(model_folder):
+    for root, dirs, files in os.walk(model_folder, followlinks=True):
         for filename in files:
             item = os.path.join(root, filename)
             # check extension
@@ -303,7 +312,7 @@ def get_model_id_from_url(url:str) -> str:
 
 # get preview image by model path
 # image will be saved to file, so no return
-def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_preview) -> str:
+def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_preview):
     if not model_path:
         util.printD("model_path is empty")
         return
@@ -555,7 +564,7 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> 
             continue
 
         util.printD("Scanning path: " + model_folder)
-        for root, dirs, files in os.walk(model_folder):
+        for root, dirs, files in os.walk(model_folder, followlinks=True):
             for filename in files:
                 # check ext
                 item = os.path.join(root, filename)
@@ -597,5 +606,6 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> 
 
 
     return new_versions
+
 
 

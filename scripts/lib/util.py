@@ -1,7 +1,13 @@
 # -*- coding: UTF-8 -*-
+import os
 import hashlib
 import requests
 import shutil
+
+version = "1.5.4_jokker87"
+
+def_headers = {'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
+
 
 # print for debugging
 def printD(msg):
@@ -27,7 +33,7 @@ def gen_file_sha256(filname):
 def download_file(url, path):
     printD("Downloading file from: " + url)
     # get file
-    r = requests.get(url, stream=True)
+    r = requests.get(url, stream=True, headers=def_headers)
     if not r.ok:
         printD("Get error code: " + str(r.status_code))
         printD(r.text)
@@ -39,3 +45,26 @@ def download_file(url, path):
         shutil.copyfileobj(r.raw, f)
 
     printD("File downloaded to: " + path)
+
+# get subfolder list
+def get_subfolders(folder:str) -> list:
+    printD("Get subfolder for: " + folder)
+    if not folder:
+        printD("folder can not be None")
+        return
+    
+    if not os.path.isdir(folder):
+        printD("path is not a folder")
+        return
+    
+    prefix_len = len(folder)
+    subfolders = []
+    for root, dirs, files in os.walk(folder, followlinks=True):
+        for dir in dirs:
+            full_dir_path = os.path.join(root, dir)
+            # get subfolder path from it
+            subfolder = full_dir_path[prefix_len:]
+            subfolders.append(subfolder)
+
+    return subfolders
+

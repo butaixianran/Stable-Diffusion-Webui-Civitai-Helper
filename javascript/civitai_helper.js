@@ -1,5 +1,19 @@
 "use strict";
 
+// send msg to python side by filling a hidden text box
+// then will click a button to trigger an action
+// msg is an object, not a string, will be stringify in this function
+function send_ch_py_msg(msg){
+    console.log("run send_ch_py_msg")
+    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
+    if (js_msg_txtbox && msg) {
+        // fill to msg box
+        js_msg_txtbox.value = JSON.stringify(msg);
+        js_msg_txtbox.dispatchEvent(new Event("input"));
+    }
+
+}
+
 // get msg from python side from a hidden textbox
 // normally this is an old msg, need to wait for a new msg
 function get_ch_py_msg(){
@@ -17,9 +31,8 @@ function get_ch_py_msg(){
 
 
 // get msg from python side from a hidden textbox
-// if textbox's value is different from old value then it will consider it is a new msg
 // it will try once in every sencond, until it reach the max try times
-const get_new_ch_py_msg = (old_value, max_count=3) => new Promise((resolve, reject) => {
+const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
     console.log("run get_new_ch_py_msg")
 
     let count = 0;
@@ -35,21 +48,32 @@ const get_new_ch_py_msg = (old_value, max_count=3) => new Promise((resolve, reje
             console.log(py_msg_txtbox.value)
 
             new_msg = py_msg_txtbox.value
-            if (new_msg != old_value) {
+            if (new_msg != "") {
                 find_msg=true
             }
         }
 
         if (find_msg) {
+            //clear msg in both sides
+            py_msg_txtbox.value = "";
+            py_msg_txtbox.dispatchEvent(new Event("input"));
+
             resolve(new_msg);
             clearInterval(interval);
         } else if (count > max_count) {
+            //clear msg in both sides
+            py_msg_txtbox.value = "";
+            py_msg_txtbox.dispatchEvent(new Event("input"));
+
             reject('');
             clearInterval(interval);
         }
 
     }, 1000);
 })
+
+
+
 
 function getActivePrompt() {
     const currentTab = get_uiCurrentTabContent();
@@ -79,8 +103,10 @@ async function open_model_url(event, model_type, search_term){
     console.log("start open_model_url");
 
     //get hidden components of extension 
-    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
     let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
+    if (!js_open_url_btn) {
+        return
+    }
 
 
     //msg to python side
@@ -100,11 +126,7 @@ async function open_model_url(event, model_type, search_term){
     msg["neg_prompt"] = "";
 
     // fill to msg box
-    js_msg_txtbox.value = JSON.stringify(msg);
-    js_msg_txtbox.dispatchEvent(new Event("input"));
-
-    //get old py msg
-    let py_msg = get_ch_py_msg();
+    send_ch_py_msg(msg)
 
     //click hidden button
     js_open_url_btn.click();
@@ -114,7 +136,7 @@ async function open_model_url(event, model_type, search_term){
     event.preventDefault()
 
     //check response msg from python
-    let new_py_msg = await get_new_ch_py_msg("");
+    let new_py_msg = await get_new_ch_py_msg();
     console.log("new_py_msg:");
     console.log(new_py_msg);
 
@@ -140,9 +162,10 @@ function add_trigger_words(event, model_type, search_term){
     console.log("start add_trigger_words");
 
     //get hidden components of extension 
-    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
     let js_add_trigger_words_btn = gradioApp().getElementById("ch_js_add_trigger_words_btn");
-
+    if (!js_add_trigger_words_btn) {
+        return
+    }
 
 
     //msg to python side
@@ -160,12 +183,11 @@ function add_trigger_words(event, model_type, search_term){
     msg["neg_prompt"] = "";
 
     // get active prompt
-    let prompt = getActivePrompt();
-    msg["prompt"] = prompt.value;
+    let act_prompt = getActivePrompt();
+    msg["prompt"] = act_prompt.value;
 
     // fill to msg box
-    js_msg_txtbox.value = JSON.stringify(msg);
-    js_msg_txtbox.dispatchEvent(new Event("input"));
+    send_ch_py_msg(msg)
 
     //click hidden button
     js_add_trigger_words_btn.click();
@@ -182,10 +204,10 @@ function use_preview_prompt(event, model_type, search_term){
     console.log("start use_preview_prompt");
 
     //get hidden components of extension 
-    let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
     let js_use_preview_prompt_btn = gradioApp().getElementById("ch_js_use_preview_prompt_btn");
-
-
+    if (!js_use_preview_prompt_btn) {
+        return
+    }
 
     //msg to python side
     let msg = {
@@ -201,16 +223,15 @@ function use_preview_prompt(event, model_type, search_term){
     msg["search_term"] = search_term;
 
     // get active prompt
-    prompt = getActivePrompt();
-    msg["prompt"] = prompt.value;
+    let act_prompt = getActivePrompt();
+    msg["prompt"] = act_prompt.value;
 
     // get active neg prompt
     let neg_prompt = getActiveNegativePrompt();
     msg["neg_prompt"] = neg_prompt.value;
 
     // fill to msg box
-    js_msg_txtbox.value = JSON.stringify(msg);
-    js_msg_txtbox.dispatchEvent(new Event("input"));
+    send_ch_py_msg(msg)
 
     //click hidden button
     js_use_preview_prompt_btn.click();
@@ -322,6 +343,51 @@ function get_card_prompt(search_term_to_find) {
 	return null;
 }
 
+
+// download model's new version into SD at python side
+function ch_dl_model_new_version(event, model_path, version_id, download_url){
+    console.log("start ch_dl_model_new_version");
+
+    // must confirm before downloading
+    let dl_confirm = "\nConfirm to download.\n\nCheck Download Model Section's log and console log for detail.";
+    if (!confirm(dl_confirm)) {
+        return
+    }
+
+    //get hidden components of extension 
+    let js_dl_model_new_version_btn = gradioApp().getElementById("ch_js_dl_model_new_version_btn");
+    if (!js_dl_model_new_version_btn) {
+        return
+    }
+
+    //msg to python side
+    let msg = {
+        "action": "",
+        "model_path": "",
+        "version_id": "",
+        "download_url": "",
+    }
+
+    msg["action"] = "dl_model_new_version";
+    msg["model_path"] = model_path;
+    msg["version_id"] = version_id;
+    msg["download_url"] = download_url;
+
+    // fill to msg box
+    send_ch_py_msg(msg)
+
+    //click hidden button
+    js_dl_model_new_version_btn.click();
+
+    console.log("end dl_model_new_version");
+
+    event.stopPropagation()
+    event.preventDefault()
+
+    
+}
+
+
 onUiLoaded(() => {
 
 
@@ -342,11 +408,28 @@ onUiLoaded(() => {
     // then, python side gonna open url and update prompt text box, without telling js side.
     async function update_card_for_civitai(){
 
+        //css
+        let btn_thumb_background = "rgba(0, 0, 0, 0.8)";
+
+        let ch_btn_txts = ['🌐', '💡', '🏷'];
+
+        // get component
+        let ch_always_display_ckb = gradioApp().querySelector("#ch_always_display_ckb input");
+        let ch_show_btn_on_thumb_ckb = gradioApp().querySelector("#ch_show_btn_on_thumb_ckb input");
+        let ch_always_display = false;
+        let ch_show_btn_on_thumb = false;
+        if (ch_always_display_ckb) {
+            ch_always_display = ch_always_display_ckb.checked;
+        }
+        if (ch_show_btn_on_thumb_ckb) {
+            ch_show_btn_on_thumb = ch_show_btn_on_thumb_ckb.checked;
+        }
+
 
         //change all "replace preview" into an icon
         let extra_network_id = "";
         let extra_network_node = null;
-        let addtional_nodes = null;
+        let additional_node = null;
         let replace_preview_btn = null;
         let ul_node = null;
         let search_term_node = null;
@@ -408,8 +491,7 @@ onUiLoaded(() => {
                     if (extra_network_node.className == "extra-network-thumbs") {
                         console.log(extra_network_id + " is in thumbnail mode");
                         is_thumb_mode = true;
-                        // won't work good in thumb mode, skip it for now
-                        continue;
+                        // if (!ch_show_btn_on_thumb) {continue;}
                     }
                 } else {
                     console.log("can not find extra_network_node: " + extra_network_id);
@@ -420,15 +502,68 @@ onUiLoaded(() => {
                 // get all card nodes
                 cards = extra_network_node.querySelectorAll(".card");
                 for (let card of cards) {
-					
-                    // replace preview text button into icon
+                    //additional node
+                    additional_node = card.querySelector(".actions .additional");
+                    //get ul node, which is the parent of all buttons
+                    ul_node = card.querySelector(".actions .additional ul");
+                    // replace preview text button
                     replace_preview_btn = card.querySelector(".actions .additional a");
+
+                    // check thumb mode
+                    if (is_thumb_mode) {
+                        additional_node.style.display = null;
+
+                        if (ch_show_btn_on_thumb) {
+                            ul_node.style.background = btn_thumb_background;
+                        } else {
+                            //reset
+                            ul_node.style.background = null;
+                            // console.log("remove existed buttons");
+                            // remove existed buttons
+                            if (ul_node) {
+                                // find all .a child nodes
+                                let atags = ul_node.querySelectorAll("a");
+                                
+                                for (let atag of atags) {
+                                    //reset display
+                                    atag.style.display = null;
+                                    //remove extension's button
+                                    if (ch_btn_txts.indexOf(atag.innerHTML)>=0) {
+                                        //need to remove
+                                        ul_node.removeChild(atag);
+                                    } else {
+                                        //do not remove, just reset
+                                        atag.innerHTML = "replace preview";
+                                        atag.style.display = null;
+                                        atag.style.fontSize = null;
+                                        atag.style.position = null;
+                                        atag.style.backgroundImage = null;
+                                    }
+                                }
+                            }
+                            //just reset and remove nodes, do nothing else
+                            continue;
+
+                        }
+
+                    } else {
+                        // full preview mode
+                        if (ch_always_display) {
+                            additional_node.style.display = "block";
+                        } else {
+                            additional_node.style.display = null;
+                        }
+                    }
+
+                    // change replace preview text button into icon
                     if (replace_preview_btn) {
                         if (replace_preview_btn.innerHTML == "replace preview") {
                             need_to_add_buttons = true;
                             replace_preview_btn.innerHTML = "🖼";
                             if (!is_thumb_mode) {
 								replace_preview_btn.className = "linkButton";
+                            } else {
+								replace_preview_btn.className = "linkButtonThumb";
                             }
                         }
                     }
@@ -457,28 +592,35 @@ onUiLoaded(() => {
 					
 					// then we need to add 3 buttons to each ul node:
                     let open_url_node = document.createElement("a");
-                    // open_url_node.href = "#";
+                    open_url_node.href = "#";
                     open_url_node.innerHTML = "🌐";
                     if (!is_thumb_mode) {
 						open_url_node.className = "linkButton";
+                    } else {
+						open_url_node.className = "linkButtonThumb";
                     }
                     open_url_node.title = "Open this model's civitai url";
                     open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
 
                     let add_trigger_words_node = document.createElement("a");
-                    // add_trigger_words_node.href = "#";
+                    add_trigger_words_node.href = "#";
                     add_trigger_words_node.innerHTML = "💡";
                     if (!is_thumb_mode) {
 						add_trigger_words_node.className = "linkButton";
+                    } else {
+						add_trigger_words_node.className = "linkButtonThumb";
                     }
+
                     add_trigger_words_node.title = "Add trigger words to prompt";
                     add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+search_term+"')");
 
                     let use_preview_prompt_node = document.createElement("a");
-                    // use_preview_prompt_node.href = "#";
+                    use_preview_prompt_node.href = "#";
                     use_preview_prompt_node.innerHTML = "🏷";
                     if (!is_thumb_mode) {
                         use_preview_prompt_node.className = "linkButton";
+                    } else {
+						use_preview_prompt_node.className = "linkButtonThumb";
                     }
                     use_preview_prompt_node.title = "Use prompt from preview image";
                     use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
@@ -491,7 +633,7 @@ onUiLoaded(() => {
 					
 					open_url_node.parentNode.insertBefore(replace_preview_btn, open_url_node)
 					
-					if (model_type == "lora") {
+					if (model_type == "lora" && !is_thumb_mode) {
 						let save_node = document.createElement("a");
 						// use_preview_prompt_node.href = "#";
 						save_node.innerHTML = "💾";
