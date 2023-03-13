@@ -151,11 +151,11 @@ In these cases, you can always link a model to civitai by filling its URL in thi
 
 
 ## Civitai API Security Check
-Since last website down of civitai, it has more strict checking for request's frequency. Once it thinks this extension is sending requests to quickly, it gonna re-direct extension's API request to Cloudflare's real human checking page. Then this extension can not get any information back. 
+Since last website down of civitai, it has more strict checking for request's frequency. Once it thinks this extension's request is not secured, it gonna re-direct extension's API request to Cloudflare's real human checking page. Then this extension can not get any information back. 
 
 In that case, you have to wait until civitai unblock you. It could take hours.  
 
-Since v1.5.1, TI scanning is forced to delay 1 second to avoid this case. So you should be find if you are using 1.5.1 or later.  
+Since v1.5.1, TI scanning is forced to delay 1 second to avoid this case. And since 1.5.4, there is a default header in all API request to fake as a browser. So you should be find if you are using 1.5.4 or later.  
 
 
 ## Feature Request
@@ -170,14 +170,10 @@ Enjoy!
 # Change Log
 ## v1.5.4
 * set sys.stdout to utf-8
-
-## v1.5.3
+* Add default header for requests to prevent from being blocked by civitai.
+* merge other v1.5.x change log to v1.5.4
 * When downloading a model by url, check if target model version is already existed in user selected sub-folder.
-
-## v1.5.2
 * Support scanning only selected model types. 
-
-## v1.5.1
 * Force TI scanning delay 1 second to prevent from civitai treating this extension's requests as attacking.
 
 ## v1.5.0
