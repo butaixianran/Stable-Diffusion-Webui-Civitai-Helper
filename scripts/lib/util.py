@@ -4,7 +4,7 @@ import hashlib
 import requests
 import shutil
 
-version = "1.5.1"
+version = "1.5.2"
 
 # print for debugging
 def printD(msg):

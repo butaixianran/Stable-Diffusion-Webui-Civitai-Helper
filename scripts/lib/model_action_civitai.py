@@ -10,14 +10,30 @@ from . import downloader
 
 # scan model to generate SHA256, then use this SHA256 to get model info from civitai
 # return output msg
-def scan_model(max_size_preview, skip_nsfw_preview):
+def scan_model(scan_model_types, max_size_preview, skip_nsfw_preview):
     util.printD("Start scan_model")
-
     output = ""
+
+    # check model types
+    if not scan_model_types:
+        output = "Model Types is None, can not scan."
+        util.printD(output)
+        return output
+    
+    model_types = []
+    # check type if it is a string
+    if type(scan_model_types) == str:
+        model_types.append(scan_model_types)
+    else:
+        model_types = scan_model_types
+    
     model_count = 0
     image_count = 0
     # scan_log = ""
     for model_type, model_folder in model.folders.items():
+        if model_type not in model_types:
+            continue
+
         util.printD("Scanning path: " + model_folder)
         for root, dirs, files in os.walk(model_folder, followlinks=True):
             for filename in files:

@@ -168,6 +168,9 @@ From v1.5, v1.x goes into maintenance phase.
 Enjoy!
 
 # Change Log
+## v1.5.2
+* Support scanning only selected model types. 
+
 ## v1.5.1
 * Force TI scanning delay 1 second to prevent from civitai treating this extension's requests as attacking.
 
