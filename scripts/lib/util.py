@@ -4,7 +4,7 @@ import hashlib
 import requests
 import shutil
 
-version = "1.5.3"
+version = "1.5.4"
 
 def_headers = {'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
 
