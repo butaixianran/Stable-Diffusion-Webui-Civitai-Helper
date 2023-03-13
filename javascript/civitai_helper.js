@@ -543,7 +543,7 @@ onUiLoaded(() => {
 						let found = onclickValue.match(regex)[0];
 						
 						let splits = found.split(',');
-						card.setAttribute('onclick','if (event.currentTarget == event.explicitOriginalTarget) {return cardClicked'+splits[0]+',get_card_prompt("'+loraCardName+'"),'+splits[2]+"}");
+						card.setAttribute('onclick','if (event.target !== this) return; cardClicked'+splits[0]+',get_card_prompt("'+loraCardName+'"),'+splits[2]);
 					}
 
                     //add to card

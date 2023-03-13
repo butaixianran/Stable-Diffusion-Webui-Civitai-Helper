@@ -6,7 +6,6 @@
 * Prompt value doesn't get removed, only lora and its weight
 * Slider min and max value have fixed values, config values don't apply for now
 * Lora configs aren't linked between txt2img and img2img, only if you save them and then refresh the extension with the button
-* Only works in Firefox
 
 # Notice
 After install or update to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
