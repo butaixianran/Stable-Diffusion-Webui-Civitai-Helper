@@ -55,6 +55,9 @@ def save_lora_configs(msg):
     weightActive = lora_values[2]
     promptActive = lora_values[3]
 
+    if search_term not in lora_configs:
+        lora_configs[search_term] = {}
+
     lora_configs[search_term]["weight"] = float(weightValue)
     lora_configs[search_term]["prompt"] = promptValue
     lora_configs[search_term]["weight_active"] = (weightActive == 'true')
