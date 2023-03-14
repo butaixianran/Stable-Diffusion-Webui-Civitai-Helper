@@ -47,8 +47,8 @@ def save_lora_configs(msg):
         util.printD("Parsing js ms failed")
         return
 
-    action, model_type, search_term, prompt, neg_prompt = result
-
+    prompt = result["prompt"]
+    search_term = result["search_term"]
     lora_values = prompt.split(";")
     weightValue = lora_values[0]
     promptValue = lora_values[1]
