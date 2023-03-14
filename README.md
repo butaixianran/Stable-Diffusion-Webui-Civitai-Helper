@@ -1,10 +1,6 @@
 ### Language
 [中文](README.cn.md)
 
-# IMPORTANT
-
-Do an initial scan in the civit ai tab!
-
 # Known issues for jokker87 additions
 
 * Prompt value doesn't get removed, only lora and its weight
