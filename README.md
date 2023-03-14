@@ -168,6 +168,9 @@ From v1.5, v1.x goes into maintenance phase.
 Enjoy!
 
 # Change Log
+## v1.5.5
+* update SHA256 function, now it just use the code from pip
+
 ## v1.5.4
 * set sys.stdout to utf-8
 * Add default header for requests to prevent from being blocked by civitai.
