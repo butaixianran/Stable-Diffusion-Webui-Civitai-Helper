@@ -29,7 +29,6 @@ def load_lora_configs(msg):
         "lora_configs":""
     }
 
-    util.printD(lora_configs)
     util.printD("Send lora config to js")
     content["lora_configs"] = json.dumps(lora_configs, separators=(',', ':'))
     output = msg_handler.build_py_msg("load_lora_configs", content)
