@@ -100,13 +100,14 @@ def on_ui_tabs():
         
         with gr.Box():
             with gr.Column():
-                gr.Markdown("### Get Civitai Model Info by Model Page URL")
+                gr.Markdown("### Get Model Info from Civitai by URL")
+                gr.Markdown("Use this when scanning can not find a local model on civitai")
                 with gr.Row():
                     model_type_drop = gr.Dropdown(choices=model_types, label="Model Type", value="ckp", multiselect=False)
                     empty_info_only_ckb = gr.Checkbox(label="Only Show Models have no Info", value=False, elem_id="cn_empty_info_only_ckb")
                     model_name_drop = gr.Dropdown(choices=no_info_model_names, label="Model", value="ckp", multiselect=False)
 
-                model_url_or_id_txtbox = gr.Textbox(label="Civitai URL or Model ID", lines=1, value="")
+                model_url_or_id_txtbox = gr.Textbox(label="Civitai URL", lines=1, value="")
                 get_civitai_model_info_by_id_btn = gr.Button(value="Get Model Info from Civitai", variant="primary")
                 get_model_by_id_log_md = gr.Markdown("")
 
@@ -114,7 +115,7 @@ def on_ui_tabs():
             with gr.Column():
                 gr.Markdown("### Download Model")
                 with gr.Row():
-                    dl_model_url_or_id_txtbox = gr.Textbox(label="Civitai URL or Model ID", lines=1, value="")
+                    dl_model_url_or_id_txtbox = gr.Textbox(label="Civitai URL", lines=1, value="")
                     dl_model_info_btn = gr.Button(value="1. Get Model Info by Civitai Url", variant="primary")
 
                 gr.Markdown(value="2. Pick Subfolder and Model Version")

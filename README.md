@@ -1,5 +1,6 @@
 ### Language
-[中文](README.cn.md)
+[中文](README.cn.md)  
+[日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)  
 
 # Known issues for jokker87 additions
 
@@ -66,14 +67,14 @@ If a model info file already exists, it will be skipped. If a model cannot be fo
 When you have some new models, just click scan button again, to get new model's information and preview images. It won't scan the same model twice. 
 
 ## Model Card
-**(Use this only after scanning finished)** 
+**(Use this only after scanning finished)**   
 Open SD webui's build-in "Extra Network" tab, to show model cards.
 
 ![](img/extra_network.jpg)
 
 
 Move your mouse on to the bottom of a model card. It will show 4 icon buttons:
-  - 🖼: Modified "replace preview" text into this icon
+  - 🖼: Replace preview (a build-in button, modified from text to icon)
   - 🌐: Open this model's Civitai url in a new tab
   - 💡: Add this model's trigger words to prompt
   - 🏷: Use this model's preview image's prompt
@@ -97,32 +98,36 @@ To download a model by Civitai Model Page's Url, you need 3 steps:
 * Click download.
 ![](img/download_model.jpg)
 
-Detail will be displayed on console log, with a progress bar.  
-Downloading can resume from break-point, so no fear for large file.  
+Detail will be displayed on console log, with a progress bar.   
+Downloading can resume from break-point, so no fear for large file.   
 
 ## Checking Model's New Version
 You can checking your local model's new version from civitai by model types. You can select multiple model types.   
 ![](img/check_model_new_version.jpg)  
 
-The checking process has a "1 second delay" after each model's new version checking request. So it is a little slow. 
+The checking process has a "1 second delay" after each model's new version checking request. So it is a little slow.  
 
-This is to protect Civitai from facing issue like DDos from this extension. Some cloud service provider has a rule as "no more than 1 API request in a second for free user". Civitai doesn't have this rule yet, but we still need to protect it. There is no good for us if it is down.  
+This is to protect Civitai from issue like DDos from this extension. Some cloud service provider has a rule as "no more than 1 API request in a second for free user". Civitai doesn't have this rule yet, but we still need to protect it. There is no good for us if it is down.  
 
 **After checking process done**, it will display all new version's information on UI.  
 
 There are 3 urls for each new version. 
-* First one is model's page.
+* First one is model's civitai page.  
 * Second one is new version's download url.    
 * Third one is a button to download it into your SD's model folder with python.  
-With this one, output information is on "Download Model" section's log and console log. One task at a time.  
+With this one, output information is on "Download Model" section's log and console log. **One task at a time**.  
 
 ![](img/check_model_new_version_output.jpg)
 
 
 ## Get Model Info By Url
-If a model's SHA256 can not be found in civitai, but you still want to link it to a civitai model. You can choose this model from list, then offer a civitai model page's url you want to link.   
+This is used to force a local model links to a Civitai model. For example, you converted a model's format or pruned it. Then it can not be found on civitai when scanning.  
 
-After clicking button, extension will download that civitai model's model info for this local model file you picked.  
+In that case, if you still want to link it to a civitai model. You can use this funcion.   
+
+Choose this model from list, then offer a civitai model page's url.   
+
+After clicking button, extension will download that civitai model's info and preview image for the local file you picked.  
 
 ![](img/get_one_model_info.jpg)  
 
@@ -173,7 +178,40 @@ From v1.5, v1.x goes into maintenance phase.
 
 Enjoy!
 
+## Common Issue
+### 4 Button on card didn't show
+First of all, make sure you clicked "Refresh Civitai Helper" button.  
+
+If issue is still there, then, only reason is you are not using the latest SD webui. So, Make sure you updated it.  
+
+Your update could be failed if you have modified SD webui's file. You need to check git command's console log to make sure it is updated. 
+
+In many cases, git will just refuse to update and tell you there are some conflicts need you to handle manually. If you don't check the consloe log, you will think your SD webui is updated, but it is not.  
+
+### Scan or Get model info failed
+This extension now is stable. So, the reason for this most likely is your request has been refused by Civitai.  
+
+Civitai is not that stable as those rich websites, it can be down, or re-direct API request to a real human checking page.(This rule is disabled for now, but can be enabled at anytime they want)  
+
+So, the only thing you can do is just wait a while then try again.  
+
+### Scanning fail when using colab
+First of, search your error message with google. Most likely, it will be a colab issue.    
+
+If you are sure it is a out of memory issue when scanning models, and you are using this extension's latest version, then there is nothing we can do.   
+
+Since v1.5.5, we've already optimized the SHA256 function to the top. So the only 2 choices for you are:  
+* try again  
+* or use a pro account of colab.  
+
+
+
+
+
 # Change Log
+## v1.5.5
+* update SHA256 function, now it just use the code from pip
+
 ## v1.5.4
 * set sys.stdout to utf-8
 * Add default header for requests to prevent from being blocked by civitai.
