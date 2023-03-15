@@ -1,5 +1,7 @@
 ### Language
-[中文](README.cn.md)
+[中文](README.cn.md)  
+[日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)
+
 
 # Notice
 After install or update to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
