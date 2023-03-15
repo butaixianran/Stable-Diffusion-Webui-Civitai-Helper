@@ -114,7 +114,9 @@ With this one, output information is on "Download Model" section's log and conso
 
 
 ## Get Model Info By Url
-If a model's SHA256 can not be found in civitai, but you still want to link it to a civitai model. You can choose this model from list, then offer a civitai model page's url you want to link.   
+This is used to force a local model link to a Civitai model. For example, you convert a model's format or pruned it, or converted a checkpoint model into a lora. Then it can not be found on civitai when scanning.  
+
+If a model's SHA256 can not be found in civitai, but you still want to link it to a civitai model. You can use this funcion, choose this model from list, then offer a civitai model page's url you want to link.   
 
 After clicking button, extension will download that civitai model's model info for this local model file you picked.  
 
