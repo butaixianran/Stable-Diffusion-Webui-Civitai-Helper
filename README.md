@@ -174,7 +174,9 @@ Enjoy!
 
 ## Common Issue
 ### 4 Button on card didn't show
-The only reason for this issue, is you are not using the latest SD webui. So, Make sure you updated it.  
+First of all, make sure you clicked "Refresh Civitai Helper" button.  
+
+If issue is still there, then, only reason is you are not using the latest SD webui. So, Make sure you updated it.  
 
 Your update could be failed if you have modified SD webui's file. You need to check git command's console log to make sure it is updated. 
 
