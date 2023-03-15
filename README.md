@@ -172,6 +172,34 @@ From v1.5, v1.x goes into maintenance phase.
 
 Enjoy!
 
+## Common Issue
+### 4 Button on card didn't show
+The only reason for this issue, is you are not using the latest SD webui. So, Make sure you updated it.  
+
+Your update could be failed if you have modified SD webui's file. You need to check git command's console log to make sure it is updated. 
+
+In many cases, git will just refuse to update and tell you there are some conflicts need you to handle manually. If you don't check the consloe log, you will think your SD webui is updated, but it is not.  
+
+### Scan or Get model info failed
+This extension now is stable. So, the reason for this most likely is your request has been refused by Civitai.  
+
+Civitai is not that stable as those rich websites, it can be down, or re-direct API request to a real human checking page.(This rule is disabled for now, but can be enabled at anytime they want)  
+
+So, the only thing you can do is just wait a while then try again.  
+
+### Scanning fail when using colab
+First of, search your error message with google. Most likely, it will be a colab issue.    
+
+If you are sure it is a out of memory issue when scanning models, and you are using this extension's latest version, then there is nothing we can do.   
+
+Since v1.5.5, we've already optimized the SHA256 function to the top. So the only 2 choices for you are:  
+* try again  
+* or use a pro account of colab.  
+
+
+
+
+
 # Change Log
 ## v1.5.5
 * update SHA256 function, now it just use the code from pip
