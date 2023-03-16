@@ -139,6 +139,13 @@ def on_ui_tabs():
 
         with gr.Box():
             with gr.Column():
+                gr.Markdown("### Lora Card Extra Network UI")
+                with gr.Row():
+                    min_weight_js_cb = gr.Number(label="Minimum value for weight slider", value=min_weight_js, elem_id="ch_min_weight_js_cb")
+                    max_weight_js_cb = gr.Number(label="Maximum value for weight slider", value=max_weight_js, elem_id="ch_max_weight_js_cb")
+
+        with gr.Box():
+            with gr.Column():
                 gr.Markdown("### Other Setting")
                 with gr.Row():
                     open_url_with_js_ckb = gr.Checkbox(label="Open Url At Client Side", value=open_url_with_js, elem_id="ch_open_url_with_js_ckb")
@@ -148,12 +155,7 @@ def on_ui_tabs():
                 save_setting_btn = gr.Button(value="Save Setting")
                 general_log_md = gr.Markdown(value="")
 
-        with gr.Box():
-            with gr.Column():
-                gr.Markdown("### Lora Card Extra Network UI")
-                with gr.Row():
-                    min_weight_js_cb = gr.Number(label="Minimum value for weight slider", value=min_weight_js, elem_id="ch_min_weight_js_cb")
-                    max_weight_js_cb = gr.Number(label="Maximum value for weight slider", value=max_weight_js, elem_id="ch_max_weight_js_cb")
+        
 
         # ====Footer====
         gr.Markdown(f"<center>version:{util.version}</center>")

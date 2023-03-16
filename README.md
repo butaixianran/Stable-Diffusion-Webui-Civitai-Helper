@@ -5,7 +5,6 @@
 # Known issues for jokker87 additions
 
 * Prompt value doesn't get removed, only lora and its weight
-* Slider min and max value have fixed values, config values don't apply for now
 * Lora configs aren't linked between txt2img and img2img, only if you save them and then refresh the extension with the button
 
 # Notice

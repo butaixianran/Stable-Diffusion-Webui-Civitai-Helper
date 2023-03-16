@@ -506,6 +506,8 @@ onUiLoaded(() => {
                 }
                 // console.log("find extra_network_node: " + extra_network_id);
 
+                let minValue = gradioApp().querySelector("#ch_min_weight_js_cb input").value;
+				let maxValue = gradioApp().querySelector("#ch_max_weight_js_cb input").value;
                 // get all card nodes
                 cards = extra_network_node.querySelectorAll(".card");
                 for (let card of cards) {
@@ -657,7 +659,7 @@ onUiLoaded(() => {
 						let jokker_li = document.createElement("li");
 						let jokker_li2 = document.createElement("li");
 						// TODO: get min max from backend
-						jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.1" min="0" max="2" /><input class="weightActive" type="checkbox" /></div></div>';
+						jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.01" min="'+minValue+'" max="'+maxValue+'" /><input class="weightActive" type="checkbox" /></div></div>';
 					
 						jokker_li2.innerHTML = '<div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div>';
 						ul_node.appendChild(jokker_li);
