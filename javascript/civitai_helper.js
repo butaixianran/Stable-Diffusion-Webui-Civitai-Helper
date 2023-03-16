@@ -9,7 +9,9 @@ function send_ch_py_msg(msg){
     if (js_msg_txtbox && msg) {
         // fill to msg box
         js_msg_txtbox.value = JSON.stringify(msg);
-        js_msg_txtbox.dispatchEvent(new Event("input"));
+		let ev = new Event("input");
+		Object.defineProperty(ev, 'target', {writable: false, value: js_msg_txtbox});
+        js_msg_txtbox.dispatchEvent(ev);
     }
 
 }
@@ -52,20 +54,23 @@ const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
                 find_msg=true
             }
         }
-
+		
+		let ev = new Event("input");
+		Object.defineProperty(ev, 'target', {writable: false, value: py_msg_txtbox});
+		
         if (find_msg) {
             //clear msg in both sides
             py_msg_txtbox.value = "";
-            py_msg_txtbox.dispatchEvent(new Event("input"));
+            py_msg_txtbox.dispatchEvent(ev);
 
             resolve(new_msg);
             clearInterval(interval);
         } else if (count > max_count) {
             //clear msg in both sides
             py_msg_txtbox.value = "";
-            py_msg_txtbox.dispatchEvent(new Event("input"));
+            py_msg_txtbox.dispatchEvent(ev);
 
-            reject('');
+            reject('could not get response from py');
             clearInterval(interval);
         }
 
@@ -275,7 +280,9 @@ function save_lora_config(event, model_type, search_term){
 
     // fill to msg box
     js_msg_txtbox.value = JSON.stringify(msg);
-    js_msg_txtbox.dispatchEvent(new Event("input"));
+	let ev = new Event("input");
+	Object.defineProperty(ev, 'target', {writable: false, value: js_msg_txtbox});
+    js_msg_txtbox.dispatchEvent(ev);
 
     //click hidden button
     js_save_lora_configs_btn.click();
@@ -454,7 +461,7 @@ onUiLoaded(() => {
 		//event.preventDefault()
 
 		//check response msg from python
-		let new_py_msg = await get_new_ch_py_msg("");
+		let new_py_msg = await get_new_ch_py_msg();
 		let lora_confs = JSON.parse(new_py_msg);
 		lora_confs = JSON.parse(lora_confs["content"]["lora_configs"]);
 
@@ -724,7 +731,7 @@ onUiLoaded(() => {
 
 
     //run it once
-    setTimeout(function() { update_card_for_civitai(); }, 3000);
+    setTimeout(function() { update_card_for_civitai(); }, 1000);
 	//update_card_for_civitai();
 });
 
