@@ -338,6 +338,7 @@ onUiLoaded(() => {
         //change all "replace preview" into an icon
         let extra_network_id = "";
         let extra_network_node = null;
+        let metadata_button = null;
         let additional_node = null;
         let replace_preview_btn = null;
         let ul_node = null;
@@ -390,6 +391,8 @@ onUiLoaded(() => {
                 // get all card nodes
                 cards = extra_network_node.querySelectorAll(".card");
                 for (let card of cards) {
+                    //metadata_buttoncard
+                    metadata_button = card.querySelector(".metadata-button");
                     //additional node
                     additional_node = card.querySelector(".actions .additional");
                     //get ul node, which is the parent of all buttons
@@ -428,6 +431,13 @@ onUiLoaded(() => {
                                         atag.style.backgroundImage = null;
                                     }
                                 }
+
+                                //also remove br tag in ul
+                                let brtag = ul_node.querySelector("br");
+                                if (brtag) {
+                                    ul_node.removeChild(brtag);
+                                }
+
                             }
                             //just reset and remove nodes, do nothing else
                             continue;
@@ -441,6 +451,13 @@ onUiLoaded(() => {
                         } else {
                             additional_node.style.display = null;
                         }
+
+                        // remove br tag
+                        let brtag = ul_node.querySelector("br");
+                        if (brtag) {
+                            ul_node.removeChild(brtag);
+                        }
+
                     }
 
                     // change replace preview text button into icon
@@ -536,6 +553,10 @@ onUiLoaded(() => {
 
                     //add to card
                     ul_node.appendChild(open_url_node);
+                    //add br if metadata_button exists
+                    if (is_thumb_mode && metadata_button) {
+                        ul_node.appendChild(document.createElement("br"));
+                    }
                     ul_node.appendChild(add_trigger_words_node);
                     ul_node.appendChild(use_preview_prompt_node);
 
