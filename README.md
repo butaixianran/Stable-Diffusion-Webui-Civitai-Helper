@@ -203,6 +203,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.5.6
+* update error msg when can not connect to civitai API service
+
 ## v1.5.5
 * update SHA256 function, now it just use the code from pip
 
