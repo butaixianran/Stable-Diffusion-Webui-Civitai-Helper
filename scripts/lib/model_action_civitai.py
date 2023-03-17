@@ -80,7 +80,7 @@ def scan_model(scan_model_types, max_size_preview, skip_nsfw_preview):
                             time.sleep(1)
 
                         if model_info is None:
-                            output = "Failed to get model_info"
+                            output = "Connect to Civitai API service failed. Wait a while and try again"
                             util.printD(output)
                             return output+", check console log for detail"
 
@@ -228,6 +228,10 @@ def get_model_info_by_url(model_url_or_id:str) -> tuple:
         return    
 
     model_info = civitai.get_model_info_by_id(model_id)
+    if model_info is None:
+        util.printD("Connect to Civitai API service failed. Wait a while and try again")
+        return
+    
     if not model_info:
         util.printD("failed to get model info from url or id")
         return
