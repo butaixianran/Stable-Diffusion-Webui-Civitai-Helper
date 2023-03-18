@@ -188,6 +188,8 @@ git在很多时候，会拒绝升级，并告诉你有些冲突需要你手动�
 解决方法是，让给你汉化的那个人，把这个地方给改回去。如果不想等人家给你改，你可以自己从SD Webui的源码里，把这段中文，改回`replace preview`。这段文字藏在：  
 `你的SD目录\html\extra-networks-card.html`里面。   
 
+### Request model info from civitai
+意思就是正在连接civitai，如果没有后面的信息，就是连不上，请挂代理。
 
 
 ### 扫描或获取模型信息失败
