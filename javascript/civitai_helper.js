@@ -321,6 +321,12 @@ onUiLoaded(() => {
         let btn_thumb_background = "rgba(0, 0, 0, 0.8)";
 
         let ch_btn_txts = ['🌐', '💡', '🏷'];
+        let replace_preview_text = getTranslation("replace preview");
+        if (!replace_preview_text) {
+            replace_preview_text = "replace preview";
+        }
+        
+
 
         // get component
         let ch_always_display_ckb = gradioApp().querySelector("#ch_always_display_ckb input");
@@ -424,7 +430,7 @@ onUiLoaded(() => {
                                         ul_node.removeChild(atag);
                                     } else {
                                         //do not remove, just reset
-                                        atag.innerHTML = "replace preview";
+                                        atag.innerHTML = replace_preview_text;
                                         atag.style.display = null;
                                         atag.style.fontSize = null;
                                         atag.style.position = null;
@@ -462,7 +468,7 @@ onUiLoaded(() => {
 
                     // change replace preview text button into icon
                     if (replace_preview_btn) {
-                        if (replace_preview_btn.innerHTML == "replace preview") {
+                        if (replace_preview_btn.innerHTML == replace_preview_text) {
                             need_to_add_buttons = true;
                             replace_preview_btn.innerHTML = "🖼";
                             if (!is_thumb_mode) {
