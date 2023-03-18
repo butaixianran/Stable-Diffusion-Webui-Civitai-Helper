@@ -210,6 +210,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.5.7
+* Fix Localization issue for 4 addtional buttons on cards
+
 ## v1.5.6
 * update error msg when can not connect to civitai API service
 * update thumb mode for SD webui new version's metadata button
