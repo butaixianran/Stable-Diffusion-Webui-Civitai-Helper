@@ -80,6 +80,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 ![](img/thumb_mode.jpg)  
 
 ## 下载 
+**(单任务，下载完一个再下另一个)**  
 通过Civitai模型页面Url下载模型，要3个步骤：
 * 填入url，点击按钮获取模型信息
 * 扩展会自动填入模型名称和类型，你需要选择下载的子目录和模型版本。

@@ -287,7 +287,7 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
     event.stopPropagation()
     event.preventDefault()
 
-    
+
 }
 
 
