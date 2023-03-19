@@ -367,8 +367,8 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
 
 }
 
-var re_extranet   =    /<([^:]+:[^:]+):[\d\.]+>/;
-var re_extranet_g = /\s+<([^:]+:[^:]+):[\d\.]+>/g;
+var re_extranet   =    /<([^:]+:[^:]+):-?[\d\.]+>/;
+var re_extranet_g = /\s+<([^:]+:[^:]+):-?[\d\.]+>/g;
 
 function tryToRemoveExtraNetworkFromPromptOwn(textarea, text){
     var m = text.match(re_extranet)
