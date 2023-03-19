@@ -337,7 +337,7 @@ function get_card_prompt(search_term_to_find) {
 			finalPrompt += loraPrompt;
 		}
 		
-		if (promptActive.checked) {
+		if (promptActive.checked && promptInput.value.trim() != "") {
 			if (weightActive.checked) {
 				finalPrompt += ", ";
 			}
