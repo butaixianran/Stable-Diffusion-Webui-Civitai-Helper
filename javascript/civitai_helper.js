@@ -491,6 +491,7 @@ onUiLoaded(() => {
         let cards = null;
         let need_to_add_buttons = false;
         let is_thumb_mode = false;
+		let loraTxt2ImgInputDict = {};
 
 		console.log("start load_lora_configs");
 
@@ -740,19 +741,79 @@ onUiLoaded(() => {
 							promptActive.checked = lora_confs[loraCardName]["prompt_active"];
 						}
 						
-						weightInput.onchange = function() {
-							weightValueInput.value = this.value;
+						if (tab_prefix == tab_prefix_list[0]) {
+							loraTxt2ImgInputDict[loraCardName] = {weightInput, weightValueInput, promptInput, promptActive};
 						}
-						weightInput.oninput = function() {
-							weightValueInput.value = this.value;
+						else {
+							let oldValueInput = loraTxt2ImgInputDict[loraCardName].weightValueInput;
+							let oldInput = loraTxt2ImgInputDict[loraCardName].weightInput;
+							let oldPrompt = loraTxt2ImgInputDict[loraCardName].promptInput;
+							let oldActive = loraTxt2ImgInputDict[loraCardName].promptActive;
+							
+							promptActive.onchange = function() {
+								oldActive.checked = this.checked;
+							}
+							oldActive.onchange = function() {
+								promptActive.checked = this.checked;
+							}
+							
+							promptInput.onchange = function() {
+								oldPrompt.value = this.value;
+							}
+							promptInput.oninput = function() {
+								oldPrompt.value = this.value;
+							}
+							oldPrompt.onchange = function() {
+								promptInput.value = this.value;
+							}
+							oldPrompt.oninput = function() {
+								promptInput.value = this.value;
+							}
+							
+							weightInput.onchange = function() {
+								weightValueInput.value = this.value;
+								oldValueInput.value = this.value;
+								oldInput.value = this.value;
+							}
+							weightInput.oninput = function() {
+								weightValueInput.value = this.value;
+								oldValueInput.value = this.value;
+								oldInput.value = this.value;
+							}
+							
+							weightValueInput.onchange = function() {
+								weightInput.value = this.value;
+								oldValueInput.value = this.value;
+								oldInput.value = this.value;
+							}
+							weightValueInput.oninput = function() {
+								weightInput.value = this.value;
+								oldValueInput.value = this.value;
+								oldInput.value = this.value;
+							}
+							
+							oldValueInput.onchange = function() {
+								weightInput.value = this.value;
+								weightValueInput.value = this.value;
+								oldInput.value = this.value;
+							}
+							oldValueInput.oninput = function() {
+								weightInput.value = this.value;
+								weightValueInput.value = this.value;
+								oldInput.value = this.value;
+							}
+							oldInput.onchange = function() {
+								weightInput.value = this.value;
+								weightValueInput.value = this.value;
+								oldValueInput.value = this.value;
+							}
+							oldInput.oninput = function() {
+								weightInput.value = this.value;
+								weightValueInput.value = this.value;
+								oldValueInput.value = this.value;
+							}
 						}
 						
-						weightValueInput.onchange = function() {
-							weightInput.value = this.value;
-						}
-						weightValueInput.oninput = function() {
-							weightInput.value = this.value;
-						}
 						
 						let onclickValue = card.getAttribute('onclick');
 						let regex = /\((.*?)\)/;

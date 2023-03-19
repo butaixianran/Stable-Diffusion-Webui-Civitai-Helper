@@ -4,7 +4,7 @@
 
 # Known issues for jokker87 additions
 
-* Lora configs aren't linked between txt2img and img2img, only if you save them and then refresh the extension with the button
+* None for the moment
 
 # Notice
 After install or update to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
