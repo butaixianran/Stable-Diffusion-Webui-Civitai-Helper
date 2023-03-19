@@ -2,9 +2,16 @@
 [中文](README.cn.md)  
 [日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)  
 
-# Known issues for jokker87 additions
+# jokker87 additions
 
-* None for the moment
+You can now set your weight and prompt text on every lora card. To save the settings, click on the disk symbol. you can deactivate prompt text with the checkbox. a fresh scan in the civitai helper tab fills the values of the lora's.
+
+![](img/lora_settings.png)
+
+You can set the mininimum and maximum value of the slider in the civitai helper tab.
+
+![](img/lora_settings_tab.png)
+
 
 # Notice
 **This extension now is very stable and works well for many people. If you have an issue, read this document and check console log window's detail. I don't have time to explain everything to people again and again.**  

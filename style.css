@@ -1,63 +1,63 @@
 .additional div{
-	display: flex;
+    display: flex;
 }
 
 .additional span.hidden{
-	display: none;
+    display: none;
 }
 
 .additional .linkButton {
-	margin: 0px 5px;
-	font-size: 200%;
-	display: inline-block;
-	height: 35px;
+    margin: 0px 5px;
+    font-size: 200%;
+    display: inline-block;
+    height: 35px;
 }
 
 .extra-network-thumbs .actions .additional a.linkButtonThumb {
-	font-size: 100%;
-	display: inline;
-	position: static;
-	background-image: none;
-	background: rgba(0, 0, 0, 0.8)
+    font-size: 100%;
+    display: inline;
+    position: static;
+    background-image: none;
+    background: rgba(0, 0, 0, 0.8)
 }
 
 .additional .weightAndPrompt {
-	flex-direction: column;
+    flex-direction: column;
 }
 
 .additional .weightAndPrompt span {
-	align-self: end;
+    align-self: end;
 }
 
 .additional .weightAndPrompt .weightValueText {
-	width: 25%;
-	margin-left: auto;
+    width: 25%;
+    margin-left: auto;
 }
 
 .additional .weightAndPrompt .weightValue {
-	width: 87%;
-	justify-self: start;
-	margin: 0;
+    width: 87%;
+    justify-self: start;
+    margin: 0;
 }
 
 .additional .weightAndPrompt .weightActive {
-	float: right;
-	align-self: center;
-	margin-left: 10px;
+    float: right;
+    align-self: center;
+    margin-left: 10px;
 }
 
 .additional .promptValue {
-	width: 87%;
-	margin-bottom: 10px;
+    width: 87%;
+    margin-bottom: 10px;
 }
 
 .additional .promptActive {
-	margin-left: 10px;
-	align-self: center;
+    margin-left: 10px;
+    align-self: center;
 }
 
 .additional .textright {
-	float: right;
+    float: right;
 }
 
 blockquote ul {

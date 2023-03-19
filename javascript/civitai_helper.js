@@ -9,11 +9,10 @@ function send_ch_py_msg(msg){
     if (js_msg_txtbox && msg) {
         // fill to msg box
         js_msg_txtbox.value = JSON.stringify(msg);
-		let ev = new Event("input");
-		Object.defineProperty(ev, 'target', {writable: false, value: js_msg_txtbox});
+        let ev = new Event("input");
+        Object.defineProperty(ev, 'target', {writable: false, value: js_msg_txtbox});
         js_msg_txtbox.dispatchEvent(ev);
     }
-
 }
 
 // get msg from python side from a hidden textbox
@@ -54,10 +53,10 @@ const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
                 find_msg=true
             }
         }
-		
-		let ev = new Event("input");
-		Object.defineProperty(ev, 'target', {writable: false, value: py_msg_txtbox});
-		
+
+        let ev = new Event("input");
+        Object.defineProperty(ev, 'target', {writable: false, value: py_msg_txtbox});
+
         if (find_msg) {
             //clear msg in both sides
             py_msg_txtbox.value = "";
@@ -73,12 +72,8 @@ const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
             reject('could not get response from py');
             clearInterval(interval);
         }
-
     }, 1000);
 })
-
-
-
 
 function getActivePrompt() {
     const currentTab = get_uiCurrentTabContent();
@@ -113,7 +108,6 @@ async function open_model_url(event, model_type, search_term){
         return
     }
 
-
     //msg to python side
     let msg = {
         "action": "",
@@ -122,7 +116,6 @@ async function open_model_url(event, model_type, search_term){
         "prompt": "",
         "neg_prompt": "",
     }
-
 
     msg["action"] = "open_url";
     msg["model_type"] = model_type;
@@ -153,13 +146,9 @@ async function open_model_url(event, model_type, search_term){
             if (py_msg_json.content.url) {
                 window.open(py_msg_json.content.url, "_blank");
             }
-
         }
-
-
     }
 
-    
     console.log("end open_model_url");
 }
 
@@ -171,7 +160,6 @@ function add_trigger_words(event, model_type, search_term){
     if (!js_add_trigger_words_btn) {
         return
     }
-
 
     //msg to python side
     let msg = {
@@ -192,17 +180,15 @@ function add_trigger_words(event, model_type, search_term){
     msg["prompt"] = act_prompt.value;
 
     // fill to msg box
-    send_ch_py_msg(msg)
+    send_ch_py_msg(msg);
 
     //click hidden button
     js_add_trigger_words_btn.click();
 
     console.log("end add_trigger_words");
 
-    event.stopPropagation()
-    event.preventDefault()
-
-    
+    event.stopPropagation();
+    event.preventDefault();
 }
 
 function use_preview_prompt(event, model_type, search_term){
@@ -236,16 +222,15 @@ function use_preview_prompt(event, model_type, search_term){
     msg["neg_prompt"] = neg_prompt.value;
 
     // fill to msg box
-    send_ch_py_msg(msg)
+    send_ch_py_msg(msg);
 
     //click hidden button
     js_use_preview_prompt_btn.click();
 
     console.log("end use_preview_prompt");
 
-    event.stopPropagation()
-    event.preventDefault()
-
+    event.stopPropagation();
+    event.preventDefault();
 }
 
 function save_lora_config(event, model_type, search_term){
@@ -254,8 +239,6 @@ function save_lora_config(event, model_type, search_term){
     //get hidden components of extension 
     let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
     let js_save_lora_configs_btn = gradioApp().getElementById("ch_js_save_lora_configs_btn");
-
-
 
     //msg to python side
     let msg = {
@@ -268,19 +251,19 @@ function save_lora_config(event, model_type, search_term){
 
     msg["action"] = "save_lora_configs";
     msg["model_type"] = model_type;
-	msg["search_term"] = search_term;
+    msg["search_term"] = search_term;
 
-	let card = event.srcElement.parentElement.parentElement;
-	let weightValue = card.querySelector(".weightValueText");
-	let promptValue = card.querySelector(".promptValue");
-	let promptActive = card.querySelector(".promptActive");
+    let card = event.srcElement.parentElement.parentElement;
+    let weightValue = card.querySelector(".weightValueText");
+    let promptValue = card.querySelector(".promptValue");
+    let promptActive = card.querySelector(".promptActive");
 
     msg["prompt"] = weightValue.value + ";" + promptValue.value + ";" +promptActive.checked;
 
     // fill to msg box
     js_msg_txtbox.value = JSON.stringify(msg);
-	let ev = new Event("input");
-	Object.defineProperty(ev, 'target', {writable: false, value: js_msg_txtbox});
+    let ev = new Event("input");
+    Object.defineProperty(ev, 'target', {writable: false, value: js_msg_txtbox});
     js_msg_txtbox.dispatchEvent(ev);
 
     //click hidden button
@@ -288,61 +271,58 @@ function save_lora_config(event, model_type, search_term){
 
     console.log("end save lora config");
 
-    event.stopPropagation()
-    event.preventDefault()
-
+    event.stopPropagation();
+    event.preventDefault();
 }
 
 function get_card_prompt(search_term_to_find) {
-	let extra_network_id = "txt2img_lora_cards";
-	let extra_network_node = gradioApp().getElementById(extra_network_id);
-	
-	let cards = extra_network_node.querySelectorAll(".card");
-	let foundCard = null;
-	for (let card of cards) {
-		
-		// search_term node
-		// search_term = subfolder path + model name + ext
-		let search_term_node = card.querySelector(".actions .additional .search_term");
-		if (!search_term_node){
-			console.log("can not find search_term node for cards in " + extra_network_id);
-			continue;
-		}
+    let extra_network_id = "txt2img_lora_cards";
+    let extra_network_node = gradioApp().getElementById(extra_network_id);
 
-		// get search_term
-		let search_term = search_term_node.innerHTML.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");;
-		if (!search_term) {
-			console.log("search_term is empty for cards in " + extra_network_id);
-			continue;
-		}
+    let cards = extra_network_node.querySelectorAll(".card");
+    let foundCard = null;
+    for (let card of cards) {
 
-		if (search_term.includes(search_term_to_find)) {
-			foundCard = card;
-			break;
-		}
-	}
-	if (foundCard) {
-		let weightValueInput = foundCard.querySelector(".actions .weightValueText");
-		let weightInput = foundCard.querySelector(".actions .weightValue");
-		let promptInput = foundCard.querySelector(".actions .promptValue");
-		let promptActive = foundCard.querySelector(".actions .promptActive");
-		
-		let finalPrompt = "";
-		let loraPrompt = "<lora:"+search_term_to_find+":";
-		loraPrompt += weightValueInput.value;
-		loraPrompt += ">";
-		finalPrompt += loraPrompt;
-		
-		if (promptActive.checked && promptInput.value.trim() != "") {
-			finalPrompt += ", " + promptInput.value;
-		}
+        // search_term node
+        // search_term = subfolder path + model name + ext
+        let search_term_node = card.querySelector(".actions .additional .search_term");
+        if (!search_term_node){
+            console.log("can not find search_term node for cards in " + extra_network_id);
+            continue;
+        }
 
-		return finalPrompt;
-		
-	}
-	return null;
+        // get search_term
+        let search_term = search_term_node.innerHTML.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");;
+        if (!search_term) {
+            console.log("search_term is empty for cards in " + extra_network_id);
+            continue;
+        }
+
+        if (search_term.includes(search_term_to_find)) {
+            foundCard = card;
+            break;
+        }
+    }
+    if (foundCard) {
+        let weightValueInput = foundCard.querySelector(".actions .weightValueText");
+        let weightInput = foundCard.querySelector(".actions .weightValue");
+        let promptInput = foundCard.querySelector(".actions .promptValue");
+        let promptActive = foundCard.querySelector(".actions .promptActive");
+
+        let finalPrompt = "";
+        let loraPrompt = "<lora:"+search_term_to_find+":";
+        loraPrompt += weightValueInput.value;
+        loraPrompt += ">";
+        finalPrompt += loraPrompt;
+
+        if (promptActive.checked && promptInput.value.trim() != "") {
+            finalPrompt += ", " + promptInput.value;
+        }
+
+        return finalPrompt;
+    }
+    return null;
 }
-
 
 // download model's new version into SD at python side
 function ch_dl_model_new_version(event, model_path, version_id, download_url){
@@ -374,15 +354,15 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
     msg["download_url"] = download_url;
 
     // fill to msg box
-    send_ch_py_msg(msg)
+    send_ch_py_msg(msg);
 
     //click hidden button
     js_dl_model_new_version_btn.click();
 
     console.log("end dl_model_new_version");
 
-    event.stopPropagation()
-    event.preventDefault()
+    event.stopPropagation();
+    event.preventDefault();
 
 
 }
@@ -393,9 +373,8 @@ var re_extranet_g = /\s+<([^:]+:[^:]+):[\d\.]+>/g;
 function tryToRemoveExtraNetworkFromPromptOwn(textarea, text){
     var m = text.match(re_extranet)
     if(! m) return false
-	
-	var newText = text.replaceAll(m[0], "");
-	
+
+    var newText = text.replaceAll(m[0], "");
 
     var partToSearch = m[1]
     var replaced = false
@@ -407,13 +386,13 @@ function tryToRemoveExtraNetworkFromPromptOwn(textarea, text){
         }
         return found;
     })
-	
-	if (newText != "") {
-		newTextareaText = newTextareaText.replaceAll(newText, function(found, index){
-			replaced = true;
-			return "";
-		})
-	}
+
+    if (newText != "") {
+        newTextareaText = newTextareaText.replaceAll(newText, function(found, index){
+            replaced = true;
+            return "";
+        })
+    }
 
     if(replaced){
         textarea.value = newTextareaText
@@ -435,8 +414,6 @@ function cardClickedOwn(tabname, textToAdd, allowNegativePrompt){
 
 
 onUiLoaded(() => {
-
-
 
     // get all extra network tabs
     let tab_prefix_list = ["txt2img", "img2img"];
@@ -462,8 +439,6 @@ onUiLoaded(() => {
         if (!replace_preview_text) {
             replace_preview_text = "replace preview";
         }
-        
-
 
         // get component
         let ch_always_display_ckb = gradioApp().querySelector("#ch_always_display_ckb input");
@@ -476,7 +451,6 @@ onUiLoaded(() => {
         if (ch_show_btn_on_thumb_ckb) {
             ch_show_btn_on_thumb = ch_show_btn_on_thumb_ckb.checked;
         }
-
 
         //change all "replace preview" into an icon
         let extra_network_id = "";
@@ -491,29 +465,23 @@ onUiLoaded(() => {
         let cards = null;
         let need_to_add_buttons = false;
         let is_thumb_mode = false;
-		let loraTxt2ImgInputDict = {};
+        let loraTxt2ImgInputDict = {};
 
-		console.log("start load_lora_configs");
+        console.log("start load_lora_configs");
 
-		//get hidden components of extension 
-		let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
-		//let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
-		let js_load_lora_configs_btn = gradioApp().getElementById("ch_js_load_lora_configs_btn");
+        //get hidden components of extension 
+        let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
+        let js_load_lora_configs_btn = gradioApp().getElementById("ch_js_load_lora_configs_btn");
 
-		//click hidden button
-		js_load_lora_configs_btn.click();
+        //click hidden button
+        js_load_lora_configs_btn.click();
 
-		// stop parent event
-		//event.stopPropagation()
-		//event.preventDefault()
-
-		//check response msg from python
-		let new_py_msg = await get_new_ch_py_msg();
-		let lora_confs = JSON.parse(new_py_msg);
-		lora_confs = JSON.parse(lora_confs["content"]["lora_configs"]);
+        //check response msg from python
+        let new_py_msg = await get_new_ch_py_msg();
+        let lora_confs = JSON.parse(new_py_msg);
+        lora_confs = JSON.parse(lora_confs["content"]["lora_configs"]);
 
         for (const tab_prefix of tab_prefix_list) {
-
             for (const js_model_type of model_type_list) {
                 //get model_type for python side
                 switch (js_model_type) {
@@ -537,24 +505,22 @@ onUiLoaded(() => {
                 }
 
                 extra_network_id = tab_prefix+"_"+js_model_type+"_"+cardid_suffix;
-                // console.log("searching extra_network_node: " + extra_network_id);
                 extra_network_node = gradioApp().getElementById(extra_network_id);
+
                 // check if extr network is under thumbnail mode
                 is_thumb_mode = false
                 if (extra_network_node) {
                     if (extra_network_node.className == "extra-network-thumbs") {
                         console.log(extra_network_id + " is in thumbnail mode");
                         is_thumb_mode = true;
-                        // if (!ch_show_btn_on_thumb) {continue;}
                     }
                 } else {
                     console.log("can not find extra_network_node: " + extra_network_id);
                     continue;
                 }
-                // console.log("find extra_network_node: " + extra_network_id);
 
                 let minValue = gradioApp().querySelector("#ch_min_weight_js_cb input").value;
-				let maxValue = gradioApp().querySelector("#ch_max_weight_js_cb input").value;
+                let maxValue = gradioApp().querySelector("#ch_max_weight_js_cb input").value;
                 // get all card nodes
                 cards = extra_network_node.querySelectorAll(".card");
                 for (let card of cards) {
@@ -576,12 +542,12 @@ onUiLoaded(() => {
                         } else {
                             //reset
                             ul_node.style.background = null;
-                            // console.log("remove existed buttons");
+
                             // remove existed buttons
                             if (ul_node) {
                                 // find all .a child nodes
                                 let atags = ul_node.querySelectorAll("a");
-                                
+
                                 for (let atag of atags) {
                                     //reset display
                                     atag.style.display = null;
@@ -604,13 +570,10 @@ onUiLoaded(() => {
                                 if (brtag) {
                                     ul_node.removeChild(brtag);
                                 }
-
                             }
                             //just reset and remove nodes, do nothing else
                             continue;
-
                         }
-
                     } else {
                         // full preview mode
                         if (ch_always_display) {
@@ -624,7 +587,6 @@ onUiLoaded(() => {
                         if (brtag) {
                             ul_node.removeChild(brtag);
                         }
-
                     }
 
                     // change replace preview text button into icon
@@ -633,18 +595,18 @@ onUiLoaded(() => {
                             need_to_add_buttons = true;
                             replace_preview_btn.innerHTML = "🖼";
                             if (!is_thumb_mode) {
-								replace_preview_btn.className = "linkButton";
+                                replace_preview_btn.className = "linkButton";
                             } else {
-								replace_preview_btn.className = "linkButtonThumb";
+                                replace_preview_btn.className = "linkButtonThumb";
                             }
                         }
                     }
-					
-					if (!need_to_add_buttons) {
+
+                    if (!need_to_add_buttons) {
                         continue;
                     }
-					
-					// search_term node
+
+                    // search_term node
                     // search_term = subfolder path + model name + ext
                     search_term_node = card.querySelector(".actions .additional .search_term");
                     if (!search_term_node){
@@ -658,18 +620,18 @@ onUiLoaded(() => {
                         console.log("search_term is empty for cards in " + extra_network_id);
                         continue;
                     }
-					
-					//get ul node, which is the parent of all buttons
+
+                    //get ul node, which is the parent of all buttons
                     ul_node = card.querySelector(".actions .additional ul");
-					
-					// then we need to add 3 buttons to each ul node:
+
+                    // then we need to add 3 buttons to each ul node:
                     let open_url_node = document.createElement("a");
                     open_url_node.href = "#";
                     open_url_node.innerHTML = "🌐";
                     if (!is_thumb_mode) {
-						open_url_node.className = "linkButton";
+                        open_url_node.className = "linkButton";
                     } else {
-						open_url_node.className = "linkButtonThumb";
+                        open_url_node.className = "linkButtonThumb";
                     }
                     open_url_node.title = "Open this model's civitai url";
                     open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
@@ -678,9 +640,9 @@ onUiLoaded(() => {
                     add_trigger_words_node.href = "#";
                     add_trigger_words_node.innerHTML = "💡";
                     if (!is_thumb_mode) {
-						add_trigger_words_node.className = "linkButton";
+                        add_trigger_words_node.className = "linkButton";
                     } else {
-						add_trigger_words_node.className = "linkButtonThumb";
+                        add_trigger_words_node.className = "linkButtonThumb";
                     }
 
                     add_trigger_words_node.title = "Add trigger words to prompt";
@@ -692,141 +654,140 @@ onUiLoaded(() => {
                     if (!is_thumb_mode) {
                         use_preview_prompt_node.className = "linkButton";
                     } else {
-						use_preview_prompt_node.className = "linkButtonThumb";
+                        use_preview_prompt_node.className = "linkButtonThumb";
                     }
                     use_preview_prompt_node.title = "Use prompt from preview image";
                     use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
-					
-					let button_li = document.createElement("li");
-					
-					button_li.appendChild(open_url_node);
-					button_li.appendChild(add_trigger_words_node);
+
+                    let button_li = document.createElement("li");
+
+                    button_li.appendChild(open_url_node);
+                    button_li.appendChild(add_trigger_words_node);
                     button_li.appendChild(use_preview_prompt_node);
-					
-					open_url_node.parentNode.insertBefore(replace_preview_btn, open_url_node)
-					
-					if (model_type == "lora" && !is_thumb_mode) {
-						let save_node = document.createElement("a");
-						// use_preview_prompt_node.href = "#";
-						save_node.innerHTML = "💾";
-						if (!is_thumb_mode) {
-							save_node.className = "linkButton";
-						}
-						
-						let modelname = search_term.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");
-						save_node.title = "Save config";
-						save_node.setAttribute("onclick","save_lora_config(event, '"+model_type+"', '"+modelname+"')");
-						
-						button_li.appendChild(save_node);
-						
-						let jokker_li = document.createElement("li");
-						let jokker_li2 = document.createElement("li");
-						// TODO: get min max from backend
-						jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.01" min="'+minValue+'" max="'+maxValue+'" /></div></div>';
-					
-						jokker_li2.innerHTML = '<div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div>';
-						ul_node.appendChild(jokker_li);
-						ul_node.appendChild(jokker_li2);
-						
-						let nameSpan = card.querySelector(".actions .name");
-						let weightValueInput = card.querySelector(".actions .weightValueText");
-						let weightInput = card.querySelector(".actions .weightValue");
-						let promptInput = card.querySelector(".actions .promptValue");
-						let promptActive = card.querySelector(".actions .promptActive");
-						let loraCardName = nameSpan.innerHTML;
-						if (loraCardName in lora_confs === true) {
-							weightValueInput.value = lora_confs[loraCardName]["weight"];
-							weightInput.value = lora_confs[loraCardName]["weight"];
-							promptInput.value = lora_confs[loraCardName]["prompt"];
-							promptActive.checked = lora_confs[loraCardName]["prompt_active"];
-						}
-						
-						if (tab_prefix == tab_prefix_list[0]) {
-							loraTxt2ImgInputDict[loraCardName] = {weightInput, weightValueInput, promptInput, promptActive};
-						}
-						else {
-							let oldValueInput = loraTxt2ImgInputDict[loraCardName].weightValueInput;
-							let oldInput = loraTxt2ImgInputDict[loraCardName].weightInput;
-							let oldPrompt = loraTxt2ImgInputDict[loraCardName].promptInput;
-							let oldActive = loraTxt2ImgInputDict[loraCardName].promptActive;
-							
-							promptActive.onchange = function() {
-								oldActive.checked = this.checked;
-							}
-							oldActive.onchange = function() {
-								promptActive.checked = this.checked;
-							}
-							
-							promptInput.onchange = function() {
-								oldPrompt.value = this.value;
-							}
-							promptInput.oninput = function() {
-								oldPrompt.value = this.value;
-							}
-							oldPrompt.onchange = function() {
-								promptInput.value = this.value;
-							}
-							oldPrompt.oninput = function() {
-								promptInput.value = this.value;
-							}
-							
-							weightInput.onchange = function() {
-								weightValueInput.value = this.value;
-								oldValueInput.value = this.value;
-								oldInput.value = this.value;
-							}
-							weightInput.oninput = function() {
-								weightValueInput.value = this.value;
-								oldValueInput.value = this.value;
-								oldInput.value = this.value;
-							}
-							
-							weightValueInput.onchange = function() {
-								weightInput.value = this.value;
-								oldValueInput.value = this.value;
-								oldInput.value = this.value;
-							}
-							weightValueInput.oninput = function() {
-								weightInput.value = this.value;
-								oldValueInput.value = this.value;
-								oldInput.value = this.value;
-							}
-							
-							oldValueInput.onchange = function() {
-								weightInput.value = this.value;
-								weightValueInput.value = this.value;
-								oldInput.value = this.value;
-							}
-							oldValueInput.oninput = function() {
-								weightInput.value = this.value;
-								weightValueInput.value = this.value;
-								oldInput.value = this.value;
-							}
-							oldInput.onchange = function() {
-								weightInput.value = this.value;
-								weightValueInput.value = this.value;
-								oldValueInput.value = this.value;
-							}
-							oldInput.oninput = function() {
-								weightInput.value = this.value;
-								weightValueInput.value = this.value;
-								oldValueInput.value = this.value;
-							}
-						}
-						
-						
-						let onclickValue = card.getAttribute('onclick');
-						let regex = /\((.*?)\)/;
-						
-						let found = onclickValue.match(regex)[0];
-						
-						let splits = found.split(',');
-						card.setAttribute('onclick','if (event.target !== this) return; cardClickedOwn'+splits[0]+',get_card_prompt("'+loraCardName+'"),'+splits[2]);
-					}
+
+                    open_url_node.parentNode.insertBefore(replace_preview_btn, open_url_node)
+
+                    if (model_type == "lora" && !is_thumb_mode) {
+                        let save_node = document.createElement("a");
+                        save_node.href = "#";
+                        save_node.innerHTML = "💾";
+                        if (!is_thumb_mode) {
+                            save_node.className = "linkButton";
+                        }
+
+                        let modelname = search_term.replace(/^.*[\\\/]/, '').replace(/\.[^/.]+$/, "");
+                        save_node.title = "Save config";
+                        save_node.setAttribute("onclick","save_lora_config(event, '"+model_type+"', '"+modelname+"')");
+
+                        button_li.appendChild(save_node);
+
+                        let jokker_li = document.createElement("li");
+                        let jokker_li2 = document.createElement("li");
+
+                        jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.01" min="'+minValue+'" max="'+maxValue+'" /></div></div>';
+
+                        jokker_li2.innerHTML = '<div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div>';
+                        ul_node.appendChild(jokker_li);
+                        ul_node.appendChild(jokker_li2);
+
+                        let nameSpan = card.querySelector(".actions .name");
+                        let weightValueInput = card.querySelector(".actions .weightValueText");
+                        let weightInput = card.querySelector(".actions .weightValue");
+                        let promptInput = card.querySelector(".actions .promptValue");
+                        let promptActive = card.querySelector(".actions .promptActive");
+                        let loraCardName = nameSpan.innerHTML;
+                        if (loraCardName in lora_confs === true) {
+                            weightValueInput.value = lora_confs[loraCardName]["weight"];
+                            weightInput.value = lora_confs[loraCardName]["weight"];
+                            promptInput.value = lora_confs[loraCardName]["prompt"];
+                            promptActive.checked = lora_confs[loraCardName]["prompt_active"];
+                        }
+
+                        if (tab_prefix == tab_prefix_list[0]) {
+                            loraTxt2ImgInputDict[loraCardName] = {weightInput, weightValueInput, promptInput, promptActive};
+                        }
+                        else {
+                            let oldValueInput = loraTxt2ImgInputDict[loraCardName].weightValueInput;
+                            let oldInput = loraTxt2ImgInputDict[loraCardName].weightInput;
+                            let oldPrompt = loraTxt2ImgInputDict[loraCardName].promptInput;
+                            let oldActive = loraTxt2ImgInputDict[loraCardName].promptActive;
+
+                            promptActive.onchange = function() {
+                                oldActive.checked = this.checked;
+                            }
+                            oldActive.onchange = function() {
+                                promptActive.checked = this.checked;
+                            }
+
+                            promptInput.onchange = function() {
+                                oldPrompt.value = this.value;
+                            }
+                            promptInput.oninput = function() {
+                                oldPrompt.value = this.value;
+                            }
+                            oldPrompt.onchange = function() {
+                                promptInput.value = this.value;
+                            }
+                            oldPrompt.oninput = function() {
+                                promptInput.value = this.value;
+                            }
+
+                            weightInput.onchange = function() {
+                                weightValueInput.value = this.value;
+                                oldValueInput.value = this.value;
+                                oldInput.value = this.value;
+                            }
+                            weightInput.oninput = function() {
+                                weightValueInput.value = this.value;
+                                oldValueInput.value = this.value;
+                                oldInput.value = this.value;
+                            }
+
+                            weightValueInput.onchange = function() {
+                                weightInput.value = this.value;
+                                oldValueInput.value = this.value;
+                                oldInput.value = this.value;
+                            }
+                            weightValueInput.oninput = function() {
+                                weightInput.value = this.value;
+                                oldValueInput.value = this.value;
+                                oldInput.value = this.value;
+                            }
+
+                            oldValueInput.onchange = function() {
+                                weightInput.value = this.value;
+                                weightValueInput.value = this.value;
+                                oldInput.value = this.value;
+                            }
+                            oldValueInput.oninput = function() {
+                                weightInput.value = this.value;
+                                weightValueInput.value = this.value;
+                                oldInput.value = this.value;
+                            }
+                            oldInput.onchange = function() {
+                                weightInput.value = this.value;
+                                weightValueInput.value = this.value;
+                                oldValueInput.value = this.value;
+                            }
+                            oldInput.oninput = function() {
+                                weightInput.value = this.value;
+                                weightValueInput.value = this.value;
+                                oldValueInput.value = this.value;
+                            }
+                        }
+
+                        let onclickValue = card.getAttribute('onclick');
+                        let regex = /\((.*?)\)/;
+
+                        let found = onclickValue.match(regex)[0];
+
+                        let splits = found.split(',');
+                        card.setAttribute('onclick','if (event.target !== this) return; cardClickedOwn'+splits[0]+',get_card_prompt("'+loraCardName+'"),'+splits[2]);
+                    }
 
                     //add to card
-					if (is_thumb_mode) {
-						add_trigger_words_node.parentNode.insertBefore(document.createElement("br"), add_trigger_words_node);
+                    if (is_thumb_mode) {
+                        add_trigger_words_node.parentNode.insertBefore(document.createElement("br"), add_trigger_words_node);
                     }
                     ul_node.appendChild(button_li);
                 }
@@ -864,7 +825,6 @@ onUiLoaded(() => {
 
     //run it once
     setTimeout(function() { update_card_for_civitai(); }, 1000);
-	//update_card_for_civitai();
 });
 
 
