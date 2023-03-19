@@ -155,13 +155,6 @@ There are 2 cases this hash code can not find the model on civitai:
 In these cases, you can always link a model to civitai by filling its URL in this extension.
 
 
-## Civitai API Security Check
-Since last website down of civitai, it has more strict checking for request's frequency. Once it thinks this extension's request is not secured, it gonna re-direct extension's API request to Cloudflare's real human checking page. Then this extension can not get any information back. 
-
-In that case, you have to wait until civitai unblock you. It could take hours.  
-
-Since v1.5.1, TI scanning is forced to delay 1 second to avoid this case. And since 1.5.4, there is a default header in all API request to fake as a browser. So you should be find if you are using 1.5.4 or later.  
-
 
 ## Feature Request
 No new feature for v1.x after v1.5. All new feature will go to 2.x.
@@ -171,6 +164,7 @@ No new feature for v1.x after v1.5. All new feature will go to 2.x.
 From v1.5, v1.x goes into maintenance phase. 
 
 Enjoy!
+
 
 ## Common Issue
 ### 4 Button on card didn't show
@@ -190,11 +184,13 @@ Your update could be failed if you have modified SD webui's file. You need to ch
 In many cases, git will just refuse to update and tell you there are some conflicts need you to handle manually. If you don't check the consloe log, you will think your SD webui is updated, but it is not.  
 
 ### Scan or Get model info failed
-This extension now is stable. So, the reason for this most likely is your request has been refused by Civitai.  
+This extension is stable. So, the reason for this most likely is your request has been refused by Civitai.  
 
-Civitai is not that stable as those rich websites, it can be down, or re-direct API request to a real human checking page.(This rule is disabled for now, but can be enabled at anytime they want)  
+Civitai is not that stable as those rich websites, it can be down, refuse an API connection, or re-direct API request to a real human checking page.  
 
-So, the only thing you can do is just wait a while then try again.  
+Also, civitai has a connection pool setting. Basicly, it's a max connection number that civitai can have at the same time. So, if there are already too manny connections on civitai, it will refuse your API connection.  
+
+In those cases, the only thing you can do is just wait a while then try again.  
 
 ### Scanning fail when using colab
 First of, search your error message with google. Most likely, it will be a colab issue.    
