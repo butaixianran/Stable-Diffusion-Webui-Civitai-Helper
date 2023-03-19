@@ -367,8 +367,8 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
 
 }
 
-var re_extranet   =    /<([^:]+:[^:]+):-?[\d\.]+>/;
-var re_extranet_g = /\s+<([^:]+:[^:]+):-?[\d\.]+>/g;
+var re_extranet   =    /<([^:]+:[^:]+):-?[\d\.]*>/;
+var re_extranet_g = /\s+<([^:]+:[^:]+):-?[\d\.]*>/g;
 
 function tryToRemoveExtraNetworkFromPromptOwn(textarea, text){
     var m = text.match(re_extranet)
@@ -701,6 +701,11 @@ onUiLoaded(() => {
                             weightInput.value = lora_confs[loraCardName]["weight"];
                             promptInput.value = lora_confs[loraCardName]["prompt"];
                             promptActive.checked = lora_confs[loraCardName]["prompt_active"];
+                        } else {
+                            weightValueInput.value = (parseFloat(minValue)+parseFloat(maxValue))/2;
+                            weightInput.value = (parseFloat(minValue)+parseFloat(maxValue))/2;
+                            promptInput.value = "";
+                            promptActive.checked = true;
                         }
 
                         if (tab_prefix == tab_prefix_list[0]) {
