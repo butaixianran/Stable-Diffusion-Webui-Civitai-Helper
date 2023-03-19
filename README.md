@@ -3,7 +3,7 @@
 [日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)  
 
 # Notice
-After install or update to new version, you need to shutdown SD webui and re-launch. Just Reload UI won't work!
+**This extension now is very stable and works well for many people. If you have an issue, read this document and check console log window's detail. I don't have time to explain everything to people again and again.**  
 
 # Stable-Diffusion-Webui-Civitai-Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
@@ -32,7 +32,7 @@ Copy this project's url into it, click install.
 
 Alternatively, download this project as a zip file, and unzip it to `Your SD webui folder/extensions`.
 
-Then shutdown SD Webui and Relaunch it. Just "Reload UI" won't work for this extension.
+Everytime you install or update this extension, you need to shutdown SD Webui and Relaunch it. Just "Reload UI" won't work for this extension.
 
 Done.
 

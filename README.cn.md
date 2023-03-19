@@ -4,7 +4,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
 
 # 注意
-在安装或更新新版本之后，需要整个关闭SD Webui，重新启动它。光是Reload UI对本插件不起作用。  
+**本插件现在非常稳定，很多人用得很好，如果碰到问题，先看文档，并检查命令行窗口的详情。我没有时间反复给各位解释这个东西怎么用。**   
 
 # 功能
 * 扫描所有模型，从Civitai下载模型信息和预览图 
@@ -25,7 +25,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 # 安装
 下载本项目为zip文件，解压到`你的SD webui目录/extensions`下即可。
 
-然后整个关闭SD Webui，重新启动它。只是Reload UI不起作用。以后更新也是，必须重启SD Webui。  
+不管是安装还是升级本插件，都要整个关闭SD Webui，重新启动它。只是Reload UI不起作用。  
 
 (如果用SD webui的插件界面安装，请先给git配置代理。它不是通过浏览器下载，是通过git下载。)  
 
