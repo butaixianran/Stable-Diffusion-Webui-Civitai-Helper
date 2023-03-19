@@ -715,13 +715,10 @@ onUiLoaded(() => {
 					}
 
                     //add to card
-                    ul_node.appendChild(open_url_node);
-                    //add br if metadata_button exists
-                    if (is_thumb_mode && metadata_button) {
-                        ul_node.appendChild(document.createElement("br"));
+					if (is_thumb_mode) {
+						add_trigger_words_node.parentNode.insertBefore(document.createElement("br"), add_trigger_words_node);
                     }
-                    ul_node.appendChild(add_trigger_words_node);
-                    ul_node.appendChild(use_preview_prompt_node);
+                    ul_node.appendChild(button_li);
                 }
             }
         }
