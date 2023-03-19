@@ -743,8 +743,14 @@ onUiLoaded(() => {
 						weightInput.onchange = function() {
 							weightValueInput.value = this.value;
 						}
+						weightInput.oninput = function() {
+							weightValueInput.value = this.value;
+						}
 						
 						weightValueInput.onchange = function() {
+							weightInput.value = this.value;
+						}
+						weightValueInput.oninput = function() {
 							weightInput.value = this.value;
 						}
 						
