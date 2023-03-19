@@ -394,6 +394,52 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
 
 }
 
+var re_extranet   =    /<([^:]+:[^:]+):[\d\.]+>/;
+var re_extranet_g = /\s+<([^:]+:[^:]+):[\d\.]+>/g;
+
+function tryToRemoveExtraNetworkFromPromptOwn(textarea, text){
+    var m = text.match(re_extranet)
+    if(! m) return false
+	
+	var newText = text.replaceAll(m[0], "");
+	
+
+    var partToSearch = m[1]
+    var replaced = false
+    var newTextareaText = textarea.value.replaceAll(re_extranet_g, function(found, index){
+        m = found.match(re_extranet);
+        if(m[1] == partToSearch){
+            replaced = true;
+            return ""
+        }
+        return found;
+    })
+	
+	if (newText != "") {
+		newTextareaText = newTextareaText.replaceAll(newText, function(found, index){
+			replaced = true;
+			return "";
+		})
+	}
+
+    if(replaced){
+        textarea.value = newTextareaText
+        return true;
+    }
+
+    return false
+}
+
+function cardClickedOwn(tabname, textToAdd, allowNegativePrompt){
+    var textarea = allowNegativePrompt ? activePromptTextarea[tabname] : gradioApp().querySelector("#" + tabname + "_prompt > label > textarea")
+
+    if(! tryToRemoveExtraNetworkFromPromptOwn(textarea, textToAdd)){
+        textarea.value = textarea.value + opts.extra_networks_add_text_separator + textToAdd
+    }
+
+    updateInput(textarea)
+}
+
 
 onUiLoaded(() => {
 
@@ -717,7 +763,7 @@ onUiLoaded(() => {
 						let found = onclickValue.match(regex)[0];
 						
 						let splits = found.split(',');
-						card.setAttribute('onclick','if (event.target !== this) return; cardClicked'+splits[0]+',get_card_prompt("'+loraCardName+'"),'+splits[2]);
+						card.setAttribute('onclick','if (event.target !== this) return; cardClickedOwn'+splits[0]+',get_card_prompt("'+loraCardName+'"),'+splits[2]);
 					}
 
                     //add to card
