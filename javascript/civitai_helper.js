@@ -273,10 +273,9 @@ function save_lora_config(event, model_type, search_term){
 	let card = event.srcElement.parentElement.parentElement;
 	let weightValue = card.querySelector(".weightValueText");
 	let promptValue = card.querySelector(".promptValue");
-	let weightActive = card.querySelector(".weightActive");
 	let promptActive = card.querySelector(".promptActive");
 
-    msg["prompt"] = weightValue.value + ";" + promptValue.value + ";" + weightActive.checked + ";" +promptActive.checked;
+    msg["prompt"] = weightValue.value + ";" + promptValue.value + ";" +promptActive.checked;
 
     // fill to msg box
     js_msg_txtbox.value = JSON.stringify(msg);
@@ -326,22 +325,16 @@ function get_card_prompt(search_term_to_find) {
 		let weightValueInput = foundCard.querySelector(".actions .weightValueText");
 		let weightInput = foundCard.querySelector(".actions .weightValue");
 		let promptInput = foundCard.querySelector(".actions .promptValue");
-		let weightActive = foundCard.querySelector(".actions .weightActive");
 		let promptActive = foundCard.querySelector(".actions .promptActive");
 		
 		let finalPrompt = "";
 		let loraPrompt = "<lora:"+search_term_to_find+":";
-		if (weightActive.checked) {
-			loraPrompt += weightValueInput.value;
-			loraPrompt += ">";
-			finalPrompt += loraPrompt;
-		}
+		loraPrompt += weightValueInput.value;
+		loraPrompt += ">";
+		finalPrompt += loraPrompt;
 		
 		if (promptActive.checked && promptInput.value.trim() != "") {
-			if (weightActive.checked) {
-				finalPrompt += ", ";
-			}
-			finalPrompt += promptInput.value;
+			finalPrompt += ", " + promptInput.value;
 		}
 
 		return finalPrompt;
@@ -728,7 +721,7 @@ onUiLoaded(() => {
 						let jokker_li = document.createElement("li");
 						let jokker_li2 = document.createElement("li");
 						// TODO: get min max from backend
-						jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.01" min="'+minValue+'" max="'+maxValue+'" /><input class="weightActive" type="checkbox" /></div></div>';
+						jokker_li.innerHTML = '<div class="weightAndPrompt"><div><span for="weight">Weight</span><input class="gr-box gr-input gr-text-input weightValueText" type="text" name="weightValue" /></div><div><input class="gr-box gr-input gr-text-input weightValue" name="weight" placeholder="Weight" type="range" step="0.01" min="'+minValue+'" max="'+maxValue+'" /></div></div>';
 					
 						jokker_li2.innerHTML = '<div><input type="text" class="gr-box gr-input gr-text-input promptValue" name="prompt" placeholder="Prompt" /><input class="promptActive" type="checkbox" /></div>';
 						ul_node.appendChild(jokker_li);
@@ -738,14 +731,12 @@ onUiLoaded(() => {
 						let weightValueInput = card.querySelector(".actions .weightValueText");
 						let weightInput = card.querySelector(".actions .weightValue");
 						let promptInput = card.querySelector(".actions .promptValue");
-						let weightActive = card.querySelector(".actions .weightActive");
 						let promptActive = card.querySelector(".actions .promptActive");
 						let loraCardName = nameSpan.innerHTML;
 						if (loraCardName in lora_confs === true) {
 							weightValueInput.value = lora_confs[loraCardName]["weight"];
 							weightInput.value = lora_confs[loraCardName]["weight"];
 							promptInput.value = lora_confs[loraCardName]["prompt"];
-							weightActive.checked = lora_confs[loraCardName]["weight_active"];
 							promptActive.checked = lora_confs[loraCardName]["prompt_active"];
 						}
 						

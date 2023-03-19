@@ -17,7 +17,6 @@ def scan_model(scan_model_types, max_size_preview, skip_nsfw_preview):
     default_lora_config = {
         "weight": (setting.data["jokker"]["min_weight"]+setting.data["jokker"]["max_weight"])/2,
         "prompt": [],
-        "weight_active": True,
         "prompt_active": True
     }
 
