@@ -7,14 +7,14 @@ assignees: ''
 
 ---
 
-* **Have you read document?**
+## Have you read document?
 
-* **Have you checked console log window's msg?**
+## Have you checked console log window's msg?
 
-* **Describe Issue:**
-
-
-* **Screenshot for UI issue:**
+## Describe Issue
 
 
-* **Console log's msg or screenshot for function issue:**
+## Screenshot for UI issue
+
+
+## Console log's msg or screenshot for function issue
