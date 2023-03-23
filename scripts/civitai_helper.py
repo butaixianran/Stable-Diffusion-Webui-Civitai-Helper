@@ -17,12 +17,12 @@ import re
 import modules
 from modules import script_callbacks
 from modules import shared
-from scripts.lib import model
-from scripts.lib import js_action_civitai
-from scripts.lib import model_action_civitai
-from scripts.lib import setting
-from scripts.lib import civitai
-from scripts.lib import util
+from scripts.ch_lib import model
+from scripts.ch_lib import js_action_civitai
+from scripts.ch_lib import model_action_civitai
+from scripts.ch_lib import setting
+from scripts.ch_lib import civitai
+from scripts.ch_lib import util
 
 
 # init
