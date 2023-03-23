@@ -3,10 +3,13 @@
 [日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)  
 
 # Notice
-**This extension now is very stable and works well for many people. If you have an issue, read this document and check console log window's detail. I don't have time to explain everything to people again and again.**  
+**This extension now is very stable and works well for many people. If you have an issue, check console log window's detail and read [common issue](#common-issue) part**   
+
+If you want to claim it doesn't work, check this first: [Claim Wall](claim_wall.md)  
+
 
 # Stable-Diffusion-Webui-Civitai-Helper
-Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.
+Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.  
 
 Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
 
@@ -167,28 +170,25 @@ Enjoy!
 
 
 ## Common Issue
-### 4 Button on card didn't show
+### 4 Buttons on card didn't show
 #### Localization
-There was a Localization issue if you are not using Englist version of SD webui. This is fixed in the latest version of this extension.
-
-Update to v.1.5.7 to fix it.
-
+There was a Localization issue if you are not using English version of SD webui. This is fixed in the latest version of this extension. Update to v1.5.7 to fix it. 
 
 #### Other case
 First of all, make sure you clicked "Refresh Civitai Helper" button.  
 
-If issue is still there, then, only reason is you are not using the latest SD webui. So, Make sure you updated it.  
+If issue is still there, then only reason is you are not using the latest SD webui. So, Make sure you updated it.  
 
 Your update could be failed if you have modified SD webui's file. You need to check git command's console log to make sure it is updated. 
 
 In many cases, git will just refuse to update and tell you there are some conflicts need you to handle manually. If you don't check the consloe log, you will think your SD webui is updated, but it is not.  
 
-### Scan or Get model info failed
-This extension is stable. So, the reason for this most likely is your request has been refused by Civitai.  
+### Request, Scan or Get model info failed
+This extension is stable. So, the reason for this most likely is your internet connection to Civitai API service.  
 
-Civitai is not that stable as those rich websites, it can be down, refuse an API connection, or re-direct API request to a real human checking page.  
+Civitai is not as stable as those rich websites, it can be down or refuse your API connection.  
 
-Also, civitai has a connection pool setting. Basicly, it's a max connection number that civitai can have at the same time. So, if there are already too manny connections on civitai, it will refuse your API connection.  
+Civitai has a connection pool setting. Basicly, it's a max connection number that civitai can have at the same time. So, if there are already too manny connections on civitai, it will refuse your API connection.  
 
 In those cases, the only thing you can do is just wait a while then try again.  
 
