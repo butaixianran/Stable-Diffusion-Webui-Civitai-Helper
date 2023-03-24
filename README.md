@@ -27,6 +27,7 @@ Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-
   - 🏷: Use this model's preview image's prompt
 * Above buttons support thumbnail mode of Extra Network
 * Option to always show additional buttons, to work with touchscreen.  
+* Works for all tabs of Extra Networks - Textual Inversion, HyperNetworks, Checkpoints and Loras
 
 
 # Install
