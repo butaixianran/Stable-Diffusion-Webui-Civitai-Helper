@@ -49,14 +49,14 @@ def get_custom_model_folder():
 # write model info to file
 def write_model_info(path, model_info):
     util.printD("Write model info to file: " + path)
-    with open(path, 'w') as f:
+    with open(os.path.realpath(path), 'w') as f:
         f.write(json.dumps(model_info, indent=4))
 
 
 def load_model_info(path):
     # util.printD("Load model info from file: " + path)
     model_info = None
-    with open(path, 'r') as f:
+    with open(os.path.realpath(path), 'r') as f:
         try:
             model_info = json.load(f)
         except Exception as e:

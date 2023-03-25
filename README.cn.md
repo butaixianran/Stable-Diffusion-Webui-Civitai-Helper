@@ -118,6 +118,18 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 ![](img/get_one_model_info.jpg)  
 
+## 代理
+**如果你是刚更新新版本，你需要重启SD webui再来使用**   
+
+代理输入框在插件页面最下方。
+
+**每次填入或清除代理后，都要保存，并用SDwebui设置页面的Reload UI按钮刷新UI**  
+
+然后所有发到civitai的请求就会用代理。  
+
+依据使用的代理软件不同，有时候，甚至sock5代理, 也要填入http开头的形式"http://xxxxx"才能生效。   
+
+
 
 ## 其他设置
 **保存设置按钮, 会保存扫描模型区域，以及其他设置 这两个区域的选项**  

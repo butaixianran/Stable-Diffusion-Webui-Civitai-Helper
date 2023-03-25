@@ -1,5 +1,18 @@
 "use strict";
 
+
+function ch_convert_file_path_to_url(path){
+    let prefix = "file=";
+    let path_to_url = path.replaceAll('\\', '/');
+    return prefix+path_to_url;
+}
+
+function ch_img_node_str(path){
+    return `<img src='${ch_convert_file_path_to_url(path)}' style="width:24px"/>`;
+}
+
+
+
 // send msg to python side by filling a hidden text box
 // then will click a button to trigger an action
 // msg is an object, not a string, will be stringify in this function
@@ -72,6 +85,17 @@ const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
     }, 1000);
 })
 
+
+function getActiveTabType() {
+    const currentTab = get_uiCurrentTabContent();
+    switch (currentTab.id) {
+        case "tab_txt2img":
+            return "txt2img";
+        case "tab_img2img":
+            return "img2img";
+    }
+    return null;
+}
 
 
 
@@ -300,12 +324,32 @@ onUiLoaded(() => {
     let model_type_list = ["textual_inversion", "hypernetworks", "checkpoints", "lora"];
     let cardid_suffix = "cards";
 
+    //get init py msg
+    // let init_py_msg_str = get_ch_py_msg();
+    // let extension_path = "";
+    // if (!init_py_msg_str) {
+    //     console.log("Can not get init_py_msg");
+    // } else {
+    //     init_py_msg = JSON.parse(init_py_msg_str);
+    //     if (init_py_msg) {
+    //         extension_path = init_py_msg.extension_path;
+    //         console.log("get extension path: " + extension_path);
+    //     }
+    // }
+
+    // //icon image node as string
+    // function icon(icon_name){
+    //     let icon_path = extension_path+"/icon/"+icon_name;
+    //     return ch_img_node_str(icon_path);
+    // }
+
+
     // update extra network tab pages' cards
     // * replace "replace preview" text button into an icon
     // * add 3 button to each card:
     //  - open model url 🌐
     //  - add trigger words 💡
-    //  - use preview image's prompt 🏷
+    //  - use preview image's prompt 🏷️
     // notice: javascript can not get response from python side
     // so, these buttons just sent request to python
     // then, python side gonna open url and update prompt text box, without telling js side.
@@ -320,7 +364,7 @@ onUiLoaded(() => {
         let btn_thumb_backgroundImage = "none";
         let btn_thumb_background = "rgba(0, 0, 0, 0.8)";
 
-        let ch_btn_txts = ['🌐', '💡', '🏷'];
+        let ch_btn_txts = ['🌐', '💡', '🏷️'];
         let replace_preview_text = getTranslation("replace preview");
         if (!replace_preview_text) {
             replace_preview_text = "replace preview";
@@ -354,7 +398,50 @@ onUiLoaded(() => {
         let cards = null;
         let need_to_add_buttons = false;
         let is_thumb_mode = false;
+
+        //get current tab
+        let active_tab_type = getActiveTabType();
+        if (!active_tab_type){active_tab_type = "txt2img";}
+
         for (const tab_prefix of tab_prefix_list) {
+            if (tab_prefix != active_tab_type) {continue;}
+
+
+            //find out current selected model type tab
+            let active_extra_tab_type = "";
+            let extra_tabs = gradioApp().getElementById(tab_prefix+"_extra_tabs");
+            if (!extra_tabs) {console.log("can not find extra_tabs: " + tab_prefix+"_extra_tabs");}
+            //get tab buttons
+            let extra_tab_btns = extra_tabs.firstChild.querySelectorAll("button");
+            console.log("find buttons: " + extra_tab_btns.length);
+
+            for (let extra_tab_btn of extra_tab_btns) {
+                console.log(extra_tab_btn.innerHTML);
+                if (extra_tab_btn.className.indexOf("selected") >= 0) {
+                    console.log("found active tab: " + extra_tab_btn.innerHTML);
+
+                    switch (extra_tab_btn.innerHTML.trim()) {
+                        case "Textual Inversion":
+                            active_extra_tab_type = "ti";
+                            break;
+                        case "Hypernetworks":
+                            active_extra_tab_type = "hyper";
+                            break;
+                        case "Checkpoints":
+                            active_extra_tab_type = "ckp";
+                            break;
+                        case "Lora":
+                            active_extra_tab_type = "lora";
+                            break;
+                    }
+
+                    break;
+
+
+                }
+            }
+
+
             for (const js_model_type of model_type_list) {
                 //get model_type for python side
                 switch (js_model_type) {
@@ -376,6 +463,15 @@ onUiLoaded(() => {
                     console.log("can not get model_type from: " + js_model_type);
                     continue;
                 }
+
+
+                //only handle current sub-tab
+                if (model_type != active_extra_tab_type) {
+                    continue;
+                }
+
+                console.log("handle active extra tab");
+
 
                 extra_network_id = tab_prefix+"_"+js_model_type+"_"+cardid_suffix;
                 // console.log("searching extra_network_node: " + extra_network_id);
@@ -470,7 +566,7 @@ onUiLoaded(() => {
                     if (replace_preview_btn) {
                         if (replace_preview_btn.innerHTML == replace_preview_text) {
                             need_to_add_buttons = true;
-                            replace_preview_btn.innerHTML = "🖼";
+                            replace_preview_btn.innerHTML = "🖼️";
                             if (!is_thumb_mode) {
                                 replace_preview_btn.style.fontSize = btn_fontSize;
                                 replace_preview_btn.style.margin = btn_margin;
@@ -544,7 +640,7 @@ onUiLoaded(() => {
 
                     let use_preview_prompt_node = document.createElement("a");
                     use_preview_prompt_node.href = "#";
-                    use_preview_prompt_node.innerHTML = "🏷";
+                    use_preview_prompt_node.innerHTML = "🏷️";
                     if (!is_thumb_mode) {
                         use_preview_prompt_node.style.fontSize = btn_fontSize;
                         use_preview_prompt_node.style.margin = btn_margin;
@@ -582,27 +678,31 @@ onUiLoaded(() => {
     let tab_id = ""
     let extra_tab = null;
     let extra_toolbar = null;
+    let extra_network_refresh_btn = null;
     //add refresh button to extra network's toolbar
     for (let prefix of tab_prefix_list) {
         tab_id = prefix + "_extra_tabs";
         extra_tab = gradioApp().getElementById(tab_id);
 
         //get toolbar
-        extra_toolbar = extra_tab.querySelector("div.flex.border-b-2.flex-wrap");
+        //get Refresh button
+        extra_network_refresh_btn = gradioApp().getElementById(prefix+"_extra_refresh");
 
-        if (!extra_toolbar){
-            console.log("can not get extra network toolbar for " + tab_id);
+
+        if (!extra_network_refresh_btn){
+            console.log("can not get extra network refresh button for " + tab_id);
             continue;
         }
 
         // add refresh button to toolbar
         let ch_refresh = document.createElement("button");
-        ch_refresh.innerHTML = "Refresh Civitai Helper";
-        ch_refresh.title = "Refresh Civitai Helper's model card buttons";
-        ch_refresh.className = "gr-button gr-button-lg gr-button-secondary";
+        ch_refresh.innerHTML = "🔁";
+        ch_refresh.title = "Refresh Civitai Helper's additional buttons";
+        ch_refresh.className = "lg secondary gradio-button";
+        ch_refresh.style.fontSize = "200%";
         ch_refresh.onclick = update_card_for_civitai;
 
-        extra_toolbar.appendChild(ch_refresh);
+        extra_network_refresh_btn.parentNode.appendChild(ch_refresh);
 
     }
 

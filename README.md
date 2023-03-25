@@ -21,10 +21,10 @@ Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-
 * Checking all your local model's new version from Civitai
 * Download a new version directly into SD model folder (with info+preview)
 * Modified Built-in "Extra Network" cards, to add the following buttons on each card:
-  - 🖼: Modified "replace preview" text into this icon
+  - 🖼️: Modified "replace preview" text into this icon
   - 🌐: Open this model's Civitai url in a new tab
   - 💡: Add this model's trigger words to prompt
-  - 🏷: Use this model's preview image's prompt
+  - 🏷️: Use this model's preview image's prompt
 * Above buttons support thumbnail mode of Extra Network
 * Option to always show additional buttons, to work with touchscreen.  
 
@@ -41,9 +41,13 @@ Done.
 
 # How to Use
 ## Update Your SD Webui
-This extension need to get extra network's cards id. **Which is added to SD webui since 2023-02-06.** 
+* v1.6.x works with SD webui version from 2023-03-25 or later, which uses gradio version 3.23.0  
+* v1.5.x works with SD webui version from 2023-02-06 - 2023-03-24.  
 
-So, if you are using a version earlier than this, you need to update your SD Webui! 
+**Check your SD webui Page's bottom, "gradio" version number**   
+* If it is v3.23.0 or later, install v1.6.x.  
+* If it is v3.16.x, install v1.5.7 from [Civitai](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)   
+
 
 ## Scanning Models
 Go to extension tab "Civitai Helper". There is a button called "Scan model".  
@@ -128,12 +132,28 @@ After clicking button, extension will download that civitai model's info and pre
 
 ![](img/get_one_model_info.jpg)  
 
+## Proxy
+**If you are updating to new version, you need to re-lanuch SD webui before using it.**   
+
+Proxy textbox is at the bottom of extension tab. 
+
+**Each time you fill or clear a proxy value, you need to save setting, and Re-load UI with setting tab's reload button.**  
+
+Then all requests to civitai will use the proxy.  
+
+Sometime, even sock5 proxy, need to be used as "http://xxxxx", depence on which proxy tool you are using.  
+
+
+
+
 ## Other Setting
 **The Save Setting button, will save both "Scan Model"'s setting and other setting.**  
 
 * "Always Display Button" is good for touch screen.  
 * "Show Buttons on Thumb Mode" will turn on/off additional Buttons on thumbnail.  
 ![](img/other_setting.jpg)
+
+
 
 
 ## Preview Image
@@ -206,6 +226,12 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.6.0
+* Fix some UI issues to work with gradio 3.23.0
+* Support Proxy when connecting to civitai. Check document for detail.
+* check realpath when opening file, to fix error when using junction
+* Fix multiple addtional buttons issue after switching tabs. 
+
 ## v1.5.7
 * Fix Localization issue for 4 addtional buttons on cards
 

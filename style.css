@@ -7,3 +7,12 @@ blockquote ol {
     list-style:decimal;
     margin:4px 40px;
 }
+
+.block.padded.ch_box {
+    padding: 10px !important;
+}
+
+.block.padded.ch_vpadding {
+    padding: 10px 0 !important;
+}
+
