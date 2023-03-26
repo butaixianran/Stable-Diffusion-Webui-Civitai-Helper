@@ -12,6 +12,21 @@ function ch_img_node_str(path){
 }
 
 
+function ch_gradio_version(){
+    let foot = gradioApp().getElementById("footer");
+    if (!foot){return null;}
+
+    let versions = foot.querySelector(".versions");
+    if (!versions){return null;}
+
+    if (versions.innerHTML.indexOf("gradio: 3.16.2")>0) {
+        return "3.16.2";
+    } else {
+        return "3.23.0";
+    }
+    
+}
+
 
 // send msg to python side by filling a hidden text box
 // then will click a button to trigger an action
@@ -317,11 +332,14 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
 
 onUiLoaded(() => {
 
-
+    //get gradio version
+    let gradio_ver = ch_gradio_version();
+    console.log("gradio_ver:" + gradio_ver);
 
     // get all extra network tabs
     let tab_prefix_list = ["txt2img", "img2img"];
     let model_type_list = ["textual_inversion", "hypernetworks", "checkpoints", "lora"];
+    let model_type_label_list = ["Textual Inversion", "Hypernetworks", "Checkpoints", "Lora"];
     let cardid_suffix = "cards";
 
     //get init py msg
@@ -413,11 +431,20 @@ onUiLoaded(() => {
             if (!extra_tabs) {console.log("can not find extra_tabs: " + tab_prefix+"_extra_tabs");}
             //get tab buttons
             let extra_tab_btns = extra_tabs.firstChild.querySelectorAll("button");
-            console.log("find buttons: " + extra_tab_btns.length);
+            console.log("found buttons: " + extra_tab_btns.length);
 
             for (let extra_tab_btn of extra_tab_btns) {
                 console.log(extra_tab_btn.innerHTML);
-                if (extra_tab_btn.className.indexOf("selected") >= 0) {
+
+                // use different if condition for different gradio version
+                let condition = false;
+                if (gradio_ver=="3.23.0") {
+                    condition = (extra_tab_btn.className.indexOf("selected") >= 0);
+                } else {
+                    condition = (extra_tab_btn.className.indexOf("border-transparent")<0) && model_type_label_list.includes(extra_tab_btn.innerHTML.trim());
+                }
+
+                if (condition) {
                     console.log("found active tab: " + extra_tab_btn.innerHTML);
 
                     switch (extra_tab_btn.innerHTML.trim()) {

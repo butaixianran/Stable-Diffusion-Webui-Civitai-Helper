@@ -41,13 +41,8 @@ Done.
 
 # How to Use
 ## Update Your SD Webui
-* v1.6.x works with SD webui version from 2023-03-25 or later, which uses gradio version 3.23.0  
-* v1.5.x works with SD webui version from 2023-02-06 - 2023-03-24.  
-
-**Check your SD webui Page's bottom, "gradio" version number**   
-* If it is v3.23.0 or later, install v1.6.x.  
-* If it is v3.16.x, install v1.5.7 from [Civitai](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)   
-
+This extension need to get extra network's cards id. Which is added since **2023-02-06**.  
+**If your SD webui is an earlier version, you need to update it!**  
 
 ## Scanning Models
 Go to extension tab "Civitai Helper". There is a button called "Scan model".  
