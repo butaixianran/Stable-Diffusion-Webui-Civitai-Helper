@@ -136,7 +136,7 @@ Proxy textbox is at the bottom of extension tab.
 
 Then all requests to civitai will use the proxy.  
 
-Sometime, even sock5 proxy, need to be used as "http://xxxxx", depence on which proxy tool you are using.  
+For some sock5 proxy, need to be used as "socks5h://xxxxx".  
 
 
 
