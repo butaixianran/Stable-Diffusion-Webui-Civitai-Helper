@@ -2,13 +2,17 @@
 [中文](README.cn.md)  
 [日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)  
 
+## About Civitai Helper2: Model Info Helper
+Civitai Helper 2 will be renamed to **ModelInfo Helper**. It is under development, you can watch its UI demo video to see how it gonna look like:    
+[https://youtu.be/mPcKwQDDH8s](https://youtu.be/mPcKwQDDH8s)  
+
 # Notice
 **This extension now is very stable and works well for many people. If you have an issue, check console log window's detail and read [common issue](#common-issue) part**   
 
 If you want to claim it doesn't work, check this first: [Claim Wall](claim_wall.md)  
 
 
-# Stable-Diffusion-Webui-Civitai-Helper
+# Civitai Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.  
 
 Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  

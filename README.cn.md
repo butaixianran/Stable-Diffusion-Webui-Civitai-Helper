@@ -1,4 +1,9 @@
-# Stable-Diffusion-Webui-Civitai-Helper
+## 关于Civitai Helper2: Model Info Helper
+Civitai助手2将改名为**Model Info助手**。目前还在缓慢开发中。你可以查看它的UI演示视频，了解它会是什么样子:    
+[https://youtu.be/mPcKwQDDH8s](https://youtu.be/mPcKwQDDH8s)  
+
+
+# Civitai Helper
 Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Civitai模型。
 
 [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
