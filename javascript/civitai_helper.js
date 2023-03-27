@@ -339,7 +339,14 @@ onUiLoaded(() => {
     // get all extra network tabs
     let tab_prefix_list = ["txt2img", "img2img"];
     let model_type_list = ["textual_inversion", "hypernetworks", "checkpoints", "lora"];
-    let model_type_label_list = ["Textual Inversion", "Hypernetworks", "Checkpoints", "Lora"];
+    //get translated label list
+    let model_type_label_list = [
+        getTranslation("Textual Inversion")??"Textual Inversion",
+        getTranslation("Hypernetworks")??"Hypernetworks",
+        getTranslation("Checkpoints")??"Checkpoints",
+        getTranslation("Lora")??"Lora",
+    ];
+
     let cardid_suffix = "cards";
 
     //get init py msg
@@ -441,6 +448,9 @@ onUiLoaded(() => {
                 if (gradio_ver=="3.23.0") {
                     condition = (extra_tab_btn.className.indexOf("selected") >= 0);
                 } else {
+                    // console.log("condition parts");
+                    // console.log(extra_tab_btn.className.indexOf("border-transparent")<0);
+                    // console.log(model_type_label_list.includes(extra_tab_btn.innerHTML.trim()));
                     condition = (extra_tab_btn.className.indexOf("border-transparent")<0) && model_type_label_list.includes(extra_tab_btn.innerHTML.trim());
                 }
 
@@ -448,16 +458,16 @@ onUiLoaded(() => {
                     console.log("found active tab: " + extra_tab_btn.innerHTML);
 
                     switch (extra_tab_btn.innerHTML.trim()) {
-                        case "Textual Inversion":
+                        case model_type_label_list[0]:
                             active_extra_tab_type = "ti";
                             break;
-                        case "Hypernetworks":
+                        case model_type_label_list[1]:
                             active_extra_tab_type = "hyper";
                             break;
-                        case "Checkpoints":
+                        case model_type_label_list[2]:
                             active_extra_tab_type = "ckp";
                             break;
-                        case "Lora":
+                        case model_type_label_list[3]:
                             active_extra_tab_type = "lora";
                             break;
                     }

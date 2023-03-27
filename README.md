@@ -225,6 +225,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.6.1
+* Fix Localization issue for 4 addtional buttons on cards. (Forgot that again...)
+
 ## v1.6.0
 * Fix some UI issues to work with gradio 3.23.0
 * Support Proxy when connecting to civitai. Check document for detail.
