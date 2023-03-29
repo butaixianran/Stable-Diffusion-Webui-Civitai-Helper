@@ -194,7 +194,7 @@ Enjoy!
 ## Common Issue
 ### 4 Buttons on card didn't show
 #### Localization
-There was a Localization issue if you are not using English version of SD webui. This is fixed in the latest version of this extension. Update to v1.5.7 to fix it. 
+There was a Localization issue if you are not using English version of SD webui. This is fixed in the latest version of this extension. **But, Bilingual localization extension will not be supported.**  
 
 #### Other case
 First of all, make sure you clicked "Refresh Civitai Helper" button.  
