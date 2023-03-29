@@ -339,14 +339,6 @@ onUiLoaded(() => {
     // get all extra network tabs
     let tab_prefix_list = ["txt2img", "img2img"];
     let model_type_list = ["textual_inversion", "hypernetworks", "checkpoints", "lora"];
-    //get translated label list
-    let model_type_label_list = [
-        (getTranslation("Textual Inversion")??"Textual Inversion").trim(),
-        (getTranslation("Hypernetworks")??"Hypernetworks").trim(),
-        (getTranslation("Checkpoints")??"Checkpoints").trim(),
-        (getTranslation("Lora")??"Lora").trim(),
-    ];
-
     let cardid_suffix = "cards";
 
     //get init py msg
@@ -436,46 +428,28 @@ onUiLoaded(() => {
             let active_extra_tab_type = "";
             let extra_tabs = gradioApp().getElementById(tab_prefix+"_extra_tabs");
             if (!extra_tabs) {console.log("can not find extra_tabs: " + tab_prefix+"_extra_tabs");}
-            //get tab buttons
-            let extra_tab_btns = extra_tabs.firstChild.querySelectorAll("button");
-            console.log("found buttons: " + extra_tab_btns.length);
 
-            for (let extra_tab_btn of extra_tab_btns) {
-                console.log(extra_tab_btn.innerHTML);
+            //get active extratab
+            const active_extra_tab = Array.from(get_uiCurrentTabContent().querySelectorAll('.extra-network-cards,.extra-network-thumbs'))
+                .find(el => el.closest('.tabitem').style.display === 'block')
+                ?.id.match(/^(txt2img|img2img)_(.+)_cards$/)[2]
 
-                // use different if condition for different gradio version
-                let condition = false;
-                if (gradio_ver=="3.23.0") {
-                    condition = (extra_tab_btn.className.indexOf("selected") >= 0);
-                } else {
-                    // console.log("condition parts");
-                    // console.log(extra_tab_btn.className.indexOf("border-transparent")<0);
-                    // console.log(model_type_label_list.includes(extra_tab_btn.innerHTML.trim()));
-                    condition = (extra_tab_btn.className.indexOf("border-transparent")<0) && model_type_label_list.includes(extra_tab_btn.innerHTML.trim());
-                }
+                
+            console.log("found active tab: " + active_extra_tab);
 
-                if (condition) {
-                    console.log("found active tab: " + extra_tab_btn.innerHTML);
-
-                    switch (extra_tab_btn.innerHTML.trim()) {
-                        case model_type_label_list[0]:
-                            active_extra_tab_type = "ti";
-                            break;
-                        case model_type_label_list[1]:
-                            active_extra_tab_type = "hyper";
-                            break;
-                        case model_type_label_list[2]:
-                            active_extra_tab_type = "ckp";
-                            break;
-                        case model_type_label_list[3]:
-                            active_extra_tab_type = "lora";
-                            break;
-                    }
-
+            switch (active_extra_tab) {
+                case "textual_inversion":
+                    active_extra_tab_type = "ti";
                     break;
-
-
-                }
+                case "hypernetworks":
+                    active_extra_tab_type = "hyper";
+                    break;
+                case "checkpoints":
+                    active_extra_tab_type = "ckp";
+                    break;
+                case "lora":
+                    active_extra_tab_type = "lora";
+                    break;
             }
 
 
@@ -601,7 +575,7 @@ onUiLoaded(() => {
 
                     // change replace preview text button into icon
                     if (replace_preview_btn) {
-                        if (replace_preview_btn.innerHTML == replace_preview_text) {
+                        if (replace_preview_btn.innerHTML !== "🖼️") {
                             need_to_add_buttons = true;
                             replace_preview_btn.innerHTML = "🖼️";
                             if (!is_thumb_mode) {
