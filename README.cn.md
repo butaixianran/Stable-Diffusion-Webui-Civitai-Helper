@@ -12,7 +12,10 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 **本插件现在非常稳定，很多人用得很好，如果碰到问题，先看[常见问题](#常见问题)，并检查命令行窗口的详情。**   
 如果是想声称这个插件不起作用，先看这个：[Claim Wall](claim_wall.md)  
 
+
 # 功能
+[中文介绍视频(非官方)](https://youtu.be/x4tPWPmeAgM?t=373)  
+
 * 扫描所有模型，从Civitai下载模型信息和预览图 
 * 通过civitai模型页面url，连接本地模型和civitai模型信息
 * 通过Civitai模型页面url，下载模型(含信息和预览图)到SD目录或子目录。
