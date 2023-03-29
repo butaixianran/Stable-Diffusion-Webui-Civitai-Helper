@@ -341,10 +341,10 @@ onUiLoaded(() => {
     let model_type_list = ["textual_inversion", "hypernetworks", "checkpoints", "lora"];
     //get translated label list
     let model_type_label_list = [
-        getTranslation("Textual Inversion")??"Textual Inversion",
-        getTranslation("Hypernetworks")??"Hypernetworks",
-        getTranslation("Checkpoints")??"Checkpoints",
-        getTranslation("Lora")??"Lora",
+        (getTranslation("Textual Inversion")??"Textual Inversion").trim(),
+        (getTranslation("Hypernetworks")??"Hypernetworks").trim(),
+        (getTranslation("Checkpoints")??"Checkpoints").trim(),
+        (getTranslation("Lora")??"Lora").trim(),
     ];
 
     let cardid_suffix = "cards";

@@ -37,6 +37,9 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 
 # 使用方法
+## 不要使用双语对照插件
+本插件无法在那个双语对照插件下工作，请换用普通中文化插件。  
+
 ## 更新你的SD webui
 本扩展需要取到 Extra Network的卡片列表id。**这个是2023-02-06，才添加到SD webui里面的。**  
 

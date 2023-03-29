@@ -44,6 +44,9 @@ Everytime you install or update this extension, you need to shutdown SD Webui an
 Done.
 
 # How to Use
+## Do not use bilingual localization
+This extension can not work with bilingual localization extension. Disable it before using this extension.  
+
 ## Update Your SD Webui
 This extension need to get extra network's cards id. Which is added since **2023-02-06**.  
 **If your SD webui is an earlier version, you need to update it!**  
