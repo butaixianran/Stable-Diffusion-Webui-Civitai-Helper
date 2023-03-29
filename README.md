@@ -226,6 +226,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.6.1.1
+* Support bilingual localization extension by PR
+
 ## v1.6.1
 * Fix Localization issue for 4 addtional buttons on cards. (Forgot that again...)
 
