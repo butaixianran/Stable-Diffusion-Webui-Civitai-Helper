@@ -35,20 +35,20 @@ Then removed his comment from civitai, but his post on reddit is still there, so
 
 ![](img/user_claim_wall/css_issue_part4.jpg)  
 
-### **Blame SD Webui's changing to this extension**  
-(Latest SD webui removed a button from UI, they claim this extension did that, and want it back by this extension)  
+### **Blame SD Webui's modification to this extension**  
+Latest SD webui removed a button from UI, they claim this extension did that, and want it back by this extension  
 
 ![](img/user_claim_wall/blame_sdweui_update_to_this_ext.jpg)  
 
-### Don't even use this extension, claim other extension's error to this extension
+### Claim other extension's error to this extension
 Just because both extensions have "Civitai" in extension's name  
 
 ![](img/user_claim_wall/do_not_even_use_this_ext.jpg)   
 
 
-### **Didn't re-launch SD webui like document asked**  
+### **Didn't even use this extension and request a feature it already has**  
 
-![](img/user_claim_wall/did_not_relaunch_sdwebui.jpg)  
+![](img/user_claim_wall/request_a_feature_it_already_has.jpg)  
 
 ### **Renamed model folder's name carelessly and forgot that**
 Takes about 8 hours to find out why this extension doesn't work on his SDwebui and ready to re-install SD webui from beginning. 

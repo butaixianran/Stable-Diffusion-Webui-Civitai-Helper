@@ -59,10 +59,20 @@ def dl(url, folder, filename, filepath):
 
 
     util.printD("Target file path: " + file_path)
+    base, ext = os.path.splitext(file_path)
+
+    # check if file is already exist
+    count = 2
+    new_base = base
+    while os.path.isfile(file_path):
+        util.printD("Target file already exist.")
+        # re-name
+        new_base = base + "_" + str(count)
+        file_path = new_base + ext
+        count += 1
 
     # use a temp file for downloading
-    base, ext = os.path.splitext(file_path)
-    dl_file_path = base+dl_ext
+    dl_file_path = new_base+dl_ext
 
 
     util.printD(f"Downloading to temp file: {dl_file_path}")
