@@ -226,6 +226,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.6.2
+* When downloading, re-name file if file already exists
+
 ## v1.6.1.1
 * Support bilingual localization extension by PR
 
