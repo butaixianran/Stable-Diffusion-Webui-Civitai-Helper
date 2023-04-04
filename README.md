@@ -1,7 +1,6 @@
-## Notice
-**After 2023-04-04's update of civitai, its API service doesn't have preview image url in it anymore. So do not scan your model, until civitai fixes that. Check this issue to learn more:**   https://github.com/civitai/civitai/issues/414
-  
-
+### Language
+[中文](README.cn.md)  
+[日本語(非公式)](https://economylife.net/civitai-helper-webui-install/
 
 ## About Civitai Helper2: Model Info Helper
 Civitai Helper 2 will be renamed to **ModelInfo Helper**. It is under development, you can watch its UI demo video to see how it gonna look like:    
