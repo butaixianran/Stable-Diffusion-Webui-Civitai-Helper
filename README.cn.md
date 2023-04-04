@@ -1,9 +1,3 @@
-## 注意
-**Civitai在2023-04-04的大幅改版之后，现在API里面没有提供预览图信息，全是空的。所以，在civitai修复之前，不要扫描模型。你可以通过下面的issue了解事情进展:**   
-https://github.com/civitai/civitai/issues/414
-
-  
-
 ## 关于Civitai Helper2: Model Info Helper
 Civitai助手2将改名为**Model Info助手**。目前还在缓慢开发中。你可以查看它的UI演示视频，了解它会是什么样子:    
 [https://youtu.be/mPcKwQDDH8s](https://youtu.be/mPcKwQDDH8s)  
