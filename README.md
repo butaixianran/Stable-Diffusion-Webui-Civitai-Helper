@@ -1,5 +1,6 @@
 ### Language
 [中文](README.cn.md)  
+[日本語(ChatGPT)](README.jp.md)  
 [日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)
 
 ## About Civitai Helper2: Model Info Helper
