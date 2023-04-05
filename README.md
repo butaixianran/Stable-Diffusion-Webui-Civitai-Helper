@@ -1,7 +1,8 @@
 ### Language
-[中文](README.cn.md)  
+[中文](README.cn.md)   
 [日本語(ChatGPT)](README.jp.md)  
-[日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)
+[日本語(非公式)](https://economylife.net/civitai-helper-webui-install/)   
+[한국어(ChatGPT)](README.kr.md)  
 
 ## About Civitai Helper2: Model Info Helper
 Civitai Helper 2 will be renamed to **ModelInfo Helper**. It is under development, you can watch its UI demo video to see how it gonna look like:    
