@@ -196,6 +196,9 @@ Enjoy!
 #### Localization
 There was a Localization issue if you are not using English version of SD webui. This is fixed in the latest version of this extension. **Bilingual localization extension is supported by PR since v1.6.1.1.**  
 
+##### Using cloud based localization extension
+Turn off cloud based localization extension, use normal localization extension.  
+
 #### Other case
 First of all, make sure you clicked "Refresh Civitai Helper" button.  
 
