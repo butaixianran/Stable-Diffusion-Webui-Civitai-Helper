@@ -1,6 +1,6 @@
 ### Language
 [中文](README.cn.md)   
-[日本語](README.jp.md)
+[日本語](README.jp.md)  
 [한국어(ChatGPT)](README.kr.md)  
 
 ## About Civitai Helper2: Model Info Helper
