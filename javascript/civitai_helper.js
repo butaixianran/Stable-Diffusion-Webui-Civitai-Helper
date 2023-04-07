@@ -221,11 +221,14 @@ function add_trigger_words(event, model_type, search_term){
     msg["action"] = "add_trigger_words";
     msg["model_type"] = model_type;
     msg["search_term"] = search_term;
-    msg["neg_prompt"] = "";
 
     // get active prompt
     let act_prompt = getActivePrompt();
     msg["prompt"] = act_prompt.value;
+
+    // get active neg prompt
+    let neg_prompt = getActiveNegativePrompt();
+    msg["neg_prompt"] = neg_prompt.value;
 
     // fill to msg box
     send_ch_py_msg(msg)

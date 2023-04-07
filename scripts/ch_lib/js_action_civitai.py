@@ -77,40 +77,63 @@ def add_trigger_words(msg):
     model_type = result["model_type"]
     search_term = result["search_term"]
     prompt = result["prompt"]
+    neg_prompt = result["neg_prompt"]
 
+    trainedWords = []
+    negWords = []
 
     model_info = civitai.load_model_info_by_search_term(model_type, search_term)
     if not model_info:
         util.printD(f"Failed to get model info for {model_type} {search_term}")
-        return [prompt, prompt]
-    
-    if "trainedWords" not in model_info.keys():
+        return [prompt, prompt, neg_prompt, neg_prompt]
+
+    if "trainedWords" in model_info.keys():
+        trainedWords = model_info["trainedWords"]
+        if not trainedWords:
+            util.printD(f"No trainedWords from info file for {model_type} {search_term}")
+            trainedWords = []
+
+        if len(trainedWords) == 0:
+            util.printD(f"trainedWords from info file for {model_type} {search_term} is empty")
+            trainedWords = []
+    else:
         util.printD(f"Failed to get trainedWords from info file for {model_type} {search_term}")
-        return [prompt, prompt]
-    
-    trainedWords = model_info["trainedWords"]
-    if not trainedWords:
-        util.printD(f"No trainedWords from info file for {model_type} {search_term}")
-        return [prompt, prompt]
-    
-    if len(trainedWords) == 0:
-        util.printD(f"trainedWords from info file for {model_type} {search_term} is empty")
-        return [prompt, prompt]
-    
+
+    if "negWords" in model_info.keys():
+        negWords = model_info["negWords"]
+        if not negWords:
+            util.printD(f"No negWords from info file for {model_type} {search_term}")
+            negWords = []
+
+        if len(negWords) == 0:
+            util.printD(f"negWords from info file for {model_type} {search_term} is empty")
+            negWords = []
+    else:
+        util.printD(f"Failed to get negWords from info file for {model_type} {search_term}")
+
     # get ful trigger words
     trigger_words = ""
-    for word in trainedWords:
-        trigger_words = trigger_words + word + ", "
+    if trainedWords:
+        for word in trainedWords:
+            trigger_words = trigger_words + word + ", "
 
-    new_prompt = prompt + " " + trigger_words
+    neg_words = ""
+    if negWords:
+        for word in negWords:
+            neg_words = neg_words + word + ", "
+
+    new_prompt = prompt + " " + trigger_words if trigger_words != "" else prompt
+    new_neg_prompt = neg_prompt + " " + neg_words if neg_words != "" else neg_prompt
     util.printD("trigger_words: " + trigger_words)
     util.printD("prompt: " + prompt)
     util.printD("new_prompt: " + new_prompt)
+    util.printD("new_prompt: " + new_prompt)
+    util.printD("new_neg_prompt: " + new_neg_prompt)
 
     util.printD("End add_trigger_words")
 
     # add to prompt
-    return [new_prompt, new_prompt]
+    return [new_prompt, new_neg_prompt, new_prompt, new_neg_prompt]
 
 
 
@@ -124,7 +147,7 @@ def use_preview_image_prompt(msg):
     if not result:
         util.printD("Parsing js ms failed")
         return
-    
+
     model_type = result["model_type"]
     search_term = result["search_term"]
     prompt = result["prompt"]
@@ -135,11 +158,11 @@ def use_preview_image_prompt(msg):
     if not model_info:
         util.printD(f"Failed to get model info for {model_type} {search_term}")
         return [prompt, neg_prompt, prompt, neg_prompt]
-    
+
     if "images" not in model_info.keys():
         util.printD(f"Failed to get images from info file for {model_type} {search_term}")
         return [prompt, neg_prompt, prompt, neg_prompt]
-    
+
     images = model_info["images"]
     if not images:
         util.printD(f"No images from info file for {model_type} {search_term}")
