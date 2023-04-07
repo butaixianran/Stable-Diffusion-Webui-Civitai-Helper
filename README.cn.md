@@ -10,7 +10,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 # 注意
 **本插件现在非常稳定，很多人用得很好，如果碰到问题，先看[常见问题](#常见问题)，并检查命令行窗口的详情。**   
-如果是想声称这个插件不起作用，先看这个：[Claim Wall](claim_wall.md)  
+开issue前，请先看文档。找茬行为的用户将会被拉黑，参考：[找茬行为会被拉黑](https://github.com/butaixianran/Stable-Diffusion-Webui-Civitai-Helper/issues/96#issuecomment-1500310981)   
 
 
 # 功能
