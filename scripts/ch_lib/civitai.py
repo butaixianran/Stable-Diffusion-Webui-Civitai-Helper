@@ -295,7 +295,7 @@ def get_model_id_from_url(url:str) -> str:
         id = str(url)
         return id
     
-    s = url.split("/")
+    s = re.sub("\\?.+$", "", url).split("/")
     if len(s) < 2:
         util.printD("url is not valid")
         return ""
