@@ -230,6 +230,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.6.2.1
+* when parsing civitai url, remove query string by PR
+
 ## v1.6.2
 * When downloading, re-name file if file already exists
 
