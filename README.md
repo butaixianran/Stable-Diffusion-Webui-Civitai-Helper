@@ -230,6 +230,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.6.3
+* Support downloading multiple files, not avaiable when checking new version.
+
 ## v1.6.2.1
 * when parsing civitai url, remove query string by PR
 

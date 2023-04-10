@@ -274,6 +274,48 @@ def get_model_info_by_url(model_url_or_id:str) -> tuple:
 
     return (model_info, model_name, model_type, subfolders, version_strs)
 
+# get version info by version string
+def get_ver_info_by_ver_str(version_str:str, model_info:dict) -> dict:
+    if not version_str:
+        util.printD("version_str is empty")
+        return
+    
+    if not model_info:
+        util.printD("model_info is None")
+        return
+    
+    # get version list
+    if "modelVersions" not in model_info.keys():
+        util.printD("modelVersions is not in model_info")
+        return
+
+    modelVersions = model_info["modelVersions"]
+    if not modelVersions:
+        util.printD("modelVersions is Empty")
+        return
+    
+    # find version by version_str
+    version = None
+    for ver in modelVersions:
+        # version name can not be used as id
+        # version id is not readable
+        # so , we use name_id as version string
+        ver_str = ver["name"]+"_"+str(ver["id"])
+        if ver_str == version_str:
+            # find version
+            version = ver
+
+    if not version:
+        util.printD("can not find version by version string: " + version_str)
+        return
+    
+    # get version id
+    if "id" not in version.keys():
+        util.printD("this version has no id")
+        return
+    
+    return version
+
 
 # get download url from model info by version string
 # return - (version_id, download_url)
@@ -387,24 +429,28 @@ def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, versio
         util.printD(output)
         return output
     
-    # get download url
-    r = get_id_and_dl_url_by_version_str(version_str, model_info)
-    if not r:
-        output = "Fail to get download url, check console log for detail"
+    # get version info
+    ver_info = get_ver_info_by_ver_str(version_str, model_info)
+    if not ver_info:
+        output = "Fail to get version info, check console log for detail"
         util.printD(output)
         return output
     
-    version_id, url = r
-    if not version_id:
-        output = "Fail to get version id, check console log for detail"
-        util.printD(output)
-        return output
+    version_id = ver_info["id"]
 
-    if not url:
-        output = "Fail to get download url, check console log for detail"
-        util.printD(output)
-        return output
-    
+    # get all download url from files info
+    # some model versions have multiple files
+    download_urls = []
+    if "files" in ver_info.keys():
+        for file_info in ver_info["files"]:
+            if "downloadUrl" in file_info.keys():
+                download_urls.append(file_info["downloadUrl"])
+
+    if not len(download_urls):
+        if "downloadUrl" in ver_info.keys():
+            download_urls.append(ver_info["downloadUrl"])
+
+
     # check if this model is already existed
     r = civitai.search_local_model_info_by_version_id(model_folder, version_id)
     if r:
@@ -413,11 +459,19 @@ def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, versio
         return output
     
     # download
-    filepath = downloader.dl(url, model_folder, None, None)
+    filepath = ""
+    for url in download_urls:
+        model_filepath = downloader.dl(url, model_folder, None, None)
+        if not model_filepath:
+            output = "Downloading failed, check console log for detail"
+            util.printD(output)
+            return output
+        
+        if url == ver_info["downloadUrl"]:
+            filepath = model_filepath
+
     if not filepath:
-        output = "Downloading failed, check console log for detail"
-        util.printD(output)
-        return output
+        filepath = model_filepath
     
     # get version info
     version_info = civitai.get_version_info_by_version_id(version_id)
