@@ -71,7 +71,7 @@ def load():
         util.printD("load setting file failed")
         return
 
-    data = {**data, **json_data}
+    data = {**json_data, **data}
 
 
 # save setting from parameter
