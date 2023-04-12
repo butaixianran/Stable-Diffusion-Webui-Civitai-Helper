@@ -71,20 +71,8 @@ def load():
         util.printD("load setting file failed")
         return
 
-    data = json_data
+    data = {**data, **json_data}
 
-    # check for new key
-    if "always_display" not in data["general"].keys():
-        data["general"]["always_display"] = False
-
-    if "show_btn_on_thumb" not in data["general"].keys():
-        data["general"]["show_btn_on_thumb"] = True
-
-    if "proxy" not in data["general"].keys():
-        data["general"]["proxy"] = ""
-
-
-    return
 
 # save setting from parameter
 def save_from_input(max_size_preview, skip_nsfw_preview, open_url_with_js, always_display, show_btn_on_thumb, proxy):
