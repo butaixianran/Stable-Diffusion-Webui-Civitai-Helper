@@ -216,6 +216,22 @@ Civitai has a connection pool setting. Basicly, it's a max connection number tha
 
 In those cases, the only thing you can do is just wait a while then try again.  
 
+### Get Wrong model info and preview images from civitai
+A bad news is, some models are saved with a wrong sha256 in civitai's database. Check here for more detail:  
+[https://github.com/civitai/civitai/issues/426](https://github.com/civitai/civitai/issues/426)  
+
+So, for those models, this extension can not get the right model info or preview images.   
+
+In this case, you have to remove the model info file and get the right model info by a civitai url on this extension's tab page.  
+
+Also, you can report those models with wrong sha256 to civitai at following page:   
+[https://discord.com/channels/1037799583784370196/1096271712959615100/1096271712959615100](https://discord.com/channels/1037799583784370196/1096271712959615100/1096271712959615100)  
+
+Please report that model to civitai, so they can fix it.  
+
+
+
+
 ### Scanning fail when using colab
 First of, search your error message with google. Most likely, it will be a colab issue.    
 
