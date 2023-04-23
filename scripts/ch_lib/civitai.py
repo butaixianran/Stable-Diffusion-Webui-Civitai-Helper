@@ -319,16 +319,20 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
         return
 
     if not os.path.isfile(model_path):
-        util.printD("model_path is not a file: "+model_path)
+        util.printD("model_path is not a file: "+ model_path)
         return
 
     base, ext = os.path.splitext(model_path)
+
     first_preview = base+".png"
     sec_preview = base+".preview.png"
+
+    check_preview_files = [base + ext for ext in (".png", ".preview.png", ".jpg", ".preview.jpg", ".webp", ".preview.webp")]
+
     info_file = base + suffix + model.info_ext
 
     # check preview image
-    if not os.path.isfile(sec_preview):
+    if not all(os.path.isfile(file) for file in check_preview_files):
         # need to download preview image
         util.printD("Checking preview image for model: " + model_path)
         # load model_info file

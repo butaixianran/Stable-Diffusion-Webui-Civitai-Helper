@@ -430,7 +430,7 @@ onUiLoaded(() => {
             if (!extra_tabs) {console.log("can not find extra_tabs: " + tab_prefix+"_extra_tabs");}
 
             //get active extratab
-            const active_extra_tab = Array.from(get_uiCurrentTabContent().querySelectorAll('.extra-network-cards,.extra-network-thumbs'))
+            const active_extra_tab = Array.from(document.querySelectorAll('.extra-network-cards,.extra-network-thumbs'))
                 .find(el => el.closest('.tabitem').style.display === 'block')
                 ?.id.match(/^(txt2img|img2img)_(.+)_cards$/)[2]
 
