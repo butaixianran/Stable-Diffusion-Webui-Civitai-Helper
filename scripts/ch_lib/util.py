@@ -1,5 +1,6 @@
 # -*- coding: UTF-8 -*-
 import os
+import sys
 import io
 import hashlib
 import requests
@@ -16,7 +17,7 @@ proxies = None
 
 # print for debugging
 def printD(msg):
-    print(f"Civitai Helper: {msg}")
+    print(f"Civitai Helper: {msg}", file=sys.stderr)
 
 
 def read_chunks(file, size=io.DEFAULT_BUFFER_SIZE):
