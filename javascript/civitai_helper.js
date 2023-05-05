@@ -692,29 +692,11 @@ onUiLoaded(() => {
     let extra_network_refresh_btn = null;
     //add refresh button to extra network's toolbar
     for (let prefix of tab_prefix_list) {
-        tab_id = prefix + "_extra_tabs";
-        extra_tab = gradioApp().getElementById(tab_id);
-
-        //get toolbar
-        //get Refresh button
-        extra_network_refresh_btn = gradioApp().getElementById(prefix+"_extra_refresh");
-
-
-        if (!extra_network_refresh_btn){
-            console.log("can not get extra network refresh button for " + tab_id);
-            continue;
-        }
-
-        // add refresh button to toolbar
-        let ch_refresh = document.createElement("button");
-        ch_refresh.innerHTML = "🔁";
-        ch_refresh.title = "Refresh Civitai Helper's additional buttons";
-        ch_refresh.className = "lg secondary gradio-button";
-        ch_refresh.style.fontSize = "200%";
-        ch_refresh.onclick = update_card_for_civitai;
-
-        extra_network_refresh_btn.parentNode.appendChild(ch_refresh);
-
+        let timer
+        document.querySelector(`#${prefix}_extra_networks.gradio-row`).addEventListener("DOMSubtreeModified", function(){
+            clearTimeout(timer);
+            timer = setTimeout(update_card_for_civitai, 200);
+        }, false);
     }
 
 
