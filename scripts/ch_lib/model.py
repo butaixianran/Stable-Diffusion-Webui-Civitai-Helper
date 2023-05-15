@@ -3,11 +3,11 @@
 import os
 import json
 from . import util
-from modules import shared
+from modules import shared, paths_internal
 
 
 # this is the default root path
-root_path = os.getcwd()
+root_path = paths_internal.data_path
 
 # if command line arguement is used to change model folder, 
 # then model folder is in absolute path, not based on this root path anymore.
