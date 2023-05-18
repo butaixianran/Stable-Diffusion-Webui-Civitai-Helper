@@ -246,6 +246,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.6.4
+* Add "Download All files" checkbox for downloading model section. Uncheck means only download 1 file.
+
 ## v1.6.3
 * Support downloading multiple files, not avaiable when checking new version.
 

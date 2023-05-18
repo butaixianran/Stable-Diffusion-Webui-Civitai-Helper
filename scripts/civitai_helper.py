@@ -123,7 +123,7 @@ def on_ui_tabs():
                 gr.Markdown("Use this when scanning can not find a local model on civitai")
                 with gr.Row():
                     model_type_drop = gr.Dropdown(choices=model_types, label="Model Type", value="ckp", multiselect=False)
-                    empty_info_only_ckb = gr.Checkbox(label="Only Show Models have no Info", value=False, elem_id="cn_empty_info_only_ckb", elem_classes="ch_vpadding")
+                    empty_info_only_ckb = gr.Checkbox(label="Only Show Models have no Info", value=False, elem_id="ch_empty_info_only_ckb", elem_classes="ch_vpadding")
                     model_name_drop = gr.Dropdown(choices=no_info_model_names, label="Model", value="ckp", multiselect=False)
 
                 model_url_or_id_txtbox = gr.Textbox(label="Civitai URL", lines=1, value="")
@@ -143,6 +143,7 @@ def on_ui_tabs():
                     dl_model_type_txtbox = gr.Textbox(label="Model Type", interactive=False, lines=1, value="")
                     dl_subfolder_drop = gr.Dropdown(choices=[], label="Sub-folder", value="", interactive=True, multiselect=False)
                     dl_version_drop = gr.Dropdown(choices=[], label="Model Version", value="", interactive=True, multiselect=False)
+                    dl_all_ckb = gr.Checkbox(label="Download All files", value=False, elem_id="ch_dl_all_ckb", elem_classes="ch_vpadding")
                 
                 dl_civitai_model_by_id_btn = gr.Button(value="3. Download Model", variant="primary")
                 dl_log_md = gr.Markdown(value="Check Console log for Downloading Status")
@@ -194,7 +195,7 @@ def on_ui_tabs():
 
         # Download Model
         dl_model_info_btn.click(get_model_info_by_url, inputs=dl_model_url_or_id_txtbox, outputs=[dl_model_info, dl_model_name_txtbox, dl_model_type_txtbox, dl_subfolder_drop, dl_version_drop])
-        dl_civitai_model_by_id_btn.click(model_action_civitai.dl_model_by_input, inputs=[dl_model_info, dl_model_type_txtbox, dl_subfolder_drop, dl_version_drop, max_size_preview_ckb, skip_nsfw_preview_ckb], outputs=dl_log_md)
+        dl_civitai_model_by_id_btn.click(model_action_civitai.dl_model_by_input, inputs=[dl_model_info, dl_model_type_txtbox, dl_subfolder_drop, dl_version_drop, dl_all_ckb, max_size_preview_ckb, skip_nsfw_preview_ckb], outputs=dl_log_md)
 
         # Check models' new version
         check_models_new_version_btn.click(model_action_civitai.check_models_new_version_to_md, inputs=model_types_ckbg, outputs=check_models_new_version_log_md)

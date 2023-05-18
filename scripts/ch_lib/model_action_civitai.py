@@ -380,7 +380,7 @@ def get_id_and_dl_url_by_version_str(version_str:str, model_info:dict) -> tuple:
 
 # download model from civitai by input
 # output to markdown log
-def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, version_str:str, max_size_preview:bool, skip_nsfw_preview:bool) -> str:
+def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, version_str:str, dl_all_bool:bool, max_size_preview:bool, skip_nsfw_preview:bool) -> str:
 
     output = ""
 
@@ -438,37 +438,55 @@ def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, versio
     
     version_id = ver_info["id"]
 
-    # get all download url from files info
-    # some model versions have multiple files
-    download_urls = []
-    if "files" in ver_info.keys():
-        for file_info in ver_info["files"]:
-            if "downloadUrl" in file_info.keys():
-                download_urls.append(file_info["downloadUrl"])
 
-    if not len(download_urls):
-        if "downloadUrl" in ver_info.keys():
-            download_urls.append(ver_info["downloadUrl"])
+    if dl_all_bool:
+        # get all download url from files info
+        # some model versions have multiple files
+        download_urls = []
+        if "files" in ver_info.keys():
+            for file_info in ver_info["files"]:
+                if "downloadUrl" in file_info.keys():
+                    download_urls.append(file_info["downloadUrl"])
+
+        if not len(download_urls):
+            if "downloadUrl" in ver_info.keys():
+                download_urls.append(ver_info["downloadUrl"])
 
 
-    # check if this model is already existed
-    r = civitai.search_local_model_info_by_version_id(model_folder, version_id)
-    if r:
-        output = "This model version is already existed"
-        util.printD(output)
-        return output
-    
-    # download
-    filepath = ""
-    for url in download_urls:
-        model_filepath = downloader.dl(url, model_folder, None, None)
-        if not model_filepath:
-            output = "Downloading failed, check console log for detail"
+        # check if this model is already existed
+        r = civitai.search_local_model_info_by_version_id(model_folder, version_id)
+        if r:
+            output = "This model version is already existed"
             util.printD(output)
             return output
         
-        if url == ver_info["downloadUrl"]:
-            filepath = model_filepath
+        # download
+        filepath = ""
+        for url in download_urls:
+            model_filepath = downloader.dl(url, model_folder, None, None)
+            if not model_filepath:
+                output = "Downloading failed, check console log for detail"
+                util.printD(output)
+                return output
+            
+            if url == ver_info["downloadUrl"]:
+                filepath = model_filepath
+    else:
+        # only download one file
+        # get download url
+        url = ver_info["downloadUrl"]
+        if not url:
+            output = "Fail to get download url, check console log for detail"
+            util.printD(output)
+            return output
+        
+        # download
+        filepath = downloader.dl(url, model_folder, None, None)
+        if not filepath:
+            output = "Downloading failed, check console log for detail"
+            util.printD(output)
+            return output
+
 
     if not filepath:
         filepath = model_filepath
