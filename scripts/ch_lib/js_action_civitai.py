@@ -23,7 +23,7 @@ def open_model_url(msg, open_url_with_js):
     if not result:
         util.printD("Parsing js ms failed")
         return
-    
+
     model_type = result["model_type"]
     search_term = result["search_term"]
 
@@ -50,7 +50,7 @@ def open_model_url(msg, open_url_with_js):
     }
 
     if not open_url_with_js:
-        util.printD("Open Url: " + url)
+        util.printD(f"Open Url: {url}")
         # open url
         webbrowser.open_new_tab(url)
     else:
@@ -73,7 +73,7 @@ def add_trigger_words(msg):
     if not result:
         util.printD("Parsing js ms failed")
         return
-    
+
     model_type = result["model_type"]
     search_term = result["search_term"]
     prompt = result["prompt"]
@@ -83,29 +83,29 @@ def add_trigger_words(msg):
     if not model_info:
         util.printD(f"Failed to get model info for {model_type} {search_term}")
         return [prompt, prompt]
-    
+
     if "trainedWords" not in model_info.keys():
         util.printD(f"Failed to get trainedWords from info file for {model_type} {search_term}")
         return [prompt, prompt]
-    
+
     trainedWords = model_info["trainedWords"]
     if not trainedWords:
         util.printD(f"No trainedWords from info file for {model_type} {search_term}")
         return [prompt, prompt]
-    
+
     if len(trainedWords) == 0:
         util.printD(f"trainedWords from info file for {model_type} {search_term} is empty")
         return [prompt, prompt]
-    
+
     # get ful trigger words
     trigger_words = ""
     for word in trainedWords:
         trigger_words = trigger_words + word + ", "
 
-    new_prompt = prompt + " " + trigger_words
-    util.printD("trigger_words: " + trigger_words)
-    util.printD("prompt: " + prompt)
-    util.printD("new_prompt: " + new_prompt)
+    new_prompt = f"{prompt} {trigger_words}"
+    util.printD(f"trigger_words: {trigger_words}")
+    util.printD(f"prompt: {prompt}")
+    util.printD(f"new_prompt: {new_prompt}")
 
     util.printD("End add_trigger_words")
 
@@ -188,14 +188,14 @@ def dl_model_new_version(msg, max_size_preview, skip_nsfw_preview):
         output = "Parsing js ms failed"
         util.printD(output)
         return output
-    
+
     model_path = result["model_path"]
     version_id = result["version_id"]
     download_url = result["download_url"]
 
-    util.printD("model_path: " + model_path)
-    util.printD("version_id: " + str(version_id))
-    util.printD("download_url: " + download_url)
+    util.printD(f"model_path: {model_path}")
+    util.printD(f"version_id: {str(version_id)}")
+    util.printD(f"download_url: {download_url}")
 
     # check data
     if not model_path:
@@ -207,14 +207,14 @@ def dl_model_new_version(msg, max_size_preview, skip_nsfw_preview):
         output = "version_id is empty"
         util.printD(output)
         return output
-    
+
     if not download_url:
         output = "download_url is empty"
         util.printD(output)
         return output
 
     if not os.path.isfile(model_path):
-        output = "model_path is not a file: "+ model_path
+        output = f"model_path is not a file: {model_path}"
         util.printD(output)
         return output
 
@@ -232,14 +232,14 @@ def dl_model_new_version(msg, max_size_preview, skip_nsfw_preview):
     # download file
     new_model_path = downloader.dl(download_url, model_folder, None, None)
     if not new_model_path:
-        output = "Download failed, check console log for detail. Download url: " + download_url
+        output = f"Download failed, check console log for detail. Download url: {download_url}"
         util.printD(output)
         return output
 
     # get version info
     version_info = civitai.get_version_info_by_version_id(version_id)
     if not version_info:
-        output = "Model downloaded, but failed to get version info, check console log for detail. Model saved to: " + new_model_path
+        output = f"Model downloaded, but failed to get version info, check console log for detail. Model saved to: {new_model_path}"
         util.printD(output)
         return output
 
@@ -250,7 +250,7 @@ def dl_model_new_version(msg, max_size_preview, skip_nsfw_preview):
 
     # then, get preview image
     civitai.get_preview_image_by_model_path(new_model_path, max_size_preview, skip_nsfw_preview)
-    
-    output = "Done. Model downloaded to: " + new_model_path
+
+    output = f"Done. Model downloaded to: {new_model_path}"
     util.printD(output)
     return output
