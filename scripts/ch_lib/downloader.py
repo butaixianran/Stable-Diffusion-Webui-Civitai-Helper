@@ -12,7 +12,7 @@ requests.packages.urllib3.disable_warnings()
 
 # output is downloaded file path
 def dl(url, folder, filename, filepath):
-    util.printD("Start downloading from: " + url)
+    util.printD(f"Start downloading from: {url}")
     # get file_path
     file_path = ""
     if filepath:
@@ -22,11 +22,11 @@ def dl(url, folder, filename, filepath):
         if not folder:
             util.printD("folder is none")
             return
-        
+
         if not os.path.isdir(folder):
-            util.printD("folder does not exist: "+folder)
+            util.printD(f"folder does not exist: {folder}")
             return
-        
+
         if filename:
             file_path = os.path.join(folder, filename)
 
@@ -40,25 +40,25 @@ def dl(url, folder, filename, filepath):
     # if file_path is empty, need to get file name from download url's header
     if not file_path:
         filename = ""
-        if "Content-Disposition" in rh.headers.keys():
+        if "Content-Disposition" in rh.headers:
             cd = rh.headers["Content-Disposition"]
             # Extract the filename from the header
             # content of a CD: "attachment;filename=FileName.txt"
             # in case "" is in CD filename's start and end, need to strip them out
             filename = cd.split("=")[1].strip('"')
             if not filename:
-                util.printD("Fail to get file name from Content-Disposition: " + cd)
+                util.printD(f"Fail to get file name from Content-Disposition: {cd}")
                 return
-            
+
         if not filename:
             util.printD("Can not get file name from download url's header")
             return
-        
+
         # with folder and filename, now we have the full file path
         file_path = os.path.join(folder, filename)
 
 
-    util.printD("Target file path: " + file_path)
+    util.printD(f"Target file path: {file_path}")
     base, ext = os.path.splitext(file_path)
 
     # check if file is already exist
@@ -67,7 +67,7 @@ def dl(url, folder, filename, filepath):
     while os.path.isfile(file_path):
         util.printD("Target file already exist.")
         # re-name
-        new_base = base + "_" + str(count)
+        new_base = f"{base}_{str(count)}"
         file_path = new_base + ext
         count += 1
 

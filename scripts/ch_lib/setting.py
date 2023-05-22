@@ -29,7 +29,7 @@ data = {
 # save setting
 # return output msg for log
 def save():
-    print("Saving setting to: " + path)
+    print(f"Saving setting to: {path}")
 
     json_data = json.dumps(data, indent=4)
 
@@ -40,12 +40,12 @@ def save():
         with open(path, 'w') as f:
             f.write(json_data)
     except Exception as e:
-        util.printD("Error when writing file:"+path)
+        util.printD(f"Error when writing file:{path}")
         output = str(e)
         util.printD(str(e))
         return output
 
-    output = "Setting saved to: " + path
+    output = f"Setting saved to: {path}"
     util.printD(output)
 
     return output
@@ -56,7 +56,7 @@ def load():
     # load data into globel data
     global data
 
-    util.printD("Load setting from: " + path)
+    util.printD(f"Load setting from: {path}")
 
     if not os.path.isfile(path):
         util.printD("No setting file, use default")
