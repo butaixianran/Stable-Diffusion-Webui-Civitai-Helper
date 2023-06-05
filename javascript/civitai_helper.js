@@ -338,7 +338,7 @@ onUiLoaded(() => {
 
     // get all extra network tabs
     let tab_prefix_list = ["txt2img", "img2img"];
-    let model_type_list = ["textual_inversion", "hypernetworks", "checkpoints", "lora"];
+    let model_type_list = ["textual_inversion", "hypernetworks", "checkpoints", "lora", "lycoris"];
     let cardid_suffix = "cards";
 
     //get init py msg
@@ -432,7 +432,7 @@ onUiLoaded(() => {
             //get active extratab
             const active_extra_tab = Array.from(get_uiCurrentTabContent().querySelectorAll('.extra-network-cards,.extra-network-thumbs'))
                 .find(el => el.closest('.tabitem').style.display === 'block')
-                ?.id.match(/^(txt2img|img2img)_(.+)_cards$/)[2]
+                ?.id.match(/^(txt2img|img2img|tab_twoshot_mask)_(.+)_cards$/)[2]
 
                 
             console.log("found active tab: " + active_extra_tab);
@@ -449,6 +449,9 @@ onUiLoaded(() => {
                     break;
                 case "lora":
                     active_extra_tab_type = "lora";
+                    break;
+                case "lycoris":
+                    active_extra_tab_type = "lycoris";
                     break;
             }
 
@@ -487,10 +490,16 @@ onUiLoaded(() => {
                 extra_network_id = tab_prefix+"_"+js_model_type+"_"+cardid_suffix;
                 // console.log("searching extra_network_node: " + extra_network_id);
                 extra_network_node = gradioApp().getElementById(extra_network_id);
-                // check if extr network is under thumbnail mode
+                let lycoris_node = gradioApp().getElementById(tab_prefix+"_lycoris_"+cardid_suffix);
+                let is_lycoris = !!lycoris_node.offsetWidth;
+                if (is_lycoris) {
+                    extra_network_node = lycoris_node;
+                    model_type = "lycoris";
+                }
+                // check if extra network is under thumbnail mode
                 is_thumb_mode = false
                 if (extra_network_node) {
-                    if (extra_network_node.className == "extra-network-thumbs") {
+                    if (extra_network_node.className == "extra-network-thumbs" || extra_network_node.className == "extra-network-cards") {
                         console.log(extra_network_id + " is in thumbnail mode");
                         is_thumb_mode = true;
                         // if (!ch_show_btn_on_thumb) {continue;}
