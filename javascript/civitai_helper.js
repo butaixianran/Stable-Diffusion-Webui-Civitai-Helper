@@ -450,7 +450,7 @@ onUiLoaded(() => {
                 case "lora":
                     active_extra_tab_type = "lora";
                     break;
-				case "lycoris":
+                case "lycoris":
                     active_extra_tab_type = "lycoris";
                     break;
             }
@@ -471,7 +471,7 @@ onUiLoaded(() => {
                     case "lora":
                         model_type = "lora";
                         break;
-					 case "lycoris":
+                    case "lycoris":
                         model_type = "lycoris";
                         break;
                 }
