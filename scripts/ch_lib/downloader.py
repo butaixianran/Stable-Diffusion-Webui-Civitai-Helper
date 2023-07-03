@@ -2,6 +2,7 @@
 import sys
 import requests
 import os
+import time
 from . import util
 
 
@@ -93,20 +94,36 @@ def dl(url, folder, filename, filepath):
 
     # write to file
     with open(dl_file_path, "ab") as f:
-        for chunk in r.iter_content(chunk_size=1024):
-            if chunk:
-                downloaded_size += len(chunk)
-                f.write(chunk)
-                # force to write to disk
-                f.flush()
+        resumecount = 3
+        while(resumecount > 0):
+            for chunk in r.iter_content(chunk_size=1024):
+                if chunk:
+                    downloaded_size += len(chunk)
+                    f.write(chunk)
+                    # force to write to disk
+                    f.flush()
 
-                # progress
-                progress = int(50 * downloaded_size / total_size)
-                sys.stdout.reconfigure(encoding='utf-8')
-                sys.stdout.write("\r[%s%s] %d%%" % ('-' * progress, ' ' * (50 - progress), 100 * downloaded_size / total_size))
-                sys.stdout.flush()
+                    # progress
+                    progress = int(50 * downloaded_size / total_size)
+                    sys.stdout.reconfigure(encoding='utf-8')
+                    sys.stdout.write("\r[%s%s] %d%%" % ('-' * progress, ' ' * (50 - progress), 100 * downloaded_size / total_size))
+                    sys.stdout.flush()
+            if(downloaded_size == total_size):
+                break
+            resumecount -= 1
+            if(resumecount == 0):
+                break
+            print()
+            util.printD(f"Download failed, Try to resume. Downloaded size: {downloaded_size}")
+            time.sleep(3)
+            headers['Range']= 'bytes=%d-' % downloaded_size
+            r = requests.get(url, stream=True, verify=False, headers=headers, proxies=util.proxies)
 
     print()
+
+    if(downloaded_size != total_size):
+        util.printD(f"Download failed due to insufficient file size. {url}")
+        return
 
     # rename file
     os.rename(dl_file_path, file_path)
