@@ -2,17 +2,51 @@ blockquote ul {
     list-style:disc;
     margin:4px 40px;
 }
-
 blockquote ol {
     list-style:decimal;
     margin:4px 40px;
 }
-
 .block.padded.ch_box {
     padding: 10px !important;
 }
-
 .block.padded.ch_vpadding {
     padding: 10px 0 !important;
 }
-
+.civitai-helper-action {
+    font-size: 1.8em;
+    line-height: 1;
+    vertical-align: middle;
+    opacity: .7;
+}
+.civitai-helper-action:hover {
+    filter: drop-shadow(2px 4px 6px black);
+    opacity: 1;
+}
+.extra-network-cards .civitai-helper-action:nth-child(2) {
+    margin: 0 .1em 0 .15em;
+    font-size: 3em;
+}
+.extra-network-thumbs .card {
+    height: 8rem !important;
+    width: 8rem !important;
+}
+.extra-network-thumbs .civitai-helper-action {
+    background-image: none !important;
+    display: inline-block !important;
+    position: static !important;
+    font-size: 1.25em !important;
+    line-height: 1.25em;
+}
+.extra-network-thumbs .civitai-helper-action:nth-child(2) {
+    font-size: 2em !important;
+    height: 1.35em !important;
+    margin-left: 0.25em;
+}
+.extra-network-thumbs .card ul {
+    position: absolute;
+    width: 100%;
+    height: 2em;
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}

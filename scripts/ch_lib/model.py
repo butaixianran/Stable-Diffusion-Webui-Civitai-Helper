@@ -17,6 +17,7 @@ folders = {
     "hyper": os.path.join(root_path, "models", "hypernetworks"),
     "ckp": os.path.join(root_path, "models", "Stable-diffusion"),
     "lora": os.path.join(root_path, "models", "Lora"),
+    "lycoris": os.path.join(root_path, "models", "LyCORIS"),
 }
 
 exts = (".bin", ".pt", ".safetensors", ".ckpt")
@@ -48,7 +49,7 @@ def get_custom_model_folder():
 
 # write model info to file
 def write_model_info(path, model_info):
-    util.printD("Write model info to file: " + path)
+    util.printD("Write model info to: " + path)
     with open(os.path.realpath(path), 'w') as f:
         f.write(json.dumps(model_info, indent=4))
 

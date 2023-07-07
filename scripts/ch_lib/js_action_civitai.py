@@ -175,6 +175,18 @@ def use_preview_image_prompt(msg):
     
     return [preview_prompt, preview_neg_prompt, preview_prompt, preview_neg_prompt]
 
+def delete_model(msg):
+    util.printD("Start delete_model")
+
+    result = msg_handler.parse_js_msg(msg)
+    if not result:
+        util.printD("Parsing js ms failed")
+        return
+    
+    model_type = result["model_type"]
+    search_term = result["search_term"]
+    result = civitai.delete_model_by_search_term(model_type, search_term)
+    return json.dumps({"result": result})
 
 # download model's new verson by model path, version id and download url
 # output is a md log
@@ -251,6 +263,6 @@ def dl_model_new_version(msg, max_size_preview, skip_nsfw_preview):
     # then, get preview image
     civitai.get_preview_image_by_model_path(new_model_path, max_size_preview, skip_nsfw_preview)
     
-    output = "Done. Model downloaded to: " + new_model_path
+    output = "Done, model save to: " + new_model_path
     util.printD(output)
     return output

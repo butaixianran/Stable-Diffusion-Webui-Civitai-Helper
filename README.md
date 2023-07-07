@@ -29,7 +29,7 @@ Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-
   - 🖼️: Modified "replace preview" text into this icon
   - 🌐: Open this model's Civitai url in a new tab
   - 💡: Add this model's trigger words to prompt
-  - 🏷️: Use this model's preview image's prompt
+  - 🪞: Use this model's preview image's prompt
 * Above buttons support thumbnail mode of Extra Network
 * Option to always show additional buttons, to work with touchscreen.  
 

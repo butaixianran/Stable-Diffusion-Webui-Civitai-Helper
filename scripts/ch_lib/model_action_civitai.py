@@ -264,7 +264,7 @@ def get_model_info_by_url(model_url_or_id:str) -> tuple:
         subfolders = []
 
     # add default root folder
-    subfolders.append("/")
+    subfolders.append(os.sep)
 
     util.printD("Get following info for downloading:")
     util.printD(f"model_name:{model_name}")
@@ -435,42 +435,30 @@ def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, versio
         output = "Fail to get version info, check console log for detail"
         util.printD(output)
         return output
-    
-    version_id = ver_info["id"]
 
-
-    if dl_all_bool:
-        # get all download url from files info
-        # some model versions have multiple files
-        download_urls = []
-        if "files" in ver_info.keys():
-            for file_info in ver_info["files"]:
-                if "downloadUrl" in file_info.keys():
-                    download_urls.append(file_info["downloadUrl"])
-
-        if not len(download_urls):
-            if "downloadUrl" in ver_info.keys():
-                download_urls.append(ver_info["downloadUrl"])
-
-
-        # check if this model is already existed
-        r = civitai.search_local_model_info_by_version_id(model_folder, version_id)
-        if r:
-            output = "This model version is already existed"
-            util.printD(output)
-            return output
+    modelVersions = model_info['modelVersions']
+    if dl_all_bool:   
         
-        # download
         filepath = ""
-        for url in download_urls:
-            model_filepath = downloader.dl(url, model_folder, None, None)
-            if not model_filepath:
+        idx = 0
+        for modelVer in modelVersions:
+            # check if this model is already existed
+            r = civitai.search_local_model_info_by_version_id(model_folder, modelVer["id"])
+            if r:
+                util.printD("Model file: '" + r["files"][0]["name"] + "' already existed, skiping it.")
+                continue
+
+            filepath = downloader.dl(modelVer["downloadUrl"], model_folder, None, None)
+            if not filepath:
                 output = "Downloading failed, check console log for detail"
                 util.printD(output)
-                return output
+                continue
+
+            idx = idx + 1
+            save_info_and_preview_image(filepath, modelVer, max_size_preview, skip_nsfw_preview)
+            util.printD(str(idx) + " of " + str(len(modelVersions)) + " files downloaded, save to: " + filepath)
             
-            if url == ver_info["downloadUrl"]:
-                filepath = model_filepath
+            output = "Done, " +  str(idx) + "/" + str(len(modelVersions)) + " files downloaded"
     else:
         # only download one file
         # get download url
@@ -486,18 +474,19 @@ def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, versio
             output = "Downloading failed, check console log for detail"
             util.printD(output)
             return output
-
-
-    if not filepath:
-        filepath = model_filepath
     
-    # get version info
-    version_info = civitai.get_version_info_by_version_id(version_id)
-    if not version_info:
-        output = "Model downloaded, but failed to get version info, check console log for detail. Model saved to: " + filepath
-        util.printD(output)
-        return output
+        # get version info
+        version_info = [mv for mv in modelVersions if mv["id"] == ver_info["id"]][0]
+        if not version_info:
+            output = "Model downloaded, but failed to get version info, check console log for detail. Model saved to: " + filepath
+            util.printD(output)
+            return output
+        
+        output = save_info_and_preview_image(filepath, version_info, max_size_preview, skip_nsfw_preview)
 
+    return output
+
+def save_info_and_preview_image(filepath:str, version_info:dict, max_size_preview:bool, skip_nsfw_preview:bool):
     # write version info to file
     base, ext = os.path.splitext(filepath)
     info_file = base + civitai.suffix + model.info_ext
@@ -506,6 +495,7 @@ def dl_model_by_input(model_info:dict, model_type:str, subfolder_str:str, versio
     # then, get preview image
     civitai.get_preview_image_by_model_path(filepath, max_size_preview, skip_nsfw_preview)
     
-    output = "Done. Model downloaded to: " + filepath
+    output = "Done, model save to: " + filepath
     util.printD(output)
+
     return output

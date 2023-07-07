@@ -81,7 +81,9 @@ def on_ui_tabs():
         if r:
             model_info, model_name, model_type, subfolders, version_strs = r
 
-        return [model_info, model_name, model_type, dl_subfolder_drop.update(choices=subfolders), dl_version_drop.update(choices=version_strs)]
+        value = os.sep if len(subfolders) == 1 else ""
+
+        return [model_info, model_name, model_type, dl_subfolder_drop.update(choices=subfolders, value=value), dl_version_drop.update(choices=version_strs, value=version_strs[0])]
 
     # ====UI====
     with gr.Blocks(analytics_enabled=False) as civitai_helper:
@@ -133,7 +135,7 @@ def on_ui_tabs():
         with gr.Box(elem_classes="ch_box"):
             with gr.Column():
                 gr.Markdown("### Download Model")
-                with gr.Row():
+                with gr.Row(elem_id="model_download_url_txt"):
                     dl_model_url_or_id_txtbox = gr.Textbox(label="Civitai URL", lines=1, value="")
                     dl_model_info_btn = gr.Button(value="1. Get Model Info by Civitai Url", variant="primary")
 
@@ -181,6 +183,7 @@ def on_ui_tabs():
         js_open_url_btn = gr.Button(value="Open Model Url", visible=False, elem_id="ch_js_open_url_btn")
         js_add_trigger_words_btn = gr.Button(value="Add Trigger Words", visible=False, elem_id="ch_js_add_trigger_words_btn")
         js_use_preview_prompt_btn = gr.Button(value="Use Prompt from Preview Image", visible=False, elem_id="ch_js_use_preview_prompt_btn")
+        js_use_delete_model_btn = gr.Button(value="Delete Model", visible=False, elem_id="ch_js_delete_model_btn")
         js_dl_model_new_version_btn = gr.Button(value="Download Model's new version", visible=False, elem_id="ch_js_dl_model_new_version_btn")
 
         # ====events====
@@ -207,6 +210,7 @@ def on_ui_tabs():
         js_open_url_btn.click(js_action_civitai.open_model_url, inputs=[js_msg_txtbox, open_url_with_js_ckb], outputs=py_msg_txtbox)
         js_add_trigger_words_btn.click(js_action_civitai.add_trigger_words, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, img2img_prompt])
         js_use_preview_prompt_btn.click(js_action_civitai.use_preview_image_prompt, inputs=[js_msg_txtbox], outputs=[txt2img_prompt, txt2img_neg_prompt, img2img_prompt, img2img_neg_prompt])
+        js_use_delete_model_btn.click(js_action_civitai.delete_model, inputs=[js_msg_txtbox], outputs=[py_msg_txtbox])
         js_dl_model_new_version_btn.click(js_action_civitai.dl_model_new_version, inputs=[js_msg_txtbox, max_size_preview_ckb, skip_nsfw_preview_ckb], outputs=dl_log_md)
 
     # the third parameter is the element id on html, with a "tab_" as prefix

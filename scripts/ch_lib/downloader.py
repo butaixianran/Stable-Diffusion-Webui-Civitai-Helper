@@ -10,6 +10,13 @@ dl_ext = ".downloading"
 # disable ssl warning info
 requests.packages.urllib3.disable_warnings()
 
+def human_readable_size(size, decimal_places=2):
+    for unit in ['B', 'KB', 'MB', 'GB', 'TB', 'PB']:
+        if size < 1024.0 or unit == 'PiB':
+            break
+        size /= 1024.0
+    return f"{size:.{decimal_places}f} {unit}"
+
 # output is downloaded file path
 def dl(url, folder, filename, filepath):
     util.printD("Start downloading from: " + url)
@@ -35,7 +42,7 @@ def dl(url, folder, filename, filepath):
     # get file size
     total_size = 0
     total_size = int(rh.headers['Content-Length'])
-    util.printD(f"File size: {total_size}")
+    util.printD(f"File size: {human_readable_size(total_size)}")
 
     # if file_path is empty, need to get file name from download url's header
     if not file_path:
@@ -65,7 +72,7 @@ def dl(url, folder, filename, filepath):
     count = 2
     new_base = base
     while os.path.isfile(file_path):
-        util.printD("Target file already exist.")
+        util.printD("Target file'" + file_path + "'already exist.")
         # re-name
         new_base = base + "_" + str(count)
         file_path = new_base + ext
@@ -81,8 +88,8 @@ def dl(url, folder, filename, filepath):
     downloaded_size = 0
     if os.path.exists(dl_file_path):
         downloaded_size = os.path.getsize(dl_file_path)
-
-    util.printD(f"Downloaded size: {downloaded_size}")
+        if downloaded_size > 0:
+            util.printD(f"Downloaded size: {downloaded_size}")
 
     # create header range
     headers = {'Range': 'bytes=%d-' % downloaded_size}
@@ -101,15 +108,15 @@ def dl(url, folder, filename, filepath):
                 f.flush()
 
                 # progress
-                progress = int(50 * downloaded_size / total_size)
+                progress = int(100 * downloaded_size / total_size)
                 sys.stdout.reconfigure(encoding='utf-8')
-                sys.stdout.write("\r[%s%s] %d%%" % ('-' * progress, ' ' * (50 - progress), 100 * downloaded_size / total_size))
+                sys.stdout.write("\r[%s%s] %d%%" % ('=' * progress, ' ' * (100 - progress), 100 * downloaded_size / total_size))
                 sys.stdout.flush()
 
     print()
 
     # rename file
     os.rename(dl_file_path, file_path)
-    util.printD(f"File Downloaded to: {file_path}")
+    util.printD(f"File save to: {file_path}")
     return file_path
 

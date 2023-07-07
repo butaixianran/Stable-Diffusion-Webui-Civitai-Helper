@@ -23,7 +23,8 @@ model_type_dict = {
     "TextualInversion": "ti",
     "Hypernetwork": "hyper",
     "LORA": "lora",
-    "LoCon": "lora",
+    "LoCon": "lycoris",
+    "LyCORIS": "lycoris",
 }
 
 
@@ -277,6 +278,7 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
 
     return model_names
 
+
 def get_model_names_by_input(model_type, empty_info_only):
     return get_model_names_by_type_and_filter(model_type, {"empty_info_only":empty_info_only})
     
@@ -365,9 +367,7 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
 # search local model by version id in 1 folder, no subfolder
 # return - model_info
 def search_local_model_info_by_version_id(folder:str, version_id:int) -> dict:
-    util.printD("Searching local model by version id")
-    util.printD("folder: " + folder)
-    util.printD("version_id: " + str(version_id))
+    util.printD("Searching local model by version id: " + str(version_id) + "in folder: " + folder)
 
     if not folder:
         util.printD("folder is none")
@@ -412,9 +412,6 @@ def search_local_model_info_by_version_id(folder:str, version_id:int) -> dict:
                     
 
     return
-
-
-
 
 
 # check new version for a model by model path
@@ -603,10 +600,46 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> 
                     # add to list
                     new_versions.append(r)
 
-
-
-
     return new_versions
 
 
+# delete model file by model type and search_term
+# parameter: model_type, search_term
+# return: delete result
+def delete_model_by_search_term(model_type:str, search_term:str):
+    if model_type not in model.folders.keys():
+        msg = f"unknow model type: {model_type}"
+        util.printD(msg)
+        return
+    
+    model_type_key = {k for k in model_type_dict if model_type_dict[k] == model_type}
+    util.printD(f"Find {model_type_key} model file: '{search_term}'")
+    
+    # search_term = subfolderpath + model name + ext. And it always start with a / even there is no sub folder
+    base, ext = os.path.splitext(search_term)
+    model_info_base = base
+    if base[:1] == "/":
+        model_info_base = base[1:]
 
+    # find 3 kinds of files: .model.info, .safetensor and .priview.jpeg
+    model_folder = model.folders[model_type]
+    model_info_filename = model_info_base + suffix + model.info_ext
+    model_info_filepath = os.path.join(model_folder, model_info_filename)
+
+    model_image_filepath = os.path.join(model_folder, model_info_base + ".preview.png")
+    model_filename = model_folder + search_term
+
+    if os.path.isfile(model_info_filepath):
+        os.remove(model_info_filepath)
+
+    if os.path.isfile(model_image_filepath):
+        os.remove(model_image_filepath)
+
+    result = False
+    if os.path.isfile(model_filename):
+        os.remove(model_filename)
+        result = True
+    else:
+        print("Error: Model file: %s not found" % model_filename)
+
+    return result

@@ -60,7 +60,7 @@ def download_file(url, path):
         r.raw.decode_content = True
         shutil.copyfileobj(r.raw, f)
 
-    printD("File downloaded to: " + path)
+    printD("File save to: " + path)
 
 # get subfolder list
 def get_subfolders(folder:str) -> list:
