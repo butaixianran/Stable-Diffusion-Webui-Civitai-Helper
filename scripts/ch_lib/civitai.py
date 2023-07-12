@@ -323,8 +323,8 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
         return
 
     base, ext = os.path.splitext(model_path)
-    first_preview = base+".png"
-    sec_preview = base+".preview.png"
+    first_preview = base+".jpg"
+    sec_preview = base+".preview.jpg"
     info_file = base + suffix + model.info_ext
 
     # check preview image
