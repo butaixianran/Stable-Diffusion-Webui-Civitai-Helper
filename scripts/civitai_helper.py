@@ -152,7 +152,7 @@ def on_ui_tabs():
             with gr.Column():
                 gr.Markdown("### Check models' new version")
                 with gr.Row():
-                    model_types_ckbg = gr.CheckboxGroup(choices=model_types, label="Model Types", value=["lora"])
+                    model_types_ckbg = gr.CheckboxGroup(choices=model_types, label="Model Types", value=["ti", "hyper", "ckp", "lora", "lycoris"])
                     check_models_new_version_btn = gr.Button(value="Check New Version from Civitai", variant="primary")
 
                 check_models_new_version_log_md = gr.HTML("It takes time, just wait. Check console log for detail")
