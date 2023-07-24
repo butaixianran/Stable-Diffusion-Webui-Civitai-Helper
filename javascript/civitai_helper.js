@@ -19,12 +19,12 @@ function ch_gradio_version(){
     let versions = foot.querySelector(".versions");
     if (!versions){return null;}
 
-    if (versions.innerHTML.indexOf("gradio: 3.16.2")>0) {
+    if (versions.textContent.indexOf("gradio: 3.16.2")>0) {
         return "3.16.2";
     } else {
         return "3.23.0";
     }
-    
+
 }
 
 
@@ -141,7 +141,7 @@ function getActiveNegativePrompt() {
 async function open_model_url(event, model_type, search_term){
     console.log("start open_model_url");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
     if (!js_open_url_btn) {
         return
@@ -193,7 +193,7 @@ async function open_model_url(event, model_type, search_term){
 
     }
 
-    
+
     console.log("end open_model_url");
 
 
@@ -202,7 +202,7 @@ async function open_model_url(event, model_type, search_term){
 function add_trigger_words(event, model_type, search_term){
     console.log("start add_trigger_words");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_add_trigger_words_btn = gradioApp().getElementById("ch_js_add_trigger_words_btn");
     if (!js_add_trigger_words_btn) {
         return
@@ -238,13 +238,13 @@ function add_trigger_words(event, model_type, search_term){
     event.stopPropagation()
     event.preventDefault()
 
-    
+
 }
 
 function use_preview_prompt(event, model_type, search_term){
     console.log("start use_preview_prompt");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_use_preview_prompt_btn = gradioApp().getElementById("ch_js_use_preview_prompt_btn");
     if (!js_use_preview_prompt_btn) {
         return
@@ -296,7 +296,7 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
         return
     }
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_dl_model_new_version_btn = gradioApp().getElementById("ch_js_dl_model_new_version_btn");
     if (!js_dl_model_new_version_btn) {
         return
@@ -386,7 +386,7 @@ onUiLoaded(() => {
         if (!replace_preview_text) {
             replace_preview_text = "replace preview";
         }
-        
+
 
 
         // get component
@@ -434,7 +434,7 @@ onUiLoaded(() => {
                 .find(el => el.closest('.tabitem').style.display === 'block')
                 ?.id.match(/^(txt2img|img2img)_(.+)_cards$/)[2]
 
-                
+
             console.log("found active tab: " + active_extra_tab);
 
             switch (active_extra_tab) {
@@ -493,7 +493,9 @@ onUiLoaded(() => {
                 extra_network_id = tab_prefix+"_"+js_model_type+"_"+cardid_suffix;
                 // console.log("searching extra_network_node: " + extra_network_id);
                 extra_network_node = gradioApp().getElementById(extra_network_id);
+
                 // check if extr network is under thumbnail mode
+                // XXX thumbnail mode removed in sd-webui v1.5.0
                 is_thumb_mode = false
                 if (extra_network_node) {
                     if (extra_network_node.className == "extra-network-thumbs") {
@@ -519,49 +521,56 @@ onUiLoaded(() => {
                     // replace preview text button
                     replace_preview_btn = card.querySelector(".actions .additional a");
 
+                    if (replace_preview_btn==null) {
+                        replace_preview_btn = document.createElement("a");
+                    }
+
                     // check thumb mode
                     if (is_thumb_mode) {
                         additional_node.style.display = null;
 
+                        if (!ul_node) {
+                            // nothing to do.
+                            continue;
+                        }
+
                         if (ch_show_btn_on_thumb) {
                             ul_node.style.background = btn_thumb_background;
                         } else {
-                            //reset
-                            ul_node.style.background = null;
                             // console.log("remove existed buttons");
                             // remove existed buttons
-                            if (ul_node) {
-                                // find all .a child nodes
-                                let atags = ul_node.querySelectorAll("a");
-                                
-                                for (let atag of atags) {
-                                    //reset display
+                            //reset
+                            ul_node.style.background = null;
+                            // find all .a child nodes
+                            let atags = ul_node.querySelectorAll("a");
+
+                            for (let atag of atags) {
+                                //reset display
+                                atag.style.display = null;
+                                //remove extension's button
+                                if (ch_btn_txts.indexOf(atag.textContent)>=0) {
+                                    //need to remove
+                                    ul_node.removeChild(atag);
+                                } else {
+                                    //do not remove, just reset
+                                    atag.textContent = replace_preview_text;
                                     atag.style.display = null;
-                                    //remove extension's button
-                                    if (ch_btn_txts.indexOf(atag.innerHTML)>=0) {
-                                        //need to remove
-                                        ul_node.removeChild(atag);
-                                    } else {
-                                        //do not remove, just reset
-                                        atag.innerHTML = replace_preview_text;
-                                        atag.style.display = null;
-                                        atag.style.fontSize = null;
-                                        atag.style.position = null;
-                                        atag.style.backgroundImage = null;
-                                    }
+                                    atag.style.fontSize = null;
+                                    atag.style.position = null;
+                                    atag.style.backgroundImage = null;
                                 }
-
-                                //also remove br tag in ul
-                                let brtag = ul_node.querySelector("br");
-                                if (brtag) {
-                                    ul_node.removeChild(brtag);
-                                }
-
                             }
-                            //just reset and remove nodes, do nothing else
-                            continue;
+
+                            //also remove br tag in ul
+                            let brtag = ul_node.querySelector("br");
+                            if (brtag) {
+                                ul_node.removeChild(brtag);
+                            }
 
                         }
+
+                        //just reset and remove nodes, do nothing else
+                        continue;
 
                     } else {
                         // full preview mode
@@ -571,19 +580,25 @@ onUiLoaded(() => {
                             additional_node.style.display = null;
                         }
 
-                        // remove br tag
-                        let brtag = ul_node.querySelector("br");
-                        if (brtag) {
-                            ul_node.removeChild(brtag);
+
+                        if (!ul_node) {
+                            ul_node = document.createElement("ul");
+                        } else {
+                            // remove br tag
+                            let brtag = ul_node.querySelector("br");
+                            if (brtag) {
+                                ul_node.removeChild(brtag);
+                            }
                         }
 
                     }
 
                     // change replace preview text button into icon
                     if (replace_preview_btn) {
-                        if (replace_preview_btn.innerHTML !== "🖼️") {
+                        if (replace_preview_btn.textContent !== "🖼️") {
+                            ul_node.appendChild(replace_preview_btn);
                             need_to_add_buttons = true;
-                            replace_preview_btn.innerHTML = "🖼️";
+                            replace_preview_btn.textContent = "🖼️";
                             if (!is_thumb_mode) {
                                 replace_preview_btn.style.fontSize = btn_fontSize;
                                 replace_preview_btn.style.margin = btn_margin;
@@ -601,7 +616,6 @@ onUiLoaded(() => {
                         continue;
                     }
 
-
                     // search_term node
                     // search_term = subfolder path + model name + ext
                     search_term_node = card.querySelector(".actions .additional .search_term");
@@ -611,7 +625,7 @@ onUiLoaded(() => {
                     }
 
                     // get search_term
-                    search_term = search_term_node.innerHTML;
+                    search_term = search_term_node.textContent;
                     if (!search_term) {
                         console.log("search_term is empty for cards in " + extra_network_id);
                         continue;
@@ -626,7 +640,7 @@ onUiLoaded(() => {
                     // then we need to add 3 buttons to each ul node:
                     let open_url_node = document.createElement("a");
                     open_url_node.href = "#";
-                    open_url_node.innerHTML = "🌐";
+                    open_url_node.textContent = "🌐";
                     if (!is_thumb_mode) {
                         open_url_node.style.fontSize = btn_fontSize;
                         open_url_node.style.margin = btn_margin;
@@ -641,7 +655,7 @@ onUiLoaded(() => {
 
                     let add_trigger_words_node = document.createElement("a");
                     add_trigger_words_node.href = "#";
-                    add_trigger_words_node.innerHTML = "💡";
+                    add_trigger_words_node.textContent = "💡";
                     if (!is_thumb_mode) {
                         add_trigger_words_node.style.fontSize = btn_fontSize;
                         add_trigger_words_node.style.margin = btn_margin;
@@ -657,7 +671,7 @@ onUiLoaded(() => {
 
                     let use_preview_prompt_node = document.createElement("a");
                     use_preview_prompt_node.href = "#";
-                    use_preview_prompt_node.innerHTML = "🏷️";
+                    use_preview_prompt_node.textContent = "🏷️";
                     if (!is_thumb_mode) {
                         use_preview_prompt_node.style.fontSize = btn_fontSize;
                         use_preview_prompt_node.style.margin = btn_margin;
@@ -679,12 +693,13 @@ onUiLoaded(() => {
                     ul_node.appendChild(add_trigger_words_node);
                     ul_node.appendChild(use_preview_prompt_node);
 
-
-
+                    if (!ul_node.parentElement) {
+                        additional_node.appendChild(ul_node);
+                    }
 
                 }
 
-                
+
             }
         }
 
@@ -713,7 +728,7 @@ onUiLoaded(() => {
 
         // add refresh button to toolbar
         let ch_refresh = document.createElement("button");
-        ch_refresh.innerHTML = "🔁";
+        ch_refresh.textContent = "🔁";
         ch_refresh.title = "Refresh Civitai Helper's additional buttons";
         ch_refresh.className = "lg secondary gradio-button";
         ch_refresh.style.fontSize = "200%";

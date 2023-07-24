@@ -43,8 +43,11 @@ def get_custom_model_folder():
     if shared.cmd_opts.lora_dir and os.path.isdir(shared.cmd_opts.lora_dir):
         folders["lora"] = shared.cmd_opts.lora_dir
 
-    if shared.cmd_opts.lyco_dir and os.path.isdir(shared.cmd_opts.lyco_dir):
-        folders["lycoris"] = shared.cmd_opts.lyco_dir
+    try:
+        if shared.cmd_opts.lyco_dir and os.path.isdir(shared.cmd_opts.lyco_dir):
+            folders["lycoris"] = shared.cmd_opts.lyco_dir
+    except:
+        pass # XXX sd-webui v1.5.0 handles the lyco directory differently.
 
 
 # write model info to file
