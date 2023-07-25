@@ -32,6 +32,10 @@ def dl(url, folder, filename, filepath):
 
     # first request for header
     rh = requests.get(url, stream=True, verify=False, headers=util.def_headers, proxies=util.proxies)
+    if rh.status_code == 404:
+        util.printD("404. Trying VAE now.")
+        url += "?type=VAE"
+        rh = requests.get(url, stream=True, verify=False, headers=util.def_headers, proxies=util.proxies)
     # get file size
     total_size = 0
     total_size = int(rh.headers['Content-Length'])
