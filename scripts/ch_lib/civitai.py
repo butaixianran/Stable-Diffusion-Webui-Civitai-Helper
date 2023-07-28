@@ -207,11 +207,22 @@ def load_model_info_by_search_term(model_type, search_term):
     if base[:1] == "/":
         model_info_base = base[1:]
 
-    model_folder = model.folders[model_type]
-    model_info_filename = model_info_base + suffix + model.info_ext
-    model_info_filepath = os.path.join(model_folder, model_info_filename)
+    if model_type == "lora" and model.folders['lycoris']:
+        model_folders = [model.folders[model_type], model.folders['lycoris']]
+    else:
+        model_folders = [model.folders[model_type]]
 
-    if not os.path.isfile(model_info_filepath):
+    #model_folder = model.folders[model_type]
+    for model_folder in model_folders:
+        model_info_filename = model_info_base + suffix + model.info_ext
+        model_info_filepath = os.path.join(model_folder, model_info_filename)
+
+        found = os.path.isfile(model_info_filepath)
+
+        if found:
+            break;
+
+    if not found:
         util.printD("Can not find model info file: " + model_info_filepath)
         return
     
@@ -227,7 +238,10 @@ def load_model_info_by_search_term(model_type, search_term):
 # return: model name list
 def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
     
-    model_folder = model.folders[model_type]
+    if model_type == "lora" and model.folders['lycoris']:
+        model_folders = [model.folders[model_type], model.folders['lycoris']]
+    else:
+        model_folders = [model.folders[model_type]]
 
     # set filter
     # only get models don't have a civitai info file
@@ -245,35 +259,35 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
     # get information from filter
     # only get those model names don't have a civitai model info file
     model_names = []
-    for root, dirs, files in os.walk(model_folder, followlinks=True):
-        for filename in files:
-            item = os.path.join(root, filename)
-            # check extension
-            base, ext = os.path.splitext(item)
-            if ext in model.exts:
-                # find a model
+    for model_folder in model_folders:
+        for root, dirs, files in os.walk(model_folder, followlinks=True):
+            for filename in files:
+                item = os.path.join(root, filename)
+                # check extension
+                base, ext = os.path.splitext(item)
+                if ext in model.exts:
+                    # find a model
 
-                # check filter
-                if no_info_only:
-                    # check model info file
-                    info_file = base + suffix + model.info_ext
-                    if os.path.isfile(info_file):
-                        continue
+                    # check filter
+                    if no_info_only:
+                        # check model info file
+                        info_file = base + suffix + model.info_ext
+                        if os.path.isfile(info_file):
+                            continue
 
-                if empty_info_only:
-                    # check model info file
-                    info_file = base + suffix + model.info_ext
-                    if os.path.isfile(info_file):
-                        # load model info
-                        model_info = model.load_model_info(info_file)
-                        # check content
-                        if model_info:
-                            if "id" in model_info.keys():
-                                # find a non-empty model info file
-                                continue
+                    if empty_info_only:
+                        # check model info file
+                        info_file = base + suffix + model.info_ext
+                        if os.path.isfile(info_file):
+                            # load model info
+                            model_info = model.load_model_info(info_file)
+                            # check content
+                            if model_info:
+                                if "id" in model_info.keys():
+                                    # find a non-empty model info file
+                                    continue
 
-                model_names.append(filename)
-
+                    model_names.append(filename)
 
     return model_names
 
