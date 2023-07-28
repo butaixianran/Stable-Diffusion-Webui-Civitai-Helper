@@ -510,9 +510,16 @@ onUiLoaded(() => {
                     additional_node = card.querySelector(".actions .additional");
                     //get ul node, which is the parent of all buttons
                     ul_node = card.querySelector(".actions .additional ul");
+                    if (ul_node==null) {
+                        ul_node = document.createElement("ul");   
+                        additional_node.appendChild(ul_node);
+                    }
                     // replace preview text button
                     replace_preview_btn = card.querySelector(".actions .additional a");
-
+                    if (replace_preview_btn==null) {
+                        replace_preview_btn = document.createElement("a");   
+                        additional_node.appendChild(replace_preview_btn);
+                    }
                     // check thumb mode
                     if (is_thumb_mode) {
                         additional_node.style.display = null;
