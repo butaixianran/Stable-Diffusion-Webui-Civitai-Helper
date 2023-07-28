@@ -29,7 +29,7 @@ def parse_js_msg(msg):
         return
 
     if action not in js_actions:
-        util.printD("Unknow action: " + action)
+        util.printD(f"Unknow action: {action}")
         return
 
     util.printD("End parse js msg")
@@ -45,13 +45,13 @@ def build_py_msg(action:str, content:dict):
     if not content:
         util.printD("Content is None")
         return
-    
+
     if not action:
         util.printD("Action is None")
         return
 
     if action not in py_actions:
-        util.printD("Unknow action: " + action)
+        util.printD(f"Unknow action: {action}")
         return
 
     msg = {
