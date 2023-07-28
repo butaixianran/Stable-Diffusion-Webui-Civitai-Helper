@@ -413,7 +413,6 @@ onUiLoaded(() => {
         let search_term = "";
         let model_type = "";
         let cards = null;
-        let need_to_add_buttons = false;
         let is_thumb_mode = false;
 
         //get current tab
@@ -521,10 +520,6 @@ onUiLoaded(() => {
                     // replace preview text button
                     replace_preview_btn = card.querySelector(".actions .additional a");
 
-                    if (replace_preview_btn==null) {
-                        replace_preview_btn = document.createElement("a");
-                    }
-
                     // check thumb mode
                     if (is_thumb_mode) {
                         additional_node.style.display = null;
@@ -593,11 +588,10 @@ onUiLoaded(() => {
 
                     }
 
-                    // change replace preview text button into icon
                     if (replace_preview_btn) {
+                        // change replace preview text button into icon
                         if (replace_preview_btn.textContent !== "🖼️") {
                             ul_node.appendChild(replace_preview_btn);
-                            need_to_add_buttons = true;
                             replace_preview_btn.textContent = "🖼️";
                             if (!is_thumb_mode) {
                                 replace_preview_btn.style.fontSize = btn_fontSize;
@@ -612,7 +606,7 @@ onUiLoaded(() => {
                         }
                     }
 
-                    if (!need_to_add_buttons) {
+                    if (ul_node.querySelector('.openurl')) {
                         continue;
                     }
 
@@ -631,8 +625,6 @@ onUiLoaded(() => {
                         continue;
                     }
 
-
-
                     // if (is_thumb_mode) {
                     //     ul_node.style.background = btn_thumb_background;
                     // }
@@ -641,6 +633,7 @@ onUiLoaded(() => {
                     let open_url_node = document.createElement("a");
                     open_url_node.href = "#";
                     open_url_node.textContent = "🌐";
+                    open_url_node.className = "openurl";
                     if (!is_thumb_mode) {
                         open_url_node.style.fontSize = btn_fontSize;
                         open_url_node.style.margin = btn_margin;
@@ -656,6 +649,7 @@ onUiLoaded(() => {
                     let add_trigger_words_node = document.createElement("a");
                     add_trigger_words_node.href = "#";
                     add_trigger_words_node.textContent = "💡";
+                    add_trigger_words_node.className = "addtriggerwords";
                     if (!is_thumb_mode) {
                         add_trigger_words_node.style.fontSize = btn_fontSize;
                         add_trigger_words_node.style.margin = btn_margin;
@@ -672,6 +666,7 @@ onUiLoaded(() => {
                     let use_preview_prompt_node = document.createElement("a");
                     use_preview_prompt_node.href = "#";
                     use_preview_prompt_node.textContent = "🏷️";
+                    use_preview_prompt_node.className = "usepreviewprompt";
                     if (!is_thumb_mode) {
                         use_preview_prompt_node.style.fontSize = btn_fontSize;
                         use_preview_prompt_node.style.margin = btn_margin;
