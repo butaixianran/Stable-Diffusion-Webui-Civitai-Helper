@@ -17,6 +17,7 @@ folders = {
     "hyper": os.path.join(root_path, "models", "hypernetworks"),
     "ckp": os.path.join(root_path, "models", "Stable-diffusion"),
     "lora": os.path.join(root_path, "models", "Lora"),
+    "lycoris": os.path.join(root_path, "models", "LyCORIS"),
 }
 
 exts = (".bin", ".pt", ".safetensors", ".ckpt")
@@ -42,8 +43,8 @@ def get_custom_model_folder():
     if shared.cmd_opts.lora_dir and os.path.isdir(shared.cmd_opts.lora_dir):
         folders["lora"] = shared.cmd_opts.lora_dir
 
-
-
+    if shared.cmd_opts.lyco_dir and os.path.isdir(shared.cmd_opts.lyco_dir):
+        folders["lycoris"] = shared.cmd_opts.lyco_dir
 
 
 # write model info to file

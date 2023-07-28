@@ -23,7 +23,7 @@ model_type_dict = {
     "TextualInversion": "ti",
     "Hypernetwork": "hyper",
     "LORA": "lora",
-    "LoCon": "lora",
+    "LoCon": "lycoris",
 }
 
 
