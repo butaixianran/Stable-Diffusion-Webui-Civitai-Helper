@@ -32,7 +32,7 @@ function ch_gradio_version(){
 // then will click a button to trigger an action
 // msg is an object, not a string, will be stringify in this function
 function send_ch_py_msg(msg){
-    console.log("run send_ch_py_msg")
+    console.log("run send_ch_py_msg");
     let js_msg_txtbox = gradioApp().querySelector("#ch_js_msg_txtbox textarea");
     if (js_msg_txtbox && msg) {
         // fill to msg box
@@ -45,15 +45,15 @@ function send_ch_py_msg(msg){
 // get msg from python side from a hidden textbox
 // normally this is an old msg, need to wait for a new msg
 function get_ch_py_msg(){
-    console.log("run get_ch_py_msg")
+    console.log("run get_ch_py_msg");
     const py_msg_txtbox = gradioApp().querySelector("#ch_py_msg_txtbox textarea");
     if (py_msg_txtbox && py_msg_txtbox.value) {
         console.log("find py_msg_txtbox");
         console.log("py_msg_txtbox value: ");
-        console.log(py_msg_txtbox.value)
-        return py_msg_txtbox.value
+        console.log(py_msg_txtbox.value);
+        return py_msg_txtbox.value;
     } else {
-        return ""
+        return "";
     }
 }
 
@@ -61,7 +61,7 @@ function get_ch_py_msg(){
 // get msg from python side from a hidden textbox
 // it will try once in every sencond, until it reach the max try times
 const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
-    console.log("run get_new_ch_py_msg")
+    console.log("run get_new_ch_py_msg");
 
     let count = 0;
     let new_msg = "";
@@ -73,11 +73,11 @@ const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
         if (py_msg_txtbox && py_msg_txtbox.value) {
             console.log("find py_msg_txtbox");
             console.log("py_msg_txtbox value: ");
-            console.log(py_msg_txtbox.value)
+            console.log(py_msg_txtbox.value);
 
-            new_msg = py_msg_txtbox.value
+            new_msg = py_msg_txtbox.value;
             if (new_msg != "") {
-                find_msg=true
+                find_msg = true;
             }
         }
 
@@ -98,7 +98,7 @@ const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
         }
 
     }, 1000);
-})
+});
 
 
 function getActiveTabType() {
@@ -144,7 +144,7 @@ async function open_model_url(event, model_type, search_term){
     //get hidden components of extension
     let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
     if (!js_open_url_btn) {
-        return
+        return;
     }
 
 
@@ -155,7 +155,7 @@ async function open_model_url(event, model_type, search_term){
         "search_term": "",
         "prompt": "",
         "neg_prompt": "",
-    }
+    };
 
 
     msg["action"] = "open_url";
@@ -165,14 +165,14 @@ async function open_model_url(event, model_type, search_term){
     msg["neg_prompt"] = "";
 
     // fill to msg box
-    send_ch_py_msg(msg)
+    send_ch_py_msg(msg);
 
     //click hidden button
     js_open_url_btn.click();
 
     // stop parent event
-    event.stopPropagation()
-    event.preventDefault()
+    event.stopPropagation();
+    event.preventDefault();
 
     //check response msg from python
     let new_py_msg = await get_new_ch_py_msg();
@@ -205,7 +205,7 @@ function add_trigger_words(event, model_type, search_term){
     //get hidden components of extension
     let js_add_trigger_words_btn = gradioApp().getElementById("ch_js_add_trigger_words_btn");
     if (!js_add_trigger_words_btn) {
-        return
+        return;
     }
 
 
@@ -216,7 +216,7 @@ function add_trigger_words(event, model_type, search_term){
         "search_term": "",
         "prompt": "",
         "neg_prompt": "",
-    }
+    };
 
     msg["action"] = "add_trigger_words";
     msg["model_type"] = model_type;
@@ -228,15 +228,15 @@ function add_trigger_words(event, model_type, search_term){
     msg["prompt"] = act_prompt.value;
 
     // fill to msg box
-    send_ch_py_msg(msg)
+    send_ch_py_msg(msg);
 
     //click hidden button
     js_add_trigger_words_btn.click();
 
     console.log("end add_trigger_words");
 
-    event.stopPropagation()
-    event.preventDefault()
+    event.stopPropagation();
+    event.preventDefault();
 
 
 }
@@ -247,7 +247,7 @@ function use_preview_prompt(event, model_type, search_term){
     //get hidden components of extension
     let js_use_preview_prompt_btn = gradioApp().getElementById("ch_js_use_preview_prompt_btn");
     if (!js_use_preview_prompt_btn) {
-        return
+        return;
     }
 
     //msg to python side
@@ -257,7 +257,7 @@ function use_preview_prompt(event, model_type, search_term){
         "search_term": "",
         "prompt": "",
         "neg_prompt": "",
-    }
+    };
 
     msg["action"] = "use_preview_prompt";
     msg["model_type"] = model_type;
@@ -272,15 +272,15 @@ function use_preview_prompt(event, model_type, search_term){
     msg["neg_prompt"] = neg_prompt.value;
 
     // fill to msg box
-    send_ch_py_msg(msg)
+    send_ch_py_msg(msg);
 
     //click hidden button
     js_use_preview_prompt_btn.click();
 
     console.log("end use_preview_prompt");
 
-    event.stopPropagation()
-    event.preventDefault()
+    event.stopPropagation();
+    event.preventDefault();
 
 }
 
@@ -293,13 +293,13 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
     // must confirm before downloading
     let dl_confirm = "\nConfirm to download.\n\nCheck Download Model Section's log and console log for detail.";
     if (!confirm(dl_confirm)) {
-        return
+        return;
     }
 
     //get hidden components of extension
     let js_dl_model_new_version_btn = gradioApp().getElementById("ch_js_dl_model_new_version_btn");
     if (!js_dl_model_new_version_btn) {
-        return
+        return;
     }
 
     //msg to python side
@@ -308,7 +308,7 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
         "model_path": "",
         "version_id": "",
         "download_url": "",
-    }
+    };
 
     msg["action"] = "dl_model_new_version";
     msg["model_path"] = model_path;
@@ -316,19 +316,61 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
     msg["download_url"] = download_url;
 
     // fill to msg box
-    send_ch_py_msg(msg)
+    send_ch_py_msg(msg);
 
     //click hidden button
     js_dl_model_new_version_btn.click();
 
     console.log("end dl_model_new_version");
 
-    event.stopPropagation()
-    event.preventDefault()
+    event.stopPropagation();
+    event.preventDefault();
 
 
 }
 
+function waitForEditor(page, type, name) {
+    let id = page + '_' + type + '_edit_user_metadata';
+
+    return new Promise(resolve => {
+        let name_field;
+        let editor = document.getElementById(id);
+
+        let popup = document.querySelector(".global-popup");
+        if (popup != null) {
+            // hide the editor window so it doesn't get in the user's
+            // way while we wait for the replace preview functionality
+            // to become available.
+            popup.style.display = "none";
+        }
+
+        // not only do we need to wait for the editor,
+        // but also for it to populate with the model metadata.
+        if (editor != null) {
+            name_field = editor.querySelector('.extra-network-name');
+            if (name_field.textContent.trim() == name) {
+                return resolve(editor);
+            }
+        }
+
+        const observer = new MutationObserver(() => {
+            let editor = document.getElementById(id);
+            let name_field;
+            if (editor != null) {
+                name_field = editor.querySelector('.extra-network-name');
+                if (name_field.textContent.trim() == name) {
+                    resolve(editor);
+                    observer.disconnect();
+                }
+            }
+        });
+
+        observer.observe(document.body, {
+            subtree: true,
+            childList: true,
+        });
+    });
+}
 
 onUiLoaded(() => {
 
@@ -417,7 +459,7 @@ onUiLoaded(() => {
 
         //get current tab
         let active_tab_type = getActiveTabType();
-        if (!active_tab_type){active_tab_type = "txt2img";}
+        if (!active_tab_type) {active_tab_type = "txt2img";}
 
         for (const tab_prefix of tab_prefix_list) {
             if (tab_prefix != active_tab_type) {continue;}
@@ -431,7 +473,7 @@ onUiLoaded(() => {
             //get active extratab
             const active_extra_tab = Array.from(get_uiCurrentTabContent().querySelectorAll('.extra-network-cards,.extra-network-thumbs'))
                 .find(el => el.closest('.tabitem').style.display === 'block')
-                ?.id.match(/^(txt2img|img2img)_(.+)_cards$/)[2]
+                ?.id.match(/^(txt2img|img2img)_(.+)_cards$/)[2];
 
 
             console.log("found active tab: " + active_extra_tab);
@@ -495,7 +537,7 @@ onUiLoaded(() => {
 
                 // check if extr network is under thumbnail mode
                 // XXX thumbnail mode removed in sd-webui v1.5.0
-                is_thumb_mode = false
+                is_thumb_mode = false;
                 if (extra_network_node) {
                     if (extra_network_node.className == "extra-network-thumbs") {
                         console.log(extra_network_id + " is in thumbnail mode");
@@ -519,6 +561,38 @@ onUiLoaded(() => {
                     ul_node = card.querySelector(".actions .additional ul");
                     // replace preview text button
                     replace_preview_btn = card.querySelector(".actions .additional a");
+
+                    if (replace_preview_btn == null) {
+                        /*
+                         * in sdwebui 1.5, the replace preview button has been
+                         * moved to a hard to reach location, so we have to do
+                         * quite a lot to get to its functionality.
+                         */
+
+                        // waste memory by keeping all of this in scope, per card.
+                        let page = active_tab_type;
+                        let type = js_model_type;
+                        let name = card.dataset.name;
+
+                        // create the replace_preview_btn, as it no longer exists
+                        replace_preview_btn = document.createElement("a");
+
+                        // create an event handler to redirect a click to the real replace_preview_button
+                        replace_preview_btn.addEventListener("click", function(e) {
+                            // we have to create a whole hidden editor window to access preview replace functionality
+                            extraNetworksEditUserMetadata(e, page, type, name);
+
+                            // the editor window takes quite some time to populate. What a waste.
+                            waitForEditor(page, type, name).then(editor => {
+                                // Gather the buttons we need to both replace the preview and close the editor
+                                let cancel_button = editor.querySelector('.edit-user-metadata-buttons button:first-of-type');
+                                let replace_preview_button = editor.querySelector('.edit-user-metadata-buttons button:nth-of-type(2)');
+
+                                replace_preview_button.click();
+                                cancel_button.click();
+                            });
+                        });
+                    }
 
                     // check thumb mode
                     if (is_thumb_mode) {
@@ -702,7 +776,7 @@ onUiLoaded(() => {
     }
 
 
-    let tab_id = ""
+    let tab_id = "";
     let extra_tab = null;
     let extra_toolbar = null;
     let extra_network_refresh_btn = null;
