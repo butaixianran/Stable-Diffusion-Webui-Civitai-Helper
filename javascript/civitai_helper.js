@@ -508,10 +508,29 @@ onUiLoaded(() => {
                     metadata_button = card.querySelector(".metadata-button");
                     //additional node
                     additional_node = card.querySelector(".actions .additional");
+
+                    // try move name above buttons
+                    try {
+                        const tmp = card.querySelector(".actions .name");
+                        tmp.parentNode.insertBefore(tmp, tmp.previousElementSibling);
+                    } catch (error) {}
+
                     //get ul node, which is the parent of all buttons
                     ul_node = card.querySelector(".actions .additional ul");
+
+                    //create ul if one doesn't already exist
+                    if (!ul_node){
+                        additional_node.appendChild(document.createElement('ul'))
+                        ul_node = card.querySelector(".actions .additional ul");
+                    }
                     // replace preview text button
                     replace_preview_btn = card.querySelector(".actions .additional a");
+                    
+                    //create a in ul if one doesn't already exist
+                    if (!replace_preview_btn){
+                        ul_node.appendChild(document.createElement('a'))
+                        replace_preview_btn = card.querySelector(".actions .additional a");
+                    }
 
                     // check thumb mode
                     if (is_thumb_mode) {
