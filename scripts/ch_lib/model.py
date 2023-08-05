@@ -43,8 +43,19 @@ def get_custom_model_folder():
     if shared.cmd_opts.lora_dir and os.path.isdir(shared.cmd_opts.lora_dir):
         folders["lora"] = shared.cmd_opts.lora_dir
 
-    if shared.cmd_opts.lyco_dir and os.path.isdir(shared.cmd_opts.lyco_dir):
-        folders["lycoris"] = shared.cmd_opts.lyco_dir
+    try:
+        # pre-1.5.0
+        if shared.cmd_opts.lyco_dir and os.path.isdir(shared.cmd_opts.lyco_dir):
+            folders["lycoris"] = shared.cmd_opts.lyco_dir
+
+    except:
+        try:
+            # sd-webui v1.5.1 added a backcompat option for lyco.
+            if shared.cmd_opts.lyco_dir_backcompat and os.path.isdir(shared.cmd_opts.lyco_dir_backcompat):
+                folders["lycoris"] = shared.cmd_opts.lyco_dir_backcompat
+        except:
+            # XXX v1.5.0 has no options for the Lyco dir: it is hardcoded as 'os.path.join(paths.models_path, "LyCORIS")'
+            pass
 
 
 # write model info to file
@@ -72,20 +83,24 @@ def load_model_info(path):
 # parameter: model_type - string
 # return: model name list
 def get_model_names_by_type(model_type:str) -> list:
-    
-    model_folder = folders[model_type]
+
+    if model_type == "lora" and folders['lycoris']:
+        model_folders = [folders[model_type], folders['lycoris']]
+    else:
+        model_folders = [folders[model_type]]
 
     # get information from filter
     # only get those model names don't have a civitai model info file
     model_names = []
-    for root, dirs, files in os.walk(model_folder, followlinks=True):
-        for filename in files:
-            item = os.path.join(root, filename)
-            # check extension
-            base, ext = os.path.splitext(item)
-            if ext in exts:
-                # find a model
-                model_names.append(filename)
+    for model_folder in model_folders:
+        for root, dirs, files in os.walk(model_folder, followlinks=True):
+            for filename in files:
+                item = os.path.join(root, filename)
+                # check extension
+                base, ext = os.path.splitext(item)
+                if ext in exts:
+                    # find a model
+                    model_names.append(filename)
 
 
     return model_names
@@ -102,20 +117,21 @@ def get_model_path_by_type_and_name(model_type:str, model_name:str) -> str:
         util.printD("model name can not be empty")
         return
 
-    folder = folders[model_type]
+    if model_type == "lora" and folders['lycoris']:
+        model_folders = [folders[model_type], folders['lycoris']]
+    else:
+        model_folders = [folders[model_type]]
 
     # model could be in subfolder, need to walk.
     model_root = ""
     model_path = ""
-    for root, dirs, files in os.walk(folder, followlinks=True):
-        for filename in files:
-            if filename == model_name:
-                # find model
-                model_root = root
-                model_path = os.path.join(root, filename)
-                return (model_root, model_path)
+    for folder in model_folders:
+        for root, dirs, files in os.walk(folder, followlinks=True):
+            for filename in files:
+                if filename == model_name:
+                    # find model
+                    model_root = root
+                    model_path = os.path.join(root, filename)
+                    return (model_root, model_path)
 
     return
-
-
-
