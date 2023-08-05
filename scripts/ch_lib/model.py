@@ -60,7 +60,7 @@ def get_custom_model_folder():
 
 # write model info to file
 def write_model_info(path, model_info):
-    util.printD("Write model info to file: " + path)
+    util.printD(f"Write model info to file: {path}")
     with open(os.path.realpath(path), 'w') as f:
         f.write(json.dumps(model_info, indent=4))
 
@@ -72,10 +72,10 @@ def load_model_info(path):
         try:
             model_info = json.load(f)
         except Exception as e:
-            util.printD("Selected file is not json: " + path)
+            util.printD(f"Selected file is not json: {path}")
             util.printD(e)
             return
-        
+
     return model_info
 
 
@@ -110,9 +110,9 @@ def get_model_names_by_type(model_type:str) -> list:
 def get_model_path_by_type_and_name(model_type:str, model_name:str) -> str:
     util.printD("Run get_model_path_by_type_and_name")
     if model_type not in folders.keys():
-        util.printD("unknown model_type: " + model_type)
+        util.printD(f"unknown model_type: {model_type}")
         return
-    
+
     if not model_name:
         util.printD("model name can not be empty")
         return

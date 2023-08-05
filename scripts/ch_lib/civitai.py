@@ -32,7 +32,7 @@ model_type_dict = {
 # width is in number, not string
 # return: url str
 def get_full_size_image_url(image_url, width):
-    return re.sub('/width=\d+/', '/width=' + str(width) + '/', image_url)
+    return re.sub('/width=\d+/', f'/width={str(width)}/', image_url)
 
 
 # use this sha256 to get model info from civitai
@@ -51,7 +51,7 @@ def get_model_info_by_hash(hash:str):
             util.printD("Civitai does not have this model")
             return {}
         else:
-            util.printD("Get error code: " + str(r.status_code))
+            util.printD(f"Get error code: {r.status_code}")
             util.printD(r.text)
             return
 
@@ -65,11 +65,11 @@ def get_model_info_by_hash(hash:str):
         util.printD("response:")
         util.printD(r.text)
         return
-    
+
     if not content:
         util.printD("error, content from civitai is None")
         return
-    
+
     return content
 
 
@@ -81,14 +81,18 @@ def get_model_info_by_id(id:str) -> dict:
         util.printD("id is empty")
         return
 
-    r = requests.get(url_dict["modelId"]+str(id), headers=util.def_headers, proxies=util.proxies)
+    r = requests.get(
+        url_dict["modelId"] + id,
+        headers=util.def_headers,
+        proxies=util.proxies,
+    )
     if not r.ok:
         if r.status_code == 404:
             # this is not a civitai model
             util.printD("Civitai does not have this model")
             return {}
         else:
-            util.printD("Get error code: " + str(r.status_code))
+            util.printD(f"Get error code: {r.status_code}")
             util.printD(r.text)
             return
 
@@ -102,11 +106,11 @@ def get_model_info_by_id(id:str) -> dict:
         util.printD("response:")
         util.printD(r.text)
         return
-    
+
     if not content:
         util.printD("error, content from civitai is None")
         return
-    
+
     return content
 
 
@@ -117,14 +121,18 @@ def get_version_info_by_version_id(id:str) -> dict:
         util.printD("id is empty")
         return
 
-    r = requests.get(url_dict["modelVersionId"]+str(id), headers=util.def_headers, proxies=util.proxies)
+    r = requests.get(
+        url_dict["modelVersionId"] + id,
+        headers=util.def_headers,
+        proxies=util.proxies,
+    )
     if not r.ok:
         if r.status_code == 404:
             # this is not a civitai model
             util.printD("Civitai does not have this model version")
             return {}
         else:
-            util.printD("Get error code: " + str(r.status_code))
+            util.printD(f"Get error code: {r.status_code}")
             util.printD(r.text)
             return
 
@@ -138,11 +146,11 @@ def get_version_info_by_version_id(id:str) -> dict:
         util.printD("response:")
         util.printD(r.text)
         return
-    
+
     if not content:
         util.printD("error, content from civitai is None")
         return
-    
+
     return content
 
 
@@ -198,9 +206,9 @@ def get_version_info_by_model_id(id:str) -> dict:
 def load_model_info_by_search_term(model_type, search_term):
     util.printD(f"Load model info of {search_term} in {model_type}")
     if model_type not in model.folders.keys():
-        util.printD("unknow model type: " + model_type)
+        util.printD(f"unknow model type: {model_type}")
         return
-    
+
     # search_term = subfolderpath + model name + ext. And it always start with a / even there is no sub folder
     base, ext = os.path.splitext(search_term)
     model_info_base = base
@@ -223,9 +231,9 @@ def load_model_info_by_search_term(model_type, search_term):
             break;
 
     if not found:
-        util.printD("Can not find model info file: " + model_info_filepath)
+        util.printD(f"Can not find model info file: {model_info_filepath}")
         return
-    
+
     return model.load_model_info(model_info_filepath)
 
 
@@ -249,9 +257,9 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
     empty_info_only = False
 
     if filter:
-        if "no_info_only" in filter.keys():
+        if "no_info_only" in filter:
             no_info_only = filter["no_info_only"]
-        if "empty_info_only" in filter.keys():
+        if "empty_info_only" in filter:
             empty_info_only = filter["empty_info_only"]
 
 
@@ -279,10 +287,7 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
                         # check model info file
                         info_file = base + suffix + model.info_ext
                         if os.path.isfile(info_file):
-                            # load model info
-                            model_info = model.load_model_info(info_file)
-                            # check content
-                            if model_info:
+                            if model_info := model.load_model_info(info_file):
                                 if "id" in model_info.keys():
                                     # find a non-empty model info file
                                     continue
@@ -305,15 +310,12 @@ def get_model_id_from_url(url:str) -> str:
         return ""
 
     if url.isnumeric():
-        # is already an id
-        id = str(url)
-        return id
-    
+        return url
     s = re.sub("\\?.+$", "", url).split("/")
     if len(s) < 2:
         util.printD("url is not valid")
         return ""
-    
+
     if s[-2].isnumeric():
         id  = s[-2]
     elif s[-1].isnumeric():
@@ -321,7 +323,7 @@ def get_model_id_from_url(url:str) -> str:
     else:
         util.printD("There is no model id in this url")
         return ""
-    
+
     return id
 
 
@@ -333,18 +335,18 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
         return
 
     if not os.path.isfile(model_path):
-        util.printD("model_path is not a file: "+model_path)
+        util.printD(f"model_path is not a file: {model_path}")
         return
 
     base, ext = os.path.splitext(model_path)
-    first_preview = base+".png"
-    sec_preview = base+".preview.png"
+    first_preview = f"{base}.png"
+    sec_preview = f"{base}.preview.png"
     info_file = base + suffix + model.info_ext
 
     # check preview image
     if not os.path.isfile(sec_preview):
         # need to download preview image
-        util.printD("Checking preview image for model: " + model_path)
+        util.printD(f"Checking preview image for model: {model_path}")
         # load model_info file
         if os.path.isfile(info_file):
             model_info = model.load_model_info(info_file)
@@ -361,7 +363,7 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
                                 if skip_nsfw_preview:
                                     util.printD("Skip NSFW image")
                                     continue
-                        
+
                         if "url" in img_dict.keys():
                             img_url = img_dict["url"]
                             if max_size_preview:
@@ -380,8 +382,8 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
 # return - model_info
 def search_local_model_info_by_version_id(folder:str, version_id:int) -> dict:
     util.printD("Searching local model by version id")
-    util.printD("folder: " + folder)
-    util.printD("version_id: " + str(version_id))
+    util.printD(f"folder: {folder}")
+    util.printD(f"version_id: {version_id}")
 
     if not folder:
         util.printD("folder is none")
@@ -390,11 +392,11 @@ def search_local_model_info_by_version_id(folder:str, version_id:int) -> dict:
     if not os.path.isdir(folder):
         util.printD("folder is not a dir")
         return
-    
+
     if not version_id:
         util.printD("version_id is none")
         return
-    
+
     # search civitai model info file
     for filename in os.listdir(folder):
         # check ext
@@ -423,7 +425,7 @@ def search_local_model_info_by_version_id(folder:str, version_id:int) -> dict:
                 if str(id) == str(version_id):
                     # find the one
                     return model_info
-                    
+
 
     return
 
@@ -439,16 +441,16 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
         return
 
     if not os.path.isfile(model_path):
-        util.printD("model_path is not a file: "+model_path)
+        util.printD(f"model_path is not a file: {model_path}")
         return
-    
+
     # get model info file name
     base, ext = os.path.splitext(model_path)
     info_file = base + suffix + model.info_ext
-    
+
     if not os.path.isfile(info_file):
         return
-    
+
     # get model info
     model_info_file = model.load_model_info(info_file)
     if not model_info_file:
@@ -456,18 +458,18 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
 
     if "id" not in model_info_file.keys():
         return
-    
+
     local_version_id = model_info_file["id"]
     if not local_version_id:
         return
 
     if "modelId" not in model_info_file.keys():
         return
-    
+
     model_id = model_info_file["modelId"]
     if not model_id:
         return
-    
+
     # get model info by id from civitai
     model_info = get_model_info_by_id(model_id)
     # delay before next request, to prevent to be treat as DDoS 
@@ -476,24 +478,24 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
 
     if not model_info:
         return
-    
+
     if "modelVersions" not in model_info.keys():
         return
-    
+
     modelVersions = model_info["modelVersions"]
     if not modelVersions:
         return
-    
+
     if not len(modelVersions):
         return
-    
+
     current_version = modelVersions[0]
     if not current_version:
         return
-    
+
     if "id" not in current_version.keys():
         return
-    
+
     current_version_id = current_version["id"]
     if not current_version_id:
         return
@@ -502,10 +504,7 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
     if current_version_id == local_version_id:
         return
 
-    model_name = ""
-    if "name" in model_info.keys():
-        model_name = model_info["name"]
-    
+    model_name = model_info["name"] if "name" in model_info.keys() else ""
     if not model_name:
         model_name = ""
 
@@ -513,21 +512,21 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
     new_version_name = ""
     if "name" in current_version.keys():
         new_version_name = current_version["name"]
-    
+
     if not new_version_name:
         new_version_name = ""
 
     description = ""
     if "description" in current_version.keys():
         description = current_version["description"]
-    
+
     if not description:
         description = ""
 
     downloadUrl = ""
     if "downloadUrl" in current_version.keys():
         downloadUrl = current_version["downloadUrl"]
-    
+
     if not downloadUrl:
         downloadUrl = ""
 
@@ -542,7 +541,7 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
                         img_url = ""
 
 
-    
+
     return (model_path, model_id, model_name, current_version_id, new_version_name, description, downloadUrl, img_url)
 
 
@@ -578,7 +577,7 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> 
         if model_type not in mts:
             continue
 
-        util.printD("Scanning path: " + model_folder)
+        util.printD(f"Scanning path: {model_folder}")
         for root, dirs, files in os.walk(model_folder, followlinks=True):
             for filename in files:
                 # check ext
@@ -596,21 +595,17 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> 
                     if not current_version_id:
                         continue
 
-                    # check this version id in list
-                    is_already_in_list = False
-                    for new_version in new_versions:
-                        if current_version_id == new_version[3]:
-                            # already in list
-                            is_already_in_list = True
-                            break
-
+                    is_already_in_list = any(
+                        current_version_id == new_version[3]
+                        for new_version in new_versions
+                    )
                     if is_already_in_list:
                         util.printD("New version is already in list")
                         continue
 
-                    # search this new version id to check if this model is already downloaded
-                    target_model_info = search_local_model_info_by_version_id(root, current_version_id)
-                    if target_model_info:
+                    if target_model_info := search_local_model_info_by_version_id(
+                        root, current_version_id
+                    ):
                         util.printD("New version is already existed")
                         continue
 
