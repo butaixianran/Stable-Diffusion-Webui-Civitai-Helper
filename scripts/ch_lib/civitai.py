@@ -160,31 +160,31 @@ def get_version_info_by_model_id(id:str) -> dict:
     if not model_info:
         util.printD(f"Failed to get model info by id: {id}")
         return
-    
+
     # check content to get version id
     if "modelVersions" not in model_info.keys():
         util.printD("There is no modelVersions in this model_info")
         return
-    
+
     if not model_info["modelVersions"]:
         util.printD("modelVersions is None")
         return
-    
+
     if len(model_info["modelVersions"])==0:
         util.printD("modelVersions is Empty")
         return
-    
+
     def_version = model_info["modelVersions"][0]
     if not def_version:
         util.printD("default version is None")
         return
-    
+
     if "id" not in def_version.keys():
         util.printD("default version has no id")
         return
-    
+
     version_id = def_version["id"]
-    
+
     if not version_id:
         util.printD("default version's id is None")
         return
@@ -215,11 +215,22 @@ def load_model_info_by_search_term(model_type, search_term):
     if base[:1] == "/":
         model_info_base = base[1:]
 
-    model_folder = model.folders[model_type]
-    model_info_filename = model_info_base + suffix + model.info_ext
-    model_info_filepath = os.path.join(model_folder, model_info_filename)
+    if model_type == "lora" and model.folders['lycoris']:
+        model_folders = [model.folders[model_type], model.folders['lycoris']]
+    else:
+        model_folders = [model.folders[model_type]]
 
-    if not os.path.isfile(model_info_filepath):
+    #model_folder = model.folders[model_type]
+    for model_folder in model_folders:
+        model_info_filename = model_info_base + suffix + model.info_ext
+        model_info_filepath = os.path.join(model_folder, model_info_filename)
+
+        found = os.path.isfile(model_info_filepath)
+
+        if found:
+            break;
+
+    if not found:
         util.printD(f"Can not find model info file: {model_info_filepath}")
         return
 
@@ -234,8 +245,11 @@ def load_model_info_by_search_term(model_type, search_term):
 # parameter: filter - dict, which kind of model you need
 # return: model name list
 def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
-    
-    model_folder = model.folders[model_type]
+
+    if model_type == "lora" and model.folders['lycoris']:
+        model_folders = [model.folders[model_type], model.folders['lycoris']]
+    else:
+        model_folders = [model.folders[model_type]]
 
     # set filter
     # only get models don't have a civitai info file
@@ -253,20 +267,21 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
     # get information from filter
     # only get those model names don't have a civitai model info file
     model_names = []
-    for root, dirs, files in os.walk(model_folder, followlinks=True):
-        for filename in files:
-            item = os.path.join(root, filename)
-            # check extension
-            base, ext = os.path.splitext(item)
-            if ext in model.exts:
-                # find a model
+    for model_folder in model_folders:
+        for root, dirs, files in os.walk(model_folder, followlinks=True):
+            for filename in files:
+                item = os.path.join(root, filename)
+                # check extension
+                base, ext = os.path.splitext(item)
+                if ext in model.exts:
+                    # find a model
 
-                # check filter
-                if no_info_only:
-                    # check model info file
-                    info_file = base + suffix + model.info_ext
-                    if os.path.isfile(info_file):
-                        continue
+                    # check filter
+                    if no_info_only:
+                        # check model info file
+                        info_file = base + suffix + model.info_ext
+                        if os.path.isfile(info_file):
+                            continue
 
                 if empty_info_only:
                     # check model info file
@@ -277,14 +292,13 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
                                 # find a non-empty model info file
                                 continue
 
-                model_names.append(filename)
-
+                    model_names.append(filename)
 
     return model_names
 
 def get_model_names_by_input(model_type, empty_info_only):
     return get_model_names_by_type_and_filter(model_type, {"empty_info_only":empty_info_only})
-    
+
 
 # get id from url
 def get_model_id_from_url(url:str) -> str:
@@ -458,7 +472,7 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
 
     # get model info by id from civitai
     model_info = get_model_info_by_id(model_id)
-    # delay before next request, to prevent to be treat as DDoS 
+    # delay before next request, to prevent to be treat as DDoS
     util.printD(f"delay:{delay} second")
     time.sleep(delay)
 
