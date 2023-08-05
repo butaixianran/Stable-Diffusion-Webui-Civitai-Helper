@@ -22,10 +22,10 @@ def printD(msg):
 def read_chunks(file, size=io.DEFAULT_BUFFER_SIZE):
     """Yield pieces of data from a file-like object until EOF."""
     while True:
-        chunk = file.read(size)
-        if not chunk:
+        if chunk := file.read(size):
+            yield chunk
+        else:
             break
-        yield chunk
 
 # Now, hashing use the same way as pip's source code.
 def gen_file_sha256(filname):
@@ -39,40 +39,40 @@ def gen_file_sha256(filname):
             h.update(block)
 
     hash_value =  h.hexdigest()
-    printD("sha256: " + hash_value)
-    printD("length: " + str(length))
+    printD(f"sha256: {hash_value}")
+    printD(f"length: {str(length)}")
     return hash_value
 
 
 
 # get preview image
 def download_file(url, path):
-    printD("Downloading file from: " + url)
+    printD(f"Downloading file from: {url}")
     # get file
     r = requests.get(url, stream=True, headers=def_headers, proxies=proxies)
     if not r.ok:
-        printD("Get error code: " + str(r.status_code))
+        printD(f"Get error code: {r.status_code}")
         printD(r.text)
         return
-    
+
     # write to file
     with open(os.path.realpath(path), 'wb') as f:
         r.raw.decode_content = True
         shutil.copyfileobj(r.raw, f)
 
-    printD("File downloaded to: " + path)
+    printD(f"File downloaded to: {path}")
 
 # get subfolder list
 def get_subfolders(folder:str) -> list:
-    printD("Get subfolder for: " + folder)
+    printD(f"Get subfolder for: {folder}")
     if not folder:
         printD("folder can not be None")
         return
-    
+
     if not os.path.isdir(folder):
         printD("path is not a folder")
         return
-    
+
     prefix_len = len(folder)
     subfolders = []
     for root, dirs, files in os.walk(folder, followlinks=True):
@@ -98,7 +98,7 @@ def get_relative_path(item_path:str, parent_path:str) -> str:
         return item_path
 
     relative = item_path[len(parent_path):]
-    if relative[:1] == "/" or relative[:1] == "\\":
+    if relative[:1] in ["/", "\\"]:
         relative = relative[1:]
 
     # printD("relative:"+relative)
