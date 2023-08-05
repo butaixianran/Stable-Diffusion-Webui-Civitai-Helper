@@ -108,8 +108,10 @@ def dl(url, folder, filename, filepath):
 
     print()
 
-    # rename file
-    os.rename(dl_file_path, file_path)
-    util.printD(f"File Downloaded to: {file_path}")
-    return file_path
+    if downloaded_size == total_size:
+        # rename file
+        os.rename(dl_file_path, file_path)
+        util.printD(f"File Downloaded to: {file_path}")
+        return file_path
 
+    return
