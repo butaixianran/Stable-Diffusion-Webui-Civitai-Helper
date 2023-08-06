@@ -122,7 +122,6 @@ def get_model_path_by_type_and_name(model_type:str, model_name:str) -> str:
     else:
         model_folders = [folders[model_type]]
 
-
     # model could be in subfolder, need to walk.
     model_root = ""
     model_path = ""
@@ -136,6 +135,3 @@ def get_model_path_by_type_and_name(model_type:str, model_name:str) -> str:
                     return (model_root, model_path)
 
     return
-
-
-

@@ -683,7 +683,6 @@ onUiLoaded(() => {
                                 replace_preview_btn.style.position = btn_thumb_pos;
                                 replace_preview_btn.style.backgroundImage = btn_thumb_backgroundImage;
                             }
-
                         }
                     }
 
@@ -772,14 +771,9 @@ onUiLoaded(() => {
                     if (!ul_node.parentElement) {
                         additional_node.appendChild(ul_node);
                     }
-
                 }
-
-
             }
         }
-
-
     }
 
 
@@ -811,7 +805,6 @@ onUiLoaded(() => {
         ch_refresh.onclick = update_card_for_civitai;
 
         extra_network_refresh_btn.parentNode.appendChild(ch_refresh);
-
     }
 
 

@@ -231,13 +231,12 @@ def load_model_info_by_search_term(model_type, search_term):
             break;
 
     if not found:
-        util.printD(f"Can not find model info file: {model_info_filepath}")
+
+    if not os.path.isfile(model_info_filepath):
+         util.printD(f"Can not find model info file: {model_info_filepath}")
         return
 
     return model.load_model_info(model_info_filepath)
-
-
-
 
 
 # get model file names by model type
@@ -276,12 +275,20 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
                 if ext in model.exts:
                     # find a model
 
-                    # check filter
-                    if no_info_only:
-                        # check model info file
-                        info_file = base + suffix + model.info_ext
-                        if os.path.isfile(info_file):
-                            continue
+    for root, dirs, files in os.walk(model_folder, followlinks=True):
+        for filename in files:
+            item = os.path.join(root, filename)
+            # check extension
+            base, ext = os.path.splitext(item)
+            if ext in model.exts:
+                # find a model
+
+                # check filter
+                if no_info_only:
+                    # check model info file
+                    info_file = base + suffix + model.info_ext
+                    if os.path.isfile(info_file):
+                        continue
 
                 if empty_info_only:
                     # check model info file
@@ -291,6 +298,23 @@ def get_model_names_by_type_and_filter(model_type:str, filter:dict) -> list:
                             if "id" in model_info.keys():
                                 # find a non-empty model info file
                                 continue
+
+
+                    # check filter
+                    if no_info_only:
+                        # check model info file
+                        info_file = base + suffix + model.info_ext
+                        if os.path.isfile(info_file):
+                            continue
+
+                    if empty_info_only:
+                        # check model info file
+                        info_file = base + suffix + model.info_ext
+                        if os.path.isfile(info_file):
+                            if model_info := model.load_model_info(info_file):
+                                if "id" in model_info.keys():
+                                    # find a non-empty model info file
+                                    continue
 
                     model_names.append(filename)
 
@@ -545,8 +569,6 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
     return (model_path, model_id, model_name, current_version_id, new_version_name, description, downloadUrl, img_url)
 
 
-
-
 # check model's new version
 # parameter: delay - float, how many seconds to delay between each request to civitai
 # return: new_versions - a list for all new versions, each one is (model_path, model_id, model_name, new_verion_id, new_version_name, description, download_url, img_url)
@@ -613,9 +635,4 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> 
                     new_versions.append(r)
 
 
-
-
     return new_versions
-
-
-
