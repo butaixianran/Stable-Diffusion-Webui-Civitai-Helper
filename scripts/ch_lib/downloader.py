@@ -46,6 +46,7 @@ def dl(url, folder, filename, filepath):
             # content of a CD: "attachment;filename=FileName.txt"
             # in case "" is in CD filename's start and end, need to strip them out
             filename = cd.split("=")[1].strip('"')
+            filename = filename.encode('iso8859-1').decode('utf-8')
             if not filename:
                 util.printD("Fail to get file name from Content-Disposition: " + cd)
                 return
