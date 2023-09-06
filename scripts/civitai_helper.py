@@ -81,7 +81,7 @@ def on_ui_tabs():
         if r:
             model_info, model_name, model_type, subfolders, version_strs = r
 
-        return [model_info, model_name, model_type, dl_subfolder_drop.update(choices=subfolders), dl_version_drop.update(choices=version_strs)]
+        return [model_info, model_name, model_type, dl_subfolder_drop.update(choices=subfolders,value=subfolders[0]), dl_version_drop.update(choices=version_strs,value=version_strs[0])]
 
     # ====UI====
     with gr.Blocks(analytics_enabled=False) as civitai_helper:
