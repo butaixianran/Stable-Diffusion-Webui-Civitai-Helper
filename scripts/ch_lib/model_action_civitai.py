@@ -64,6 +64,13 @@ def scan_model(scan_model_types, max_size_preview, skip_nsfw_preview):
                         
                         # use this sha256 to get model info from civitai
                         model_info = civitai.get_model_info_by_hash(hash)
+                        
+                        # query the model's creator
+                        if model_info != {}:
+                            modelId = model_info["modelId"]
+                            creator =  civitai.get_model_info_by_id(str(modelId))["creator"]["username"]
+                            model_info["model"]["creator"] = creator  
+
                         # delay 1 second for ti
                         if model_type == "ti":
                             util.printD("Delay 1 second for TI")
