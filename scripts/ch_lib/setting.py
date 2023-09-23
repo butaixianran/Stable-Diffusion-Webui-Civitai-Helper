@@ -12,7 +12,7 @@ path = os.path.join(scripts.basedir(), name)
 data = {
     "model":{
         "max_size_preview": True,
-        "skip_nsfw_preview": False
+        "skip_nsfw_preview": "Soft"
     },
     "general":{
         "open_url_with_js": True,

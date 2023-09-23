@@ -310,6 +310,9 @@ def get_model_id_from_url(url:str) -> str:
     
     return id
 
+def should_skip(selected_level, current_level):
+    order = ["None", "Soft", "Mature", "X", "Do not Skip"]
+    return order.index(current_level) >= order.index(selected_level)
 
 # get preview image by model path
 # image will be saved to file, so no return
@@ -344,7 +347,8 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
                         if "nsfw" in img_dict.keys():
                             if img_dict["nsfw"] != "None": 
                                 util.printD("This image is NSFW: " + str(img_dict["nsfw"]))
-                                if skip_nsfw_preview:
+                                current_nsfw = img_dict.get("nsfw", "None")
+                                if should_skip(skip_nsfw_preview, current_nsfw):
                                     util.printD("Skip NSFW image")
                                     continue
                         

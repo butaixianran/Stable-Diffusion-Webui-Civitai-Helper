@@ -108,7 +108,8 @@ def on_ui_tabs():
                 gr.Markdown("### Scan Models for Civitai")
                 with gr.Row():
                     max_size_preview_ckb = gr.Checkbox(label="Download Max Size Preview", value=max_size_preview, elem_id="ch_max_size_preview_ckb")
-                    skip_nsfw_preview_ckb = gr.Checkbox(label="Skip NSFW Preview Images", value=skip_nsfw_preview, elem_id="ch_skip_nsfw_preview_ckb")
+                    nsfw_level_choices = ["Soft", "Mature", "X", "Do not Skip"]
+                    skip_nsfw_preview_ckb = gr.Dropdown(label="Block NSFW Level Above", choices=nsfw_level_choices, value=skip_nsfw_preview, elem_id="ch_skip_nsfw_preview_ckb")
                     scan_model_types_ckbg = gr.CheckboxGroup(choices=model_types, label="Model Types", value=model_types)
 
                 # with gr.Row():
