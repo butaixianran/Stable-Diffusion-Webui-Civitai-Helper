@@ -386,35 +386,17 @@ onUiLoaded(() => {
         if (!replace_preview_text) {
             replace_preview_text = "replace preview";
         }
-        
-
-
-        // get component
-        let ch_always_display_ckb = gradioApp().querySelector("#ch_always_display_ckb input");
-        let ch_show_btn_on_thumb_ckb = gradioApp().querySelector("#ch_show_btn_on_thumb_ckb input");
-        let ch_always_display = false;
-        let ch_show_btn_on_thumb = false;
-        if (ch_always_display_ckb) {
-            ch_always_display = ch_always_display_ckb.checked;
-        }
-        if (ch_show_btn_on_thumb_ckb) {
-            ch_show_btn_on_thumb = ch_show_btn_on_thumb_ckb.checked;
-        }
 
 
         //change all "replace preview" into an icon
         let extra_network_id = "";
         let extra_network_node = null;
-        let metadata_button = null;
-        let additional_node = null;
-        let replace_preview_btn = null;
-        let ul_node = null;
+        let button_row = null;
         let search_term_node = null;
         let search_term = "";
         let model_type = "";
         let cards = null;
         let need_to_add_buttons = false;
-        let is_thumb_mode = false;
 
         //get current tab
         let active_tab_type = getActiveTabType();
@@ -487,111 +469,30 @@ onUiLoaded(() => {
                 extra_network_id = tab_prefix+"_"+js_model_type+"_"+cardid_suffix;
                 // console.log("searching extra_network_node: " + extra_network_id);
                 extra_network_node = gradioApp().getElementById(extra_network_id);
-                // check if extr network is under thumbnail mode
-                is_thumb_mode = false
-                if (extra_network_node) {
-                    if (extra_network_node.className == "extra-network-thumbs") {
-                        console.log(extra_network_id + " is in thumbnail mode");
-                        is_thumb_mode = true;
-                        // if (!ch_show_btn_on_thumb) {continue;}
-                    }
-                } else {
-                    console.log("can not find extra_network_node: " + extra_network_id);
-                    continue;
-                }
+
                 // console.log("find extra_network_node: " + extra_network_id);
 
                 // get all card nodes
                 cards = extra_network_node.querySelectorAll(".card");
                 for (let card of cards) {
-                    //metadata_buttoncard
-                    metadata_button = card.querySelector(".metadata-button");
-                    //additional node
-                    additional_node = card.querySelector(".actions .additional");
-                    //get ul node, which is the parent of all buttons
-                    ul_node = card.querySelector(".actions .additional ul");
-                    // replace preview text button
-                    replace_preview_btn = card.querySelector(".actions .additional a");
-
-                    // check thumb mode
-                    if (is_thumb_mode) {
-                        additional_node.style.display = null;
-
-                        if (ch_show_btn_on_thumb) {
-                            ul_node.style.background = btn_thumb_background;
-                        } else {
-                            //reset
-                            ul_node.style.background = null;
-                            // console.log("remove existed buttons");
-                            // remove existed buttons
-                            if (ul_node) {
-                                // find all .a child nodes
-                                let atags = ul_node.querySelectorAll("a");
-                                
-                                for (let atag of atags) {
-                                    //reset display
-                                    atag.style.display = null;
-                                    //remove extension's button
-                                    if (ch_btn_txts.indexOf(atag.innerHTML)>=0) {
-                                        //need to remove
-                                        ul_node.removeChild(atag);
-                                    } else {
-                                        //do not remove, just reset
-                                        atag.innerHTML = replace_preview_text;
-                                        atag.style.display = null;
-                                        atag.style.fontSize = null;
-                                        atag.style.position = null;
-                                        atag.style.backgroundImage = null;
-                                    }
-                                }
-
-                                //also remove br tag in ul
-                                let brtag = ul_node.querySelector("br");
-                                if (brtag) {
-                                    ul_node.removeChild(brtag);
-                                }
-
-                            }
-                            //just reset and remove nodes, do nothing else
-                            continue;
-
-                        }
-
-                    } else {
-                        // full preview mode
-                        if (ch_always_display) {
-                            additional_node.style.display = "block";
-                        } else {
-                            additional_node.style.display = null;
-                        }
-
-                        // remove br tag
-                        let brtag = ul_node.querySelector("br");
-                        if (brtag) {
-                            ul_node.removeChild(brtag);
-                        }
-
+                    //get button row
+                    button_row = card.querySelector(".button-row");
+                    
+                    if (!button_row){
+                        console.log("can not find button_row");
+                        continue;
                     }
 
-                    // change replace preview text button into icon
-                    if (replace_preview_btn) {
-                        if (replace_preview_btn.innerHTML !== "🖼️") {
-                            need_to_add_buttons = true;
-                            replace_preview_btn.innerHTML = "🖼️";
-                            if (!is_thumb_mode) {
-                                replace_preview_btn.style.fontSize = btn_fontSize;
-                                replace_preview_btn.style.margin = btn_margin;
-                            } else {
-                                replace_preview_btn.style.display = btn_thumb_display;
-                                replace_preview_btn.style.fontSize = btn_thumb_fontSize;
-                                replace_preview_btn.style.position = btn_thumb_pos;
-                                replace_preview_btn.style.backgroundImage = btn_thumb_backgroundImage;
-                            }
-
-                        }
+                    let atags = button_row.querySelectorAll("a");
+                    if (atags && atags.length) {
+                        console.log("find atags: " + atags.length);
+                    } else {
+                        console.log("no atags");
+                        need_to_add_buttons = true;
                     }
 
                     if (!need_to_add_buttons) {
+                        console.log("do not need to add buttons");
                         continue;
                     }
 
@@ -605,46 +506,26 @@ onUiLoaded(() => {
                     }
 
                     // get search_term
-                    search_term = search_term_node.innerHTML;
+                    search_term = search_term_node.innerHTML.trim();
                     if (!search_term) {
                         console.log("search_term is empty for cards in " + extra_network_id);
                         continue;
                     }
 
-
-
-                    // if (is_thumb_mode) {
-                    //     ul_node.style.background = btn_thumb_background;
-                    // }
-
+                    console.log("adding buttons");
                     // then we need to add 3 buttons to each ul node:
                     let open_url_node = document.createElement("a");
                     open_url_node.href = "#";
                     open_url_node.innerHTML = "🌐";
-                    if (!is_thumb_mode) {
-                        open_url_node.style.fontSize = btn_fontSize;
-                        open_url_node.style.margin = btn_margin;
-                    } else {
-                        open_url_node.style.display = btn_thumb_display;
-                        open_url_node.style.fontSize = btn_thumb_fontSize;
-                        open_url_node.style.position = btn_thumb_pos;
-                        open_url_node.style.backgroundImage = btn_thumb_backgroundImage;
-                    }
+                    open_url_node.className = "card-button";
+
                     open_url_node.title = "Open this model's civitai url";
                     open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
 
                     let add_trigger_words_node = document.createElement("a");
                     add_trigger_words_node.href = "#";
                     add_trigger_words_node.innerHTML = "💡";
-                    if (!is_thumb_mode) {
-                        add_trigger_words_node.style.fontSize = btn_fontSize;
-                        add_trigger_words_node.style.margin = btn_margin;
-                    } else {
-                        add_trigger_words_node.style.display = btn_thumb_display;
-                        add_trigger_words_node.style.fontSize = btn_thumb_fontSize;
-                        add_trigger_words_node.style.position = btn_thumb_pos;
-                        add_trigger_words_node.style.backgroundImage = btn_thumb_backgroundImage;
-                    }
+                    add_trigger_words_node.className = "card-button";
 
                     add_trigger_words_node.title = "Add trigger words to prompt";
                     add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+search_term+"')");
@@ -652,26 +533,15 @@ onUiLoaded(() => {
                     let use_preview_prompt_node = document.createElement("a");
                     use_preview_prompt_node.href = "#";
                     use_preview_prompt_node.innerHTML = "🏷️";
-                    if (!is_thumb_mode) {
-                        use_preview_prompt_node.style.fontSize = btn_fontSize;
-                        use_preview_prompt_node.style.margin = btn_margin;
-                    } else {
-                        use_preview_prompt_node.style.display = btn_thumb_display;
-                        use_preview_prompt_node.style.fontSize = btn_thumb_fontSize;
-                        use_preview_prompt_node.style.position = btn_thumb_pos;
-                        use_preview_prompt_node.style.backgroundImage = btn_thumb_backgroundImage;
-                    }
+                    use_preview_prompt_node.className = "card-button";
+
                     use_preview_prompt_node.title = "Use prompt from preview image";
                     use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
 
                     //add to card
-                    ul_node.appendChild(open_url_node);
-                    //add br if metadata_button exists
-                    if (is_thumb_mode && metadata_button) {
-                        ul_node.appendChild(document.createElement("br"));
-                    }
-                    ul_node.appendChild(add_trigger_words_node);
-                    ul_node.appendChild(use_preview_prompt_node);
+                    button_row.appendChild(open_url_node);
+                    button_row.appendChild(add_trigger_words_node);
+                    button_row.appendChild(use_preview_prompt_node);
 
 
 

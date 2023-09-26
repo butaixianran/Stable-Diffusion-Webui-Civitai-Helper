@@ -1,6 +1,5 @@
 ## 关于Civitai Helper2: Model Info Helper
-Civitai助手2将改名为**Model Info助手**。目前还在缓慢开发中。你可以查看它的UI演示视频，了解它会是什么样子:    
-[https://youtu.be/mPcKwQDDH8s](https://youtu.be/mPcKwQDDH8s)  
+近况请参考：[about_version2](about_version2.md) 
 
 
 # Civitai Helper
@@ -9,9 +8,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-civitai-extension)  
 
 # 注意
-**本插件现在非常稳定，很多人用得很好，如果碰到问题，先看[常见问题](#常见问题)，并检查命令行窗口的详情。**   
-开issue前，请先看文档。找茬行为的用户将会被拉黑，参考：[找茬行为会被拉黑](https://github.com/butaixianran/Stable-Diffusion-Webui-Civitai-Helper/issues/96#issuecomment-1500310981)   
-
+**本插件需要最新版SD webui，使用前请更新你的SD webui版本。安装本插件后，需要重启SD webui，而不光是重新加载UI，如果碰到问题，先看[常见问题](#常见问题)，并检查命令行窗口的详情。**   
 
 # 功能
 [中文介绍视频(非官方)](https://youtu.be/x4tPWPmeAgM?t=373)  
@@ -23,12 +20,9 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 * 批量检查本地模型，在civitai上的新版本
 * 直接下载新版本模型到SD模型目录内(含信息和预览图)
 * 修改了内置的"Extra Network"模型卡片，每个卡片增加了如下功能按钮:
-  - 🖼: 修改文字"replace preview"为这个图标
   - 🌐: 在新标签页打开这个模型的Civitai页面
   - 💡: 一键添加这个模型的触发词到关键词输入框
   - 🏷: 一键使用这个模型预览图所使用的关键词
-* 以上额外功能按钮支持thumbnail模式
-* 增加一直显示按钮的选项，以供触屏用户使用
 
 
 # 安装
@@ -42,10 +36,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 # 使用方法
 
 ## 更新你的SD webui
-本扩展需要取到 Extra Network的卡片列表id。**这个是2023-02-06，才添加到SD webui里面的。**  
-
-所以，如果你用的版本比这个早，你就需要先更新你的SD Webui！
-
+请更新SD webui到最新版  
 
 ## 扫描模型
 前往扩展页面"Civitai Helper"，有个按钮叫："Scan Model"  
@@ -70,8 +61,7 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 ![](img/extra_network.jpg)  
 
 
-移动鼠标到模型卡片底部，就会显示4个按钮：
-  - 🖼: 修改文字"replace preview"为这个图标
+移动鼠标到模型卡片顶部，就会显示3个额外的按钮：
   - 🌐: 在新标签页打开这个模型的Civitai页面
   - 💡: 一键添加这个模型的触发词到关键词输入框
   - 🏷: 一键使用这个模型预览图所使用的关键词
@@ -83,11 +73,6 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 ![](img/refresh_ch.jpg)  
 
 每次当Extra Network刷新，他都会删除掉额外的修改，我们的按钮就会消失。这时你就需要点击`Refresh Civitai Helper`把这些功能添加回去。
-
-
-### 小图模式
-以上功能按钮支持小图模式，但受制于SD Webui的CSS问题，目前，只能要么一直显示，要么一直不显示，不能鼠标滑过才显示。   
-![](img/thumb_mode.jpg)  
 
 ## 下载 
 **(单任务，下载完一个再下另一个)**  
@@ -127,24 +112,11 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 
 ![](img/get_one_model_info.jpg)  
 
-## 代理
-**如果你是刚更新新版本，你需要重启SD webui再来使用**   
+## 设置
+现在所有设置被移动到 Setting 页面->Civitai Helper区域中。
 
-代理输入框在插件页面最下方。
-
-**每次填入或清除代理后，都要保存，并用SDwebui设置页面的Reload UI按钮刷新UI**  
-
-然后所有发到civitai的请求就会用代理。  
-
+代理输入框也在其中。
 有些sock5代理, 需要使用socks5h开头的形式"socks5h://xxxxx"才能生效。   
-
-
-
-## 其他设置
-**保存设置按钮, 会保存扫描模型区域，以及其他设置 这两个区域的选项**  
-
-* "一直显示按钮" 是为了方便触屏。  
-* "小图模式显示功能按钮" 会开关功能按钮在小图模式的显示  
 ![](img/other_setting.jpg) 
 
 ## 预览图
@@ -184,9 +156,6 @@ Enjoy!
 
 ## 常见问题
 ### 4个卡片按钮不显示
-#### 汉化原因
-下载新版，最新版已经处理汉化导致的问题。**双语汉化插件需要v1.6.1.1之后的版本才开始支持。**  
-
 #### 使用了云端汉化功能
 如果是秋叶启动器，就关闭启动器“云端汉化”功能。如果是专门的云端汉化插件，就换用普通汉化插件。  
 
@@ -202,7 +171,6 @@ git在很多时候，会拒绝升级，并告诉你有些冲突需要你手动�
  
 ### Request model info from civitai
 意思就是正在连接civitai，如果没有后面的信息，就是连不上，请挂代理。
-
 
 ### 扫描或获取模型信息失败
 这个插件现在很稳定，所以，这个问题的原因，基本是是因为Civitai拒绝了你的连接请求。  

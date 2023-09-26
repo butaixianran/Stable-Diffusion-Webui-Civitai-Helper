@@ -4,14 +4,11 @@
 [한국어(ChatGPT)](README.kr.md)  
 
 ## About Civitai Helper2: Model Info Helper
-Civitai Helper 2 will be renamed to **ModelInfo Helper**. It is under development, you can watch its UI demo video to see how it gonna look like:    
-[YouTube](https://youtu.be/mPcKwQDDH8s)  
+check here for Civitai Helper 2's update:
+[about_version2](about_version2.md)  
 
 # Notice
-**This extension now is very stable and works well for many people. If you have an issue, check console log window's detail and read [common issue](#common-issue) part**   
-
-If you want to claim it doesn't work, check this first: [Claim Wall](claim_wall.md)  
-
+**This extension request latest SD webui, update it before using this extension. And also re-lanuch SD webui after installing this extension(not just reload UI). If you have an issue, check console log window's detail and read [common issue](#common-issue) part**   
 
 # Civitai Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.  
@@ -26,13 +23,9 @@ Civitai: [Civitai Url](https://civitai.com/models/16768/civitai-helper-sd-webui-
 * Checking all your local model's new version from Civitai
 * Download a new version directly into SD model folder (with info+preview)
 * Modified Built-in "Extra Network" cards, to add the following buttons on each card:
-  - 🖼️: Modified "replace preview" text into this icon
   - 🌐: Open this model's Civitai url in a new tab
   - 💡: Add this model's trigger words to prompt
-  - 🏷️: Use this model's preview image's prompt
-* Above buttons support thumbnail mode of Extra Network
-* Option to always show additional buttons, to work with touchscreen.  
-
+  - 🏷: Use this model's preview image's prompt
 
 # Install
 Go to SD webui's extension tab, go to `Install from url` sub-tab.
@@ -47,8 +40,7 @@ Done.
 # How to Use
 
 ## Update Your SD Webui
-This extension need to get extra network's cards id. Which is added since **2023-02-06**.  
-**If your SD webui is an earlier version, you need to update it!**  
+**Update SD webui before using this extension!**  
 
 ## Scanning Models
 Go to extension tab "Civitai Helper". There is a button called "Scan model".  
@@ -70,28 +62,19 @@ When you have some new models, just click scan button again, to get new model's 
 
 ## Model Card
 **(Use this only after scanning finished)**   
-Open SD webui's build-in "Extra Network" tab, to show model cards.
+Go to a Model's tab to show model cards.
 
-![](img/extra_network.jpg)
-
-
-Move your mouse on to the bottom of a model card. It will show 4 icon buttons:
-  - 🖼: Replace preview (a build-in button, modified from text to icon)
+Move your mouse on to the **Top** of a model card. It will show 3 additional icon buttons:
   - 🌐: Open this model's Civitai url in a new tab
   - 💡: Add this model's trigger words to prompt
   - 🏷: Use this model's preview image's prompt
 
 ![](img/model_card.jpg)
 
-**If these additional buttons are not there**, click the `Refresh Civitai Helper` button to bring them back.  
+**If these additional buttons are not there**, click the `Refresh Civitai Helper` button to bring them back.   
 
 ![](img/refresh_ch.jpg)  
 Everytime after Extra Network tab refreshed, it will remove all these additional buttons. So, you need to click `Refresh Civitai Helper` button to bring them back.  
-
-### Thumbnail Mode
-Additional buttons work on thumbnail too, but due to SD webui's CSS issue, for now, they must be always displayed on thumbnail or don't display at all.   
-![](img/thumb_mode.jpg)
-
 
 ## Download 
 To download a model by Civitai Model Page's Url, you need 3 steps:
@@ -133,28 +116,12 @@ After clicking button, extension will download that civitai model's info and pre
 
 ![](img/get_one_model_info.jpg)  
 
-## Proxy
-**If you are updating to new version, you need to re-lanuch SD webui before using it.**   
+## Settings
+Now all settings are moved into Setting tab->civitai helper section. 
 
-Proxy textbox is at the bottom of extension tab. 
+For some sock5 proxy, need to be used as "socks5h://127.0.0.1:port".  
 
-**Each time you fill or clear a proxy value, you need to save setting, and Re-load UI with setting tab's reload button.**  
-
-Then all requests to civitai will use the proxy.  
-
-For some sock5 proxy, need to be used as "socks5h://xxxxx".  
-
-
-
-
-## Other Setting
-**The Save Setting button, will save both "Scan Model"'s setting and other setting.**  
-
-* "Always Display Button" is good for touch screen.  
-* "Show Buttons on Thumb Mode" will turn on/off additional Buttons on thumbnail.  
 ![](img/other_setting.jpg)
-
-
 
 
 ## Preview Image
@@ -192,9 +159,6 @@ Enjoy!
 
 ## Common Issue
 ### 4 Buttons on card didn't show
-#### Localization
-There was a Localization issue if you are not using English version of SD webui. This is fixed in the latest version of this extension. **Bilingual localization extension is supported by PR since v1.6.1.1.**  
-
 ##### Using cloud based localization extension
 Turn off cloud based localization extension, use normal localization extension.  
 
@@ -230,8 +194,6 @@ Also, you can report those models with wrong sha256 to civitai at following page
 Please report that model to civitai, so they can fix it.  
 
 
-
-
 ### Scanning fail when using colab
 First of, search your error message with google. Most likely, it will be a colab issue.    
 
@@ -243,9 +205,11 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 
-
-
 # Change Log
+## v1.7.0
+* Fix all issues for latest sd webui
+* Move all settings to Setting tab
+
 ## v1.6.4
 * Add "Download All files" checkbox for downloading model section. Uncheck means only download 1 file.
 
