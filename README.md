@@ -8,7 +8,7 @@ check here for Civitai Helper 2's update:
 [about_version2](about_version2.md)  
 
 # Notice
-**This extension request latest SD webui, update it before using this extension. And also re-lanuch SD webui after installing this extension(not just reload UI). If you have an issue, check console log window's detail and read [common issue](#common-issue) part**   
+**This extension request latest SD webui v1.6.x, update it before using this extension. And also re-lanuch SD webui after installing this extension(not just reload UI). If you have an issue, check console log window's detail and read [common issue](#common-issue) part**   
 
 # Civitai Helper
 Stable Diffusion Webui Extension for Civitai, to handle your models much more easily.  
