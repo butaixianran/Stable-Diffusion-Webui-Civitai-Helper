@@ -60,7 +60,7 @@ function get_ch_py_msg(){
 
 // get msg from python side from a hidden textbox
 // it will try once in every sencond, until it reach the max try times
-const get_new_ch_py_msg = (max_count=3) => new Promise((resolve, reject) => {
+const get_new_ch_py_msg = (max_count=5) => new Promise((resolve, reject) => {
     console.log("run get_new_ch_py_msg")
 
     let count = 0;
@@ -175,7 +175,14 @@ async function open_model_url(event, model_type, search_term){
     event.preventDefault()
 
     //check response msg from python
-    let new_py_msg = await get_new_ch_py_msg();
+    let new_py_msg = "";
+    try {
+        new_py_msg = await get_new_ch_py_msg();
+        
+    } catch (error) {
+        console.log(error);        
+    }
+    
     console.log("new_py_msg:");
     console.log(new_py_msg);
 
@@ -284,6 +291,88 @@ function use_preview_prompt(event, model_type, search_term){
 
 }
 
+
+async function remove_card(event, model_type, search_term){
+    console.log("start remove_card");
+
+    //get hidden components of extension 
+    let js_remove_card_btn = gradioApp().getElementById("ch_js_remove_card_btn");
+    if (!js_remove_card_btn) {
+        return
+    }
+
+    // must confirm before removing
+    let rm_confirm = "\nConfirm to remove this model.\n\nCheck console log for detail.";
+    if (!confirm(rm_confirm)) {
+        return
+    }
+
+
+    //msg to python side
+    let msg = {
+        "action": "",
+        "model_type": "",
+        "search_term": "",
+    }
+
+
+    msg["action"] = "remove_card";
+    msg["model_type"] = model_type;
+    msg["search_term"] = search_term;
+    msg["prompt"] = "";
+    msg["neg_prompt"] = "";
+
+    // fill to msg box
+    send_ch_py_msg(msg)
+
+    //click hidden button
+    js_remove_card_btn.click();
+
+    // stop parent event
+    event.stopPropagation()
+    event.preventDefault()
+
+    //check response msg from python
+    let new_py_msg = "";
+    try {
+        new_py_msg = await get_new_ch_py_msg();
+    } catch (error) {
+        console.log(error);
+        new_py_msg = error;
+    }
+    
+    console.log("new_py_msg:");
+    console.log(new_py_msg);
+
+    //check msg
+    let result = "Done";
+    //check msg
+    if (new_py_msg) {
+        result = new_py_msg;
+    }
+
+    // alert result
+    alert(result);
+
+    if (result=="Done"){
+        console.log("refresh card list");
+        //refresh card list
+        let active_tab = getActiveTabType();
+        console.log("get active tab id: " + active_tab);
+        if (active_tab){
+            let refresh_btn_id = active_tab + "_extra_refresh";
+            let refresh_btn = gradioApp().getElementById(refresh_btn_id);
+            if (refresh_btn){
+                console.log("click button: "+refresh_btn_id);
+                refresh_btn.click();
+            }
+        }
+    }
+    
+    console.log("end remove_card");
+
+
+}
 
 
 // download model's new version into SD at python side
@@ -538,10 +627,19 @@ onUiLoaded(() => {
                     use_preview_prompt_node.title = "Use prompt from preview image";
                     use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
 
+                    let remove_card_node = document.createElement("a");
+                    remove_card_node.href = "#";
+                    remove_card_node.innerHTML = "❌";
+                    remove_card_node.className = "card-button";
+
+                    remove_card_node.title = "Remove this model";
+                    remove_card_node.setAttribute("onclick","remove_card(event, '"+model_type+"', '"+search_term+"')");
+
                     //add to card
                     button_row.appendChild(open_url_node);
                     button_row.appendChild(add_trigger_words_node);
                     button_row.appendChild(use_preview_prompt_node);
+                    button_row.appendChild(remove_card_node);
 
 
 

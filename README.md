@@ -206,8 +206,11 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.8.0
+* Add remove model button
+
 ## v1.7.0
-* Fix all issues for latest sd webui
+* Catch up with latest sd webui
 * Move all settings to Setting tab
 
 ## v1.6.4

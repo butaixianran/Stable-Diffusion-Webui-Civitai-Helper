@@ -4,8 +4,8 @@ import json
 from . import util
 
 # action list
-js_actions = ("open_url", "add_trigger_words", "use_preview_prompt", "dl_model_new_version")
-py_actions = ("open_url")
+js_actions = ("open_url", "add_trigger_words", "use_preview_prompt", "dl_model_new_version", "remove_card")
+py_actions = ("open_url", "remove_card")
 
 
 # handle request from javascript
