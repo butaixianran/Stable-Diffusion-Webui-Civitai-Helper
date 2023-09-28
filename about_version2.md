@@ -13,7 +13,7 @@ Especially InvokeAI 3.x, with its Unified Canvas and build-in node system, now w
 
 If you are not familiar with InvokeAI 3.x, you can check this video:  
 [https://www.youtube.com/watch?v=1Iz4F7o6hgQ](https://www.youtube.com/watch?v=1Iz4F7o6hgQ)  
-And its unified canvas system:
+And its unified canvas system:  
 [https://www.youtube.com/watch?v=aU0jGZpDIVc](https://www.youtube.com/watch?v=aU0jGZpDIVc)  
 
 So, for Model Info Helper, I'm re-designing it into a stand alone model and workflow management system, which should work with most popular SD UI, not just for SD webui.  
