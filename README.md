@@ -206,6 +206,10 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.8.2
+* fix downloading issue when connection failed
+* fix nsfw is not a bool issue
+
 ## v1.8.1
 * fix http headers' utf8 issue for downloading
 
