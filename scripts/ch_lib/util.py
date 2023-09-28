@@ -6,7 +6,7 @@ import requests
 import shutil
 
 
-version = "1.8.1"
+version = "1.8.2"
 
 def_headers = {'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
 

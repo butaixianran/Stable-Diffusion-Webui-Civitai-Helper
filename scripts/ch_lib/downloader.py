@@ -109,6 +109,12 @@ def dl(url, folder, filename, filepath):
 
     print()
 
+    # check file size
+    downloaded_size = os.path.getsize(dl_file_path)
+    if downloaded_size < total_size:
+        util.printD(f"Download failed due to insufficient file size. Try again later or download it manually: {url}")
+        return
+
     # rename file
     os.rename(dl_file_path, file_path)
     util.printD(f"File Downloaded to: {file_path}")
