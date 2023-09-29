@@ -18,8 +18,8 @@ And its unified canvas system:
 
 So, for Model Info Helper, I'm re-designing it into a stand alone model and workflow management system, which should work with most popular SD UI, not just for SD webui.  
 
+And I'll take down all workflow management functions so this stand alone version can be release sooner.   
 Since it won't be released as estimated, I have updated the old civitai helper 1.x to work with latest SD webui.  
-
 
 
 
