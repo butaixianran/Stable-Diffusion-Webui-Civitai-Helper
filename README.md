@@ -212,6 +212,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.8.3
+* fix a bug of removing model when model name has space in it.
+
 ## v1.8.2
 * fix downloading issue when connection failed
 * fix nsfw is not a bool issue
