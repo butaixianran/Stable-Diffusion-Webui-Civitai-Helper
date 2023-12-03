@@ -88,6 +88,8 @@ def dl(url, folder, filename, filepath):
     # create header range
     headers = {'Range': 'bytes=%d-' % downloaded_size}
     headers['User-Agent'] = util.def_headers['User-Agent']
+    if util.civitai_api_key:
+        headers["Authorization"] = f"Bearer {util.civitai_api_key}"
 
     # download with header
     r = requests.get(url, stream=True, verify=False, headers=headers, proxies=util.proxies)

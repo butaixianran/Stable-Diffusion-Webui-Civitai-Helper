@@ -115,9 +115,23 @@ Stable Diffusion Webui 扩展Civitai助手，用于更轻松的管理和使用Ci
 ## 设置
 现在所有设置被移动到 Setting 页面->Civitai Helper区域中。
 
+### 代理
 代理输入框也在其中。
 有些sock5代理, 需要使用socks5h开头的形式"socks5h://xxxxx"才能生效。   
 ![](img/other_setting.jpg) 
+
+### Civitai API Key
+有些模型现在要登录civitai网站才能下载。要通过Civitai API做到这一点，你需要在你的civitai帐号设置中，创建一个API Key，然后填写到本扩展的设置中来。
+
+zixaphir写了一个详细的教程: [wiki](https://github.com/zixaphir/Stable-Diffusion-Webui-Civitai-Helper/wiki/Civitai-API-Key).
+
+这里是比较简单的教程:
+* 登录 civitai.com
+* 前往 [你的帐号的Account Setting页面](https://civitai.com/user/account)
+* 在页面底部，找到"API Keys"部分.
+* 点击"Add API Key"按钮, 起个名字.
+* 复制生成的api key字符串，粘贴到本扩展设置页面  -> Civitai API Key 部分.
+* 保存设置，并重启SD webui
 
 ## 预览图
 Extra Network支持两种预览图命名：`model_name.png` 和 `model_name.preview.png`。其中，`model_name.png`优先级较高。

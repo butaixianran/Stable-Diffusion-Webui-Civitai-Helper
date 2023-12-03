@@ -125,9 +125,23 @@ After clicking button, extension will download that civitai model's info and pre
 ## Settings
 Now all settings are moved into Setting tab->civitai helper section. 
 
+### Proxy
 For some sock5 proxy, need to be used as "socks5h://127.0.0.1:port".  
 
 ![](img/other_setting.jpg)
+
+### Civitai API Key
+You need to login civitai to download some models. To do this with Civitai API, you need to create an API Key in your account settings on Civitai's website.
+
+zixaphir created a detailed tutorial for this: [wiki](https://github.com/zixaphir/Stable-Diffusion-Webui-Civitai-Helper/wiki/Civitai-API-Key).
+
+Here is a simple tutorial:
+* Login civitai.com
+* go to [your account's setting page](https://civitai.com/user/account)
+* At the bottom of that page, find the "API Keys" section.
+* Click "Add API Key" button, give a name.
+* Copy the api key string, paste to this extension's setting page -> Civitai API Key section.
+* Save setting and Reload SD webui
 
 
 ## Preview Image
@@ -212,6 +226,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.9.0
+* support civitai API key for downloading. Check document for detail
+
 ## v1.8.3
 * fix a bug of removing model when model name has space in it.
 

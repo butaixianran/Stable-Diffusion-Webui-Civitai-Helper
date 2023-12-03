@@ -6,12 +6,15 @@ import requests
 import shutil
 
 
-version = "1.8.3"
+version = "1.9.0"
 
-def_headers = {'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148'}
+def_headers = {'User-Agent': 'Mozilla/5.0 (iPad; CPU OS 12_2 like Mac OS X) AppleWebKit/605.1.15 (KHTML, like Gecko) Mobile/15E148',
+               "Authorization": ""}
 
 
 proxies = None
+
+civitai_api_key = ""
 
 
 # print for debugging

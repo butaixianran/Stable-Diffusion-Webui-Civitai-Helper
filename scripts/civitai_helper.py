@@ -44,6 +44,7 @@ def on_ui_settings():
     shared.opts.add_option("ch_skip_nsfw_preview", shared.OptionInfo(False, "Skip NSFW Preview Images", gr.Checkbox, {"interactive": True}, section=ch_section))
     shared.opts.add_option("ch_open_url_with_js", shared.OptionInfo(True, "Open Url At Client Side", gr.Checkbox, {"interactive": True}, section=ch_section))
     shared.opts.add_option("ch_proxy", shared.OptionInfo("", "Civitai Helper Proxy", gr.Textbox, {"interactive": True, "lines":1, "info":"format: socks5h://127.0.0.1:port"}, section=ch_section))
+    shared.opts.add_option("ch_civiai_api_key", shared.OptionInfo("", "Civitai API Key", gr.Textbox, {"interactive": True, "lines":1, "info":"check doc:https://github.com/zixaphir/Stable-Diffusion-Webui-Civitai-Helper/tree/master#api-key"}, section=ch_section))
 
 def on_ui_tabs():
     # init
@@ -68,6 +69,7 @@ def on_ui_tabs():
     skip_nsfw_preview = shared.opts.data.get("ch_skip_nsfw_preview", False)
     open_url_with_js = shared.opts.data.get("ch_open_url_with_js", True)
     proxy = shared.opts.data.get("ch_proxy", "")
+    civitai_api_key = shared.opts.data.get("ch_civiai_api_key", "")
 
     util.printD("Settings:")
     util.printD("max_size_preview: " + str(max_size_preview))
@@ -75,12 +77,22 @@ def on_ui_tabs():
     util.printD("open_url_with_js: " + str(open_url_with_js))
     util.printD("proxy: " + str(proxy))
 
+    # set civitai_api_key
+    has_api_key = False
+    if civitai_api_key:
+        has_api_key = True
+        util.civitai_api_key = civitai_api_key
+        util.def_headers["Authorization"] = f"Bearer {civitai_api_key}"
+
+    util.printD(f"use civitai api key: {has_api_key}")
+
     # set proxy
     if proxy:
         util.proxies = {
             "http": proxy,
             "https": proxy,
         }
+
 
     # ====Event's function====
     def scan_model(scan_model_types):
