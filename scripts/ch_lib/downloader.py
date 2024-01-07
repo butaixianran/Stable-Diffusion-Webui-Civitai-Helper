@@ -22,19 +22,21 @@ def dl(url, folder, filename, filepath):
         if not folder:
             util.printD("folder is none")
             return
-        
+
         if not os.path.isdir(folder):
             util.printD("folder does not exist: "+folder)
             return
-        
+
         if filename:
             file_path = os.path.join(folder, filename)
 
     # first request for header
     rh = requests.get(url, stream=True, verify=False, headers=util.def_headers, proxies=util.proxies)
     # get file size
-    total_size = 0
-    total_size = int(rh.headers['Content-Length'])
+    total_size = int(rh.headers.get('Content-Length', -1))
+    if (total_size < 0):
+        util.printD('This model requires an API key to download. More info: https://github.com/butaixianran/Stable-Diffusion-Webui-Civitai-Helper#civitai-api-key')
+        return
     util.printD(f"File size: {total_size}")
 
     # if file_path is empty, need to get file name from download url's header
@@ -50,11 +52,11 @@ def dl(url, folder, filename, filepath):
             if not filename:
                 util.printD("Fail to get file name from Content-Disposition: " + cd)
                 return
-            
+
         if not filename:
             util.printD("Can not get file name from download url's header")
             return
-        
+
         # with folder and filename, now we have the full file path
         file_path = os.path.join(folder, filename)
 
@@ -121,4 +123,3 @@ def dl(url, folder, filename, filepath):
     os.rename(dl_file_path, file_path)
     util.printD(f"File Downloaded to: {file_path}")
     return file_path
-
