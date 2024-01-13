@@ -226,6 +226,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.9.1
+* Ignore video preview from civitai
+
 ## v1.9.0
 * support civitai API key for downloading. Check document for detail
 

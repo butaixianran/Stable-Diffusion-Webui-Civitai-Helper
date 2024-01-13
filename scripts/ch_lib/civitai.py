@@ -347,6 +347,11 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
                                 if skip_nsfw_preview:
                                     util.printD("Skip NSFW image")
                                     continue
+
+                        preview_type = img_dict.get("type")
+                        if preview_type != "image":
+                            util.printD(f"Unsupported preview type: {preview_type}, ignore.")
+                            continue
                         
                         if "url" in img_dict.keys():
                             img_url = img_dict["url"]
