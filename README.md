@@ -10,7 +10,7 @@ check here for Civitai Helper 2's update:
 # Notice
 **This extension request latest SD webui v1.6.x, update it before using this extension. And also re-lanuch SD webui after installing(not just reload UI). If you have an issue, check console log window's detail and read [common issue](#common-issue) part**   
 
-**You can also try following fork of this project, which keeps updating when I'm busy on other projects.**  
+**You can also try following forks of this project, which keeps updating when I'm busy on other projects.**  
 [https://github.com/zixaphir/Stable-Diffusion-Webui-Civitai-Helper](https://github.com/zixaphir/Stable-Diffusion-Webui-Civitai-Helper)  
 or   
 [https://github.com/blue-pen5805/Stable-Diffusion-Webui-Civitai-Helper](https://github.com/blue-pen5805/Stable-Diffusion-Webui-Civitai-Helper)
