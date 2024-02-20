@@ -12,7 +12,7 @@ check here for Civitai Helper 2's update:
 
 **You can also try following fork of this project, which keeps updating when I'm busy on other projects.**  
 [https://github.com/zixaphir/Stable-Diffusion-Webui-Civitai-Helper](https://github.com/zixaphir/Stable-Diffusion-Webui-Civitai-Helper)  
-or
+or   
 [https://github.com/blue-pen5805/Stable-Diffusion-Webui-Civitai-Helper](https://github.com/blue-pen5805/Stable-Diffusion-Webui-Civitai-Helper)
 
 
