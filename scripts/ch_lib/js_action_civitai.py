@@ -25,9 +25,20 @@ def open_model_url(msg, open_url_with_js):
         return
     
     model_type = result["model_type"]
-    search_term = result["search_term"]
+    search_term = ""
+    model_path = ""
+    model_info = None
 
-    model_info = civitai.load_model_info_by_search_term(model_type, search_term)
+    if "model_path" in result.keys():
+        model_path = result["model_path"]
+        util.printD(f"Open Url for {model_path}")
+        model_info = civitai.load_model_info_by_model_path(model_path)
+    else:
+        search_term = result["search_term"]
+        util.printD(f"Open Url for {search_term}")
+        model_info = civitai.load_model_info_by_search_term(model_type, search_term)
+
+    
     if not model_info:
         util.printD(f"Failed to get model info for {model_type} {search_term}")
         return ""
@@ -73,13 +84,22 @@ def add_trigger_words(msg):
     if not result:
         util.printD("Parsing js ms failed")
         return
-    
+
     model_type = result["model_type"]
-    search_term = result["search_term"]
+    search_term = ""
+    model_path = ""
     prompt = result["prompt"]
+    model_info = None
 
+    if "model_path" in result.keys():
+        model_path = result["model_path"]
+        util.printD(f"Add Trigger Words for {model_path}")
+        model_info = civitai.load_model_info_by_model_path(model_path)
+    else:
+        search_term = result["search_term"]
+        util.printD(f"Add Trigger Words for {search_term}")
+        model_info = civitai.load_model_info_by_search_term(model_type, search_term)
 
-    model_info = civitai.load_model_info_by_search_term(model_type, search_term)
     if not model_info:
         util.printD(f"Failed to get model info for {model_type} {search_term}")
         return [prompt, prompt]
@@ -126,12 +146,21 @@ def use_preview_image_prompt(msg):
         return
     
     model_type = result["model_type"]
-    search_term = result["search_term"]
+    search_term = ""
+    model_path = ""
     prompt = result["prompt"]
     neg_prompt = result["neg_prompt"]
+    model_info = None
 
+    if "model_path" in result.keys():
+        model_path = result["model_path"]
+        util.printD(f"Add Trigger Words for {model_path}")
+        model_info = civitai.load_model_info_by_model_path(model_path)
+    else:
+        search_term = result["search_term"]
+        util.printD(f"Add Trigger Words for {search_term}")
+        model_info = civitai.load_model_info_by_search_term(model_type, search_term)
 
-    model_info = civitai.load_model_info_by_search_term(model_type, search_term)
     if not model_info:
         util.printD(f"Failed to get model info for {model_type} {search_term}")
         return [prompt, neg_prompt, prompt, neg_prompt]
@@ -269,14 +298,20 @@ def remove_model_by_path(msg):
         return output
     
     model_type = result["model_type"]
-    search_term = result["search_term"]
+    search_term = ""
+    model_path = ""
+    
 
-    model_path = model.get_model_path_by_search_term(model_type, search_term)
+    if "model_path" in result.keys():
+        model_path = result["model_path"]
+    else:
+        search_term = result["search_term"]
+        model_path = model.get_model_path_by_search_term(model_type, search_term)
+
     if not model_path:
         output = f"Fail to get model for {model_type} {search_term}"
         util.printD(output)
         return output
-
 
     if not os.path.isfile(model_path):
         output = f"Model {model_type} {search_term} does not exist, no need to remove"

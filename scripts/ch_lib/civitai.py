@@ -218,6 +218,22 @@ def load_model_info_by_search_term(model_type, search_term):
     return model.load_model_info(model_info_filepath)
 
 
+# get model info file's content by model path
+# parameter: model_path
+# return: model_info
+def load_model_info_by_model_path(model_path):
+    util.printD(f"Load model info of {model_path}")
+    
+    # search_term = subfolderpath + model name + ext. And it always start with a / even there is no sub folder
+    base, ext = os.path.splitext(model_path)
+    model_info_filepath = base + suffix + model.info_ext
+
+    if not os.path.isfile(model_info_filepath):
+        util.printD("Can not find model info file: " + model_info_filepath)
+        return
+    
+    return model.load_model_info(model_info_filepath)
+
 
 
 

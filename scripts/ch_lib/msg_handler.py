@@ -13,6 +13,8 @@ py_actions = ("open_url", "remove_card")
 # return: dict for result
 def parse_js_msg(msg):
     util.printD("Start parse js msg")
+    util.printD(f"Msg: {msg}")
+
     msg_dict = json.loads(msg)
 
     # in case client side run JSON.stringify twice
