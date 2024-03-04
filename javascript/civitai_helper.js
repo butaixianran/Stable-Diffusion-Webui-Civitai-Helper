@@ -101,6 +101,8 @@ const get_new_ch_py_msg = (max_count=5) => new Promise((resolve, reject) => {
 })
 
 
+
+
 function getActiveTabType() {
     const currentTab = get_uiCurrentTabContent();
     switch (currentTab.id) {
@@ -381,12 +383,28 @@ async function remove_card(event, model_type, search_term){
         let active_tab = getActiveTabType();
         console.log("get active tab id: " + active_tab);
         if (active_tab){
-            let refresh_btn_id = active_tab + "_extra_refresh";
-            let refresh_btn = gradioApp().getElementById(refresh_btn_id);
+            let refresh_btn_id = "";
+            let refresh_btn = null;
+
+            //check sd version
+            let sd_version = ch_sd_version();
+            console.log(`sd version is: ${sd_version}`);
+            if (sd_version >= "1.8.0") {
+                let js_model_type = convertModelTypeFromPyToJS(model_type);
+                if (!js_model_type){return;}
+    
+                refresh_btn_id = active_tab + "_" + js_model_type + "_extra_refresh";
+                refresh_btn = gradioApp().getElementById(refresh_btn_id);
+            } else {
+                refresh_btn_id = active_tab + "_extra_refresh";
+                refresh_btn = gradioApp().getElementById(refresh_btn_id);
+            }
+
             if (refresh_btn){
                 console.log("click button: "+refresh_btn_id);
                 refresh_btn.click();
             }
+
         }
     }
     
@@ -1030,12 +1048,10 @@ onUiLoaded(() => {
                 //from sd v1.8, need to replace all single '\' into '\\'
                 search_term = search_term.replaceAll("\\", "\\\\");
 
-                //from sd v1.8, search_term is changed, also added a `data-sort-path` to card node with model's full path
-                //so we can use this new path and give up search_term
-                console.log("card path: " + card.dataset.sortPath);
-                card_path = card.dataset.sortPath.replaceAll("\\", "\\\\");
-
-
+                //`data-sort-path` convert all path to lowercase, which can not be used to find model on linux.
+                //so this is not used and fall back to use search_term
+                //console.log("card path: " + card.dataset.sortPath);
+                //card_path = card.dataset.sortPath.replaceAll("\\", "\\\\");
 
                 console.log("adding buttons");
                 // then we need to add 3 buttons to each ul node:
@@ -1045,7 +1061,7 @@ onUiLoaded(() => {
                 open_url_node.className = "card-button";
 
                 open_url_node.title = "Open this model's civitai url";
-                open_url_node.setAttribute("onclick","open_model_url_with_path(event, '"+model_type+"', '"+card_path+"')");
+                open_url_node.setAttribute("onclick","open_model_url(event, '"+model_type+"', '"+search_term+"')");
 
                 let add_trigger_words_node = document.createElement("a");
                 add_trigger_words_node.href = "#";
@@ -1053,7 +1069,7 @@ onUiLoaded(() => {
                 add_trigger_words_node.className = "card-button";
 
                 add_trigger_words_node.title = "Add trigger words to prompt";
-                add_trigger_words_node.setAttribute("onclick","add_trigger_words_with_path(event, '"+model_type+"', '"+card_path+"')");
+                add_trigger_words_node.setAttribute("onclick","add_trigger_words(event, '"+model_type+"', '"+search_term+"')");
 
                 let use_preview_prompt_node = document.createElement("a");
                 use_preview_prompt_node.href = "#";
@@ -1061,7 +1077,7 @@ onUiLoaded(() => {
                 use_preview_prompt_node.className = "card-button";
 
                 use_preview_prompt_node.title = "Use prompt from preview image";
-                use_preview_prompt_node.setAttribute("onclick","use_preview_prompt_with_path(event, '"+model_type+"', '"+card_path+"')");
+                use_preview_prompt_node.setAttribute("onclick","use_preview_prompt(event, '"+model_type+"', '"+search_term+"')");
 
                 let remove_card_node = document.createElement("a");
                 remove_card_node.href = "#";
@@ -1069,7 +1085,7 @@ onUiLoaded(() => {
                 remove_card_node.className = "card-button";
 
                 remove_card_node.title = "Remove this model";
-                remove_card_node.setAttribute("onclick","remove_card_with_path(event, '"+model_type+"', '"+card_path+"')");
+                remove_card_node.setAttribute("onclick","remove_card(event, '"+model_type+"', '"+search_term+"')");
 
                 //add to card
                 button_row.appendChild(open_url_node);

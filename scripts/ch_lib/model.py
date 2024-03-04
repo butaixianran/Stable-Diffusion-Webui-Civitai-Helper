@@ -149,12 +149,31 @@ def get_model_path_by_search_term(model_type:str, search_term:str):
         
         model_sub_path = model_sub_path.strip()
 
-
     if model_sub_path[:1] == "/":
         model_sub_path = model_sub_path[1:]
 
+    model_folder_name = "";
+    if model_type == "ti":
+        model_folder_name = "embeddings"
+    elif model_type == "hyper":
+        model_folder_name = "hypernetworks"
+    elif model_type == "ckp":
+        model_folder_name = "Stable-diffusion"
+    else:
+        model_folder_name = "Lora"
+
+    # check if model folder is already in search_term
+    if model_sub_path.startswith(model_folder_name):
+        # this is sd webui v1.8.0+'s search_term
+        # need to remove this model_folder_name+"/"or""\\" from model_sub_path
+        model_sub_path = model_sub_path[len(model_folder_name):]
+
+        if model_sub_path.startswith("/") or model_sub_path.startswith("\\"):
+            model_sub_path = model_sub_path[1:]
+
     if model_type == "hyper":
-        model_sub_path = model_sub_path+".pt"
+        if not model_sub_path.endswith(".pt"):
+            model_sub_path = model_sub_path+".pt"
 
     model_folder = folders[model_type]
 

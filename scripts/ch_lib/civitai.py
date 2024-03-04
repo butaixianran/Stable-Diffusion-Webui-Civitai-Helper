@@ -201,11 +201,41 @@ def load_model_info_by_search_term(model_type, search_term):
         util.printD("unknow model type: " + model_type)
         return
     
+    # with sd webui < 1.8.0
     # search_term = subfolderpath + model name + ext. And it always start with a / even there is no sub folder
+    # with sd webui >= 1.8.0
+    # search_term = model type + subfolderpath + model name + ext. And it always start with a / even there is no sub folder
+    # this model type is based on sd webui's model folder name. ti is embeddings, ckp is Stable-diffusion, and so on
     base, ext = os.path.splitext(search_term)
     model_info_base = base
-    if base[:1] == "/":
-        model_info_base = base[1:]
+
+    if model_info_base[:1] == "/":
+        model_info_base = model_info_base[1:]
+
+
+    model_folder_name = "";
+    if model_type == "ti":
+        model_folder_name = "embeddings"
+    elif model_type == "hyper":
+        model_folder_name = "hypernetworks"
+    elif model_type == "ckp":
+        model_folder_name = "Stable-diffusion"
+    else:
+        model_folder_name = "Lora"
+
+    # check if model folder is already in search_term
+    if model_info_base.startswith(model_folder_name):
+        # this is sd webui v1.8.0+'s search_term
+        # need to remove this model_folder_name+"/" or "\\" from model_info_base
+        model_info_base = model_info_base[len(model_folder_name):]
+
+        # util.printD("cut model_info_base: " + model_info_base)
+
+        if model_info_base.startswith("/") or model_info_base.startswith("\\"):
+            model_info_base = model_info_base[1:]
+
+        # util.printD("final model_info_base: " + model_info_base)
+
 
     model_folder = model.folders[model_type]
     model_info_filename = model_info_base + suffix + model.info_ext

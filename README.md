@@ -228,7 +228,10 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 
-# Change Log
+# Change Log3
+## v1.10.1
+* Handle model path cases for linux
+
 ## v1.10.0
 * Support SD webui v1.8.x
 * With SD webui v1.8.x, this extension's refresh function is added to Official Extra Network's refresh button. There is no need another green fresh button anymore.
