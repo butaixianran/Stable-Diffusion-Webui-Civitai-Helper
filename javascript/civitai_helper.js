@@ -11,7 +11,7 @@ function ch_img_node_str(path){
     return `<img src='${ch_convert_file_path_to_url(path)}' style="width:24px"/>`;
 }
 
-export function ch_sd_version() {
+function ch_sd_version() {
     let foot = gradioApp().getElementById("footer");
     if (!foot) {
         return null;
