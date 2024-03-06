@@ -42,7 +42,11 @@ function extract_version(text) {
         return null;
     }
 
-    return matches[0].substring(1);
+    // Because forge includes v at the beginning of the version text
+    if (text[0] == 'f')
+        return matches[0].substring(1);
+
+    return matches[0];
 }
 
 
