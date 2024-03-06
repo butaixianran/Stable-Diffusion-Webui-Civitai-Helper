@@ -229,6 +229,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log3
+## v1.10.2
+* Bring back this addon's green refresh button to SD webui v1.8.x
+
 ## v1.10.1
 * Handle model path cases for linux
 

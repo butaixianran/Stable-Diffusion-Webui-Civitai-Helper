@@ -1145,10 +1145,31 @@ onUiLoaded(() => {
                 refresh_btn.onclick = function(event){
                     console.log("run refresh button on click");
                     //official's refresh function
+                    //it will send msg to python to reload card list and won't wait for that.
                     extraNetworksControlRefreshOnClick(event, prefix, js_model_type);
 
+                    //this will not get card list if cards need to be reloaded from python side.
+                    //user need to click refresh button again, after card list is reloaded.
+                    //which does not feel right by user. 
+                    //so, this addon's green refresh button is still needed.
                     update_card_for_civitai_with_sd1_8();
                 };
+
+                // add refresh button to toolbar
+                let ch_refresh = document.createElement("button");
+                ch_refresh.innerHTML = "🔁";
+                ch_refresh.title = "Refresh Civitai Helper's additional buttons";
+                ch_refresh.className = "extra-network-control--refresh";
+                ch_refresh.style.fontSize = "150%";
+                ch_refresh.onclick = update_card_for_civitai_with_sd1_8;
+
+                //extra_toolbar now is displayed as grid
+                //also grid-template-columns is set to: minmax(0, auto) repeat(4, min-content)
+                //which only allow 4 buttons
+                //so here we modify it into 5 to add another refresh button for this addon
+                extra_toolbar.style.gridTemplateColumns = "minmax(0, auto) repeat(5, min-content)";
+
+                extra_toolbar.appendChild(ch_refresh);
 
             }
 
