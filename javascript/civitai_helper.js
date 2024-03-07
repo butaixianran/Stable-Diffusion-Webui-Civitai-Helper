@@ -11,17 +11,42 @@ function ch_img_node_str(path){
     return `<img src='${ch_convert_file_path_to_url(path)}' style="width:24px"/>`;
 }
 
-function ch_sd_version(){
+function ch_sd_version() {
     let foot = gradioApp().getElementById("footer");
-    if (!foot){return null;}
+    if (!foot) {
+        return null;
+    }
 
     let versions = foot.querySelector(".versions");
-    if (!versions){return null;}
+    if (!versions) {
+        return null;
+    }
 
-    let links = versions.getElementsByTagName("a");
-    if (links == null || links.length == 0){return null;}
+    let [webui_version] = versions.getElementsByTagName("a");
+    if (!webui_version) {
+        return null;
+    }
 
-    return links[0].innerHTML.substring(1);
+    return extract_version(webui_version.innerHTML);
+}
+
+function extract_version(text) {
+    let matches;
+    // for forge
+    if (text[0] == 'f')
+        matches = text.match(/v[0-9]\.[0-9]\.[0-9]/);
+    else
+        matches = text.match(/[0-9]\.[0-9]\.[0-9]/);
+
+    if (matches === null || matches.length == 0) {
+        return null;
+    }
+
+    // Because forge includes v at the beginning of the version text
+    if (text[0] == 'f')
+        return matches[0].substring(1);
+
+    return matches[0];
 }
 
 
@@ -185,7 +210,7 @@ function convertModelTypeFromJsToPy(js_model_type) {
 async function open_model_url(event, model_type, search_term){
     console.log("start open_model_url");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
     if (!js_open_url_btn) {
         return
@@ -215,11 +240,11 @@ async function open_model_url(event, model_type, search_term){
     let new_py_msg = "";
     try {
         new_py_msg = await get_new_ch_py_msg();
-        
+
     } catch (error) {
-        console.log(error);        
+        console.log(error);
     }
-    
+
     console.log("new_py_msg:");
     console.log(new_py_msg);
 
@@ -237,7 +262,7 @@ async function open_model_url(event, model_type, search_term){
 
     }
 
-    
+
     console.log("end open_model_url");
 
 }
@@ -245,7 +270,7 @@ async function open_model_url(event, model_type, search_term){
 function add_trigger_words(event, model_type, search_term){
     console.log("start add_trigger_words");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_add_trigger_words_btn = gradioApp().getElementById("ch_js_add_trigger_words_btn");
     if (!js_add_trigger_words_btn) {
         return
@@ -277,13 +302,13 @@ function add_trigger_words(event, model_type, search_term){
     event.stopPropagation()
     event.preventDefault()
 
-    
+
 }
 
 function use_preview_prompt(event, model_type, search_term){
     console.log("start use_preview_prompt");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_use_preview_prompt_btn = gradioApp().getElementById("ch_js_use_preview_prompt_btn");
     if (!js_use_preview_prompt_btn) {
         return
@@ -323,7 +348,7 @@ function use_preview_prompt(event, model_type, search_term){
 async function remove_card(event, model_type, search_term){
     console.log("start remove_card");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_remove_card_btn = gradioApp().getElementById("ch_js_remove_card_btn");
     if (!js_remove_card_btn) {
         return
@@ -363,7 +388,7 @@ async function remove_card(event, model_type, search_term){
         console.log(error);
         new_py_msg = error;
     }
-    
+
     console.log("new_py_msg:");
     console.log(new_py_msg);
 
@@ -392,7 +417,7 @@ async function remove_card(event, model_type, search_term){
             if (sd_version >= "1.8.0") {
                 let js_model_type = convertModelTypeFromPyToJS(model_type);
                 if (!js_model_type){return;}
-    
+
                 refresh_btn_id = active_tab + "_" + js_model_type + "_extra_refresh";
                 refresh_btn = gradioApp().getElementById(refresh_btn_id);
             } else {
@@ -407,7 +432,7 @@ async function remove_card(event, model_type, search_term){
 
         }
     }
-    
+
     console.log("end remove_card");
 
 
@@ -418,7 +443,7 @@ async function remove_card(event, model_type, search_term){
 async function open_model_url_with_path(event, model_type, model_path){
     console.log("start open_model_url");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_open_url_btn = gradioApp().getElementById("ch_js_open_url_btn");
     if (!js_open_url_btn) {
         return
@@ -448,11 +473,11 @@ async function open_model_url_with_path(event, model_type, model_path){
     let new_py_msg = "";
     try {
         new_py_msg = await get_new_ch_py_msg();
-        
+
     } catch (error) {
-        console.log(error);        
+        console.log(error);
     }
-    
+
     console.log("new_py_msg:");
     console.log(new_py_msg);
 
@@ -470,7 +495,7 @@ async function open_model_url_with_path(event, model_type, model_path){
 
     }
 
-    
+
     console.log("end open_model_url");
 
 }
@@ -478,7 +503,7 @@ async function open_model_url_with_path(event, model_type, model_path){
 function add_trigger_words_with_path(event, model_type, model_path){
     console.log("start add_trigger_words");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_add_trigger_words_btn = gradioApp().getElementById("ch_js_add_trigger_words_btn");
     if (!js_add_trigger_words_btn) {
         return
@@ -510,13 +535,13 @@ function add_trigger_words_with_path(event, model_type, model_path){
     event.stopPropagation()
     event.preventDefault()
 
-    
+
 }
 
 function use_preview_prompt_with_path(event, model_type, model_path){
     console.log("start use_preview_prompt");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_use_preview_prompt_btn = gradioApp().getElementById("ch_js_use_preview_prompt_btn");
     if (!js_use_preview_prompt_btn) {
         return
@@ -556,7 +581,7 @@ function use_preview_prompt_with_path(event, model_type, model_path){
 async function remove_card_with_path(event, model_type, model_path){
     console.log("start remove_card");
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_remove_card_btn = gradioApp().getElementById("ch_js_remove_card_btn");
     if (!js_remove_card_btn) {
         return
@@ -596,7 +621,7 @@ async function remove_card_with_path(event, model_type, model_path){
         console.log(error);
         new_py_msg = error;
     }
-    
+
     console.log("new_py_msg:");
     console.log(new_py_msg);
 
@@ -628,7 +653,7 @@ async function remove_card_with_path(event, model_type, model_path){
             }
         }
     }
-    
+
     console.log("end remove_card");
 
 
@@ -645,7 +670,7 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
         return
     }
 
-    //get hidden components of extension 
+    //get hidden components of extension
     let js_dl_model_new_version_btn = gradioApp().getElementById("ch_js_dl_model_new_version_btn");
     if (!js_dl_model_new_version_btn) {
         return
@@ -671,6 +696,29 @@ function ch_dl_model_new_version(event, model_path, version_id, download_url){
     event.preventDefault()
 
 
+}
+
+/**
+ * @param {string} version1 - version1 (x.y.z)
+ * @param {string} version2 - version2 (x.y.z)
+ * @returns {number} - 1: version1 is higher, -1: version2 is higher, 0: same version
+ */
+function compareVersions(version1, version2) {
+  const v1Parts = version1.split('.').map(Number);
+  const v2Parts = version2.split('.').map(Number);
+
+  for (let i = 0; i < Math.max(v1Parts.length, v2Parts.length); i++) {
+      const v1Part = v1Parts[i] || 0;
+      const v2Part = v2Parts[i] || 0;
+
+      if (v1Part > v2Part) {
+          return 1;
+      } else if (v1Part < v2Part) {
+          return -1;
+      }
+  }
+
+  return 0; // same version
 }
 
 
@@ -736,7 +784,7 @@ onUiLoaded(() => {
                 .find(el => el.closest('.tabitem').style.display === 'block')
                 ?.id.match(/^(txt2img|img2img)_(.+)_cards$/)[2]
 
-                
+
             console.log("found active tab: " + active_extra_tab);
 
             switch (active_extra_tab) {
@@ -797,7 +845,7 @@ onUiLoaded(() => {
                 for (let card of cards) {
                     //get button row
                     button_row = card.querySelector(".button-row");
-                    
+
                     if (!button_row){
                         console.log("can not find button_row");
                         continue;
@@ -877,7 +925,7 @@ onUiLoaded(() => {
 
                 }
 
-                
+
             }
         }
 
@@ -941,11 +989,11 @@ onUiLoaded(() => {
 
 
             //find out current selected model type tab
-            
+
             extra_tabs = gradioApp().getElementById(tab_prefix+"_extra_tabs");
             if (!extra_tabs) {console.log("can not find extra_tabs: " + tab_prefix+"_extra_tabs");}
 
-            //get tab by id            
+            //get tab by id
             for (const js_model_type of model_type_list) {
                 //get tab
                 let extra_tab = gradioApp().getElementById(tab_prefix+"_"+js_model_type);
@@ -1010,7 +1058,7 @@ onUiLoaded(() => {
 
                 //set button_row's flex-wrap to wrap
                 button_row.style.flexWrap = "wrap";
-                
+
                 if (!button_row){
                     console.log("can not find button_row");
                     continue;
@@ -1095,7 +1143,7 @@ onUiLoaded(() => {
 
             }
 
-            
+
 
         }
 
@@ -1117,7 +1165,7 @@ onUiLoaded(() => {
     //from sd version 1.8.0, extra network's toolbar is fully rewrited. This extension need to re-write this part too.
     let sd_version = ch_sd_version();
     console.log(`sd version is: ${sd_version}`);
-    if (sd_version >= "1.8.0"){
+    if (compareVersions(sd_version, "1.8.0") >= 0){
 
         for (let prefix of tab_prefix_list) {
             toolbar_id = prefix + "_lora_controls";
@@ -1140,7 +1188,7 @@ onUiLoaded(() => {
                     continue;
                 }
 
-                
+
                 // from sd v1.8.0, we add refresh function to official's refresh button
                 refresh_btn.onclick = function(event){
                     console.log("run refresh button on click");
@@ -1185,17 +1233,17 @@ onUiLoaded(() => {
         for (let prefix of tab_prefix_list) {
             tab_id = prefix + "_extra_tabs";
             extra_tab = gradioApp().getElementById(tab_id);
-    
+
             //get toolbar
             //get Refresh button
             extra_network_refresh_btn = gradioApp().getElementById(prefix+"_extra_refresh");
-    
-    
+
+
             if (!extra_network_refresh_btn){
                 console.log("can not get extra network refresh button for " + tab_id);
                 continue;
             }
-    
+
             // add refresh button to toolbar
             let ch_refresh = document.createElement("button");
             ch_refresh.innerHTML = "🔁";
@@ -1203,9 +1251,9 @@ onUiLoaded(() => {
             ch_refresh.className = "lg secondary gradio-button";
             ch_refresh.style.fontSize = "200%";
             ch_refresh.onclick = update_card_for_civitai;
-    
+
             extra_network_refresh_btn.parentNode.appendChild(ch_refresh);
-    
+
         }
 
         //run it once
@@ -1215,11 +1263,8 @@ onUiLoaded(() => {
 
 
 
-    
+
 
 
 
 });
-
-
-
