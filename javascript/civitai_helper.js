@@ -1222,6 +1222,22 @@ onUiLoaded(() => {
             }
 
 
+			let my_toolbar_id = prefix + "_" + "tools";
+			let my_toolbar = gradioApp().querySelector('#'+my_toolbar_id+' .form');
+
+			let paste_btn = gradioApp().getElementById('paste');
+			if (!paste_btn) {
+				console.log("can not find paste_btn with id: paste");
+				continue;
+			}
+			// add refresh button to toolbar
+			let ch_translate = document.createElement("button");
+			ch_translate.innerHTML = "↔";
+			ch_translate.title = "Translate Civitai's MetaData";
+			ch_translate.className = paste_btn.className;
+			ch_translate.onclick = translate_civitai_metadata;
+
+			my_toolbar.appendChild(ch_translate)
 
 
         }
@@ -1261,6 +1277,75 @@ onUiLoaded(() => {
     }
 
 
+function translate_civitai_metadata() {
+	var currentTab=(document.querySelector('#tab_txt2img').style['display']!='none'?'#txt2img':'#img2img'),
+		re=new RegExp('Civitai resources: .*]'),
+		prompt_area=document.querySelector(currentTab+'_prompt textarea'),
+		pormpt_neg_area=document.querySelector(+currentTab+'_neg_prompt textarea'),
+		civitai_data=prompt_area.value.match(re),
+		needToTranslate=0,
+		model='', loras="", pos_ti='', neg_ti='', resources=[];
+
+	if (!civitai_data) {return;}
+	if (civitai_data) {console.log(resources=JSON.parse(civitai_data[0].replace("Civitai resources: ",'')));}
+	needToTranslate=resources.length;
+	resources.forEach(function(ressource){
+		console.log(ressource.modelVersionId);
+		let xhr = new XMLHttpRequest();
+		xhr.open('GET', 'https://civitai.com/api/v1/model-versions/'+ressource.modelVersionId);
+		xhr.send();
+		xhr.onload = function() {
+			if (xhr.status=="200") {
+				console.log(ressource, xhr.status, JSON.parse(xhr.response));
+				var model_data=JSON.parse(xhr.response),
+					modelName=model_data.model.name,
+					modelHash=model_data.files[0].hashes['AutoV2'],
+					modelFileName=model_data.files[0].name;
+
+				if(ressource.type=="checkpoint") { model=" Model hash: "+modelHash.toLowerCase()+", Model: "+ modelName+ ', '; needToTranslate--;}
+				if(ressource.type=="lora") { loras+='<lora:'+modelFileName.replace('.safetensors','')+':'+ressource.weight+"> #"+modelHash.toLowerCase()+"# ";  needToTranslate--;}
+				if(ressource.type=="embed") {
+					var keyword=modelFileName.replace('.safetensors','').replace('.pt','');
+					if (!prompt_area.value.includes(keyword)) { // if TI not already in prompt...
+						if (keyword.includes('bad') || keyword.includes('neg')){
+							neg_ti += ' '+keyword+' #'+modelHash.toLowerCase()+'#, ';
+						} else {
+							pos_ti+=' '+keyword+' #'+modelHash.toLowerCase()+'#, ';
+						}
+					}
+					needToTranslate--;
+				}
+				if(needToTranslate<=0) {
+					var newPrompt=prompt_area.value,
+						fistNegativePrompt=prompt_area.value.search('Negative prompt:'),
+						lastPositivePrompt=fistNegativePrompt-1,
+						stepPosition=prompt_area.value.search('Steps:');
+
+					if (lastPositivePrompt<0) {
+						lastPositivePrompt=stepPosition-1;
+					}
+
+					newPrompt+=model;
+					newPrompt+= "RNG: CPU, ";
+					newPrompt=newPrompt.substr(0, lastPositivePrompt) + " " + loras + " " + newPrompt.substr(lastPositivePrompt);
+					newPrompt=newPrompt.substr(0, lastPositivePrompt) + " " + pos_ti + " " + newPrompt.substr(lastPositivePrompt);
+
+					fistNegativePrompt=newPrompt.search('Negative prompt:');
+					stepPosition=newPrompt.search('Steps:')-1;
+					if (fistNegativePrompt<0) {
+						newPrompt=newPrompt.substr(0, stepPosition) + " Negative prompt: " + neg_ti + " " + newPrompt.substr(stepPosition);
+					} else {
+						newPrompt=newPrompt.substr(0, stepPosition) + " " + neg_ti + " " + newPrompt.substr(stepPosition);
+					}
+
+					prompt_area.value=newPrompt;
+					updateInput(prompt_area);
+				}
+			}
+		}
+	});
+	return resources;
+}
 
 
 
