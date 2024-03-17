@@ -1296,21 +1296,21 @@ function translate_civitai_metadata() {
 		xhr.send();
 		xhr.onload = function() {
 			if (xhr.status=="200") {
-				console.log(ressource, xhr.status, JSON.parse(xhr.response));
+				//console.log(ressource, xhr.status, JSON.parse(xhr.response));
 				var model_data=JSON.parse(xhr.response),
 					modelName=model_data.model.name,
 					modelHash=model_data.files[0].hashes['AutoV2'],
 					modelFileName=model_data.files[0].name;
 
 				if(ressource.type=="checkpoint") { model=" Model hash: "+modelHash.toLowerCase()+", Model: "+ modelName+ ', '; needToTranslate--;}
-				if(ressource.type=="lora") { loras+='<lora:'+modelFileName.replace('.safetensors','')+':'+ressource.weight+"> #"+modelHash.toLowerCase()+"# ";  needToTranslate--;}
+				if(ressource.type=="lora") { loras+='<lora:'+modelFileName.replace('.safetensors','')+':'+ressource.weight+">, #"+modelHash.toLowerCase()+"#\n ";  needToTranslate--;}
 				if(ressource.type=="embed") {
 					var keyword=modelFileName.replace('.safetensors','').replace('.pt','');
 					if (!prompt_area.value.includes(keyword)) { // if TI not already in prompt...
 						if (keyword.includes('bad') || keyword.includes('neg')){
-							neg_ti += ' '+keyword+' #'+modelHash.toLowerCase()+'#, ';
+							neg_ti += ' '+keyword+', #'+modelHash.toLowerCase()+"#\n ";
 						} else {
-							pos_ti+=' '+keyword+' #'+modelHash.toLowerCase()+'#, ';
+							pos_ti+=' '+keyword+', #'+modelHash.toLowerCase()+"#\n ";
 						}
 					}
 					needToTranslate--;
@@ -1327,8 +1327,8 @@ function translate_civitai_metadata() {
 
 					newPrompt+=model;
 					newPrompt+= "RNG: CPU, ";
-					newPrompt=newPrompt.substr(0, lastPositivePrompt) + " " + loras + " " + newPrompt.substr(lastPositivePrompt);
-					newPrompt=newPrompt.substr(0, lastPositivePrompt) + " " + pos_ti + " " + newPrompt.substr(lastPositivePrompt);
+					newPrompt=newPrompt.substr(0, lastPositivePrompt) + ", " + loras + " " + newPrompt.substr(lastPositivePrompt);
+					newPrompt=newPrompt.substr(0, lastPositivePrompt) + ", " + pos_ti + " " + newPrompt.substr(lastPositivePrompt);
 
 					fistNegativePrompt=newPrompt.search('Negative prompt:');
 					stepPosition=newPrompt.search('Steps:')-1;
