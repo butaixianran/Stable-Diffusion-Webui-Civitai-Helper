@@ -146,6 +146,22 @@ Here is a simple tutorial:
 * Copy the api key string, paste to this extension's setting page -> Civitai API Key section.
 * Save setting and Reload SD webui
 
+### Content Setting of Civitai
+On your civitai account's setting page, there are sections for "Content Controls" and "Content Moderation".  
+
+If you hide some content types there, then you won't be able to get those models with this extension.  
+
+To get all kinds of models, you need to 
+
+* Set your Civitai API Key like above.
+
+* And turn on all content types on civitai's account setting like following:  
+
+![](img/civitai_content_control_01.jpg)  
+
+![](img/civitai_content_control_02.jpg)  
+
+
 
 ## Preview Image
 Extra network uses both `model_file.png` and `model_file.preview.png` as preview image. But `model_file.png` has higher priority, because it is created by yourself.  

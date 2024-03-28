@@ -133,6 +133,25 @@ zixaphir写了一个详细的教程: [wiki](https://github.com/zixaphir/Stable-D
 * 复制生成的api key字符串，粘贴到本扩展设置页面  -> Civitai API Key 部分.
 * 保存设置，并重启SD webui
 
+
+### Civitai网站上的内容可见设置
+在你的Civitai帐号设置页面，有一个环节叫做："Content Controls" 和 "Content Moderation".  
+
+如果你在那里设置了隐藏一些内容，那么本扩展就无法获取对应种类的模型。  
+
+要能够获取所有内容，你需要：  
+
+* 像前文提到的，设置Civitai API Key
+
+* 并且在Civitai中，开启显示所有内容，类似如下截图:  
+
+![](img/civitai_content_control_01.jpg)  
+
+![](img/civitai_content_control_02.jpg)  
+
+
+
+
 ## 预览图
 Extra Network支持两种预览图命名：`model_name.png` 和 `model_name.preview.png`。其中，`model_name.png`优先级较高。
 
