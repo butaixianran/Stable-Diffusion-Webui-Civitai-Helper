@@ -8,6 +8,18 @@ from modules import shared
 
 # this is the default root path
 root_path = os.getcwd()
+util.printD(f"Root Path is: {root_path}")
+
+# if path is start with "~/" means root path is under linux's user home
+# so need to use os.path.expanduser("~") to get the real path
+if root_path.startswith("~/"):
+    user_home = os.path.expanduser("~")
+    util.printD(f"Root Path is under User Home: {user_home}")
+    root_path = os.path.join(user_home, root_path[2:])
+    util.printD(f"Expanded Root Path is: {root_path}")
+
+
+
 
 # if command line arguement is used to change model folder, 
 # then model folder is in absolute path, not based on this root path anymore.
