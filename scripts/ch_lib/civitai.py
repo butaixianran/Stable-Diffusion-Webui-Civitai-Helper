@@ -213,6 +213,7 @@ def load_model_info_by_search_term(model_type, search_term):
         model_info_base = model_info_base[1:]
 
 
+    
     model_folder_name = "";
     if model_type == "ti":
         model_folder_name = "embeddings"
@@ -222,6 +223,13 @@ def load_model_info_by_search_term(model_type, search_term):
         model_folder_name = "Stable-diffusion"
     else:
         model_folder_name = "Lora"
+
+    # model folder path could be customized
+    model_folder = model.folders[model_type]
+
+    model_folder_name = os.path.basename(model_folder)
+
+
 
     # check if model folder is already in search_term
     if model_info_base.startswith(model_folder_name):
@@ -237,7 +245,7 @@ def load_model_info_by_search_term(model_type, search_term):
         # util.printD("final model_info_base: " + model_info_base)
 
 
-    model_folder = model.folders[model_type]
+    
     model_info_filename = model_info_base + suffix + model.info_ext
     model_info_filepath = os.path.join(model_folder, model_info_filename)
 

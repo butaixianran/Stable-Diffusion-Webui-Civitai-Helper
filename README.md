@@ -244,7 +244,10 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 
-# Change Log3
+# Change Log
+## v1.10.4
+* Fix a bug about model path parsing when using custom model folder
+
 ## v1.10.2
 * Bring back this addon's green refresh button to SD webui v1.8.x
 

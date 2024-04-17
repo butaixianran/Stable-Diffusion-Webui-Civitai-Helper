@@ -1166,6 +1166,7 @@ onUiLoaded(() => {
     let sd_version = ch_sd_version();
     console.log(`sd version is: ${sd_version}`);
     if (compareVersions(sd_version, "1.8.0") >= 0){
+        console.log("get sd version v1.8.0+");
 
         for (let prefix of tab_prefix_list) {
             toolbar_id = prefix + "_lora_controls";
@@ -1190,18 +1191,18 @@ onUiLoaded(() => {
 
 
                 // from sd v1.8.0, we add refresh function to official's refresh button
-                refresh_btn.onclick = function(event){
-                    console.log("run refresh button on click");
-                    //official's refresh function
-                    //it will send msg to python to reload card list and won't wait for that.
-                    extraNetworksControlRefreshOnClick(event, prefix, js_model_type);
+                // refresh_btn.onclick = function(event){
+                //     console.log("run refresh button on click");
+                //     //official's refresh function
+                //     //it will send msg to python to reload card list and won't wait for that.
+                //     extraNetworksControlRefreshOnClick(event, prefix, js_model_type);
 
-                    //this will not get card list if cards need to be reloaded from python side.
-                    //user need to click refresh button again, after card list is reloaded.
-                    //which does not feel right by user. 
-                    //so, this addon's green refresh button is still needed.
-                    update_card_for_civitai_with_sd1_8();
-                };
+                //     //this will not get card list if cards need to be reloaded from python side.
+                //     //user need to click refresh button again, after card list is reloaded.
+                //     //which does not feel right by user. 
+                //     //so, this addon's green refresh button is still needed.
+                //     update_card_for_civitai_with_sd1_8();
+                // };
 
                 // add refresh button to toolbar
                 let ch_refresh = document.createElement("button");
