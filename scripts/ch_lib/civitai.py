@@ -423,10 +423,11 @@ def get_preview_image_by_model_path(model_path:str, max_size_preview, skip_nsfw_
 
 # search local model by version id in 1 folder, no subfolder
 # return - model_info
-def search_local_model_info_by_version_id(folder:str, version_id:int) -> dict:
+def search_local_model_info_by_version_id(folder:str, version_id:int, walk:bool=False) -> dict:
     util.printD("Searching local model by version id")
     util.printD("folder: " + folder)
     util.printD("version_id: " + str(version_id))
+    util.printD("walk: " + str(walk))
 
     if not folder:
         util.printD("folder is none")
@@ -441,34 +442,70 @@ def search_local_model_info_by_version_id(folder:str, version_id:int) -> dict:
         return
     
     # search civitai model info file
-    for filename in os.listdir(folder):
-        # check ext
-        base, ext = os.path.splitext(filename)
-        if ext == model.info_ext:
-            # find info file
-            if len(base) < 9:
-                # not a civitai info file
-                continue
+    # walk from top
+    if walk:
+        util.printD(f"Searching model version id {version_id} by walking in: {folder}")
+        for root, dirs, files in os.walk(folder, followlinks=True):
+            for filename in files:
+                # check ext
+                base, ext = os.path.splitext(filename)
+                if ext == model.info_ext:
+                    # find info file
+                    if len(base) < 9:
+                        # not a civitai info file
+                        continue
 
-            if base[-8:] == suffix:
-                # find a civitai info file
-                path = os.path.join(folder, filename)
-                model_info = model.load_model_info(path)
-                if not model_info:
+                    if base[-8:] == suffix:
+                        # find a civitai info file
+                        path = os.path.join(root, filename)
+                        model_info = model.load_model_info(path)
+                        if not model_info:
+                            continue
+
+                        if "id" not in model_info.keys():
+                            continue
+
+                        id = model_info["id"]
+                        if not id:
+                            continue
+
+                        # util.printD(f"Compare version id, src: {id}, target:{version_id}")
+                        if str(id) == str(version_id):
+                            # find the one
+                            util.printD(f"Found model: {path}")
+                            return model_info
+
+    # only check current path
+    else:
+        util.printD(f"Searching model version id {version_id} under: {folder}")
+        for filename in os.listdir(folder):
+            # check ext
+            base, ext = os.path.splitext(filename)
+            if ext == model.info_ext:
+                # find info file
+                if len(base) < 9:
+                    # not a civitai info file
                     continue
 
-                if "id" not in model_info.keys():
-                    continue
+                if base[-8:] == suffix:
+                    # find a civitai info file
+                    path = os.path.join(folder, filename)
+                    model_info = model.load_model_info(path)
+                    if not model_info:
+                        continue
 
-                id = model_info["id"]
-                if not id:
-                    continue
+                    if "id" not in model_info.keys():
+                        continue
 
-                # util.printD(f"Compare version id, src: {id}, target:{version_id}")
-                if str(id) == str(version_id):
-                    # find the one
-                    return model_info
-                    
+                    id = model_info["id"]
+                    if not id:
+                        continue
+
+                    # util.printD(f"Compare version id, src: {id}, target:{version_id}")
+                    if str(id) == str(version_id):
+                        # find the one
+                        return model_info
+                        
 
     return
 
@@ -596,7 +633,7 @@ def check_model_new_version_by_path(model_path:str, delay:float=1) -> tuple:
 # check model's new version
 # parameter: delay - float, how many seconds to delay between each request to civitai
 # return: new_versions - a list for all new versions, each one is (model_path, model_id, model_name, new_verion_id, new_version_name, description, download_url, img_url)
-def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> list:
+def check_models_new_version_by_model_types(model_types:list, delay:float=1, check_new_ver_exist_in_all_folder:bool=False) -> list:
     util.printD("Checking models' new version")
 
     if not model_types:
@@ -654,7 +691,12 @@ def check_models_new_version_by_model_types(model_types:list, delay:float=1) -> 
                         continue
 
                     # search this new version id to check if this model is already downloaded
-                    target_model_info = search_local_model_info_by_version_id(root, current_version_id)
+                    if check_new_ver_exist_in_all_folder:
+                        # walk from top folder for this model type
+                        target_model_info = search_local_model_info_by_version_id(model_folder, current_version_id, check_new_ver_exist_in_all_folder)
+                    else:
+                        # only check current folder
+                        target_model_info = search_local_model_info_by_version_id(root, current_version_id, check_new_ver_exist_in_all_folder)
                     if target_model_info:
                         util.printD("New version is already existed")
                         continue

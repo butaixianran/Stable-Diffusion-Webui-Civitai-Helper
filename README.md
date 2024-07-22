@@ -245,6 +245,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.11.0
+* Added a new checkbox option "When checking model's new version, checking new version existing under all model folders". When this value is False, it gonna only checking that model's current folder. 
+
 ## v1.10.4
 * Fix a bug about model path parsing when using custom model folder
 

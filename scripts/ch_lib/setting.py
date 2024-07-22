@@ -12,7 +12,8 @@ path = os.path.join(scripts.basedir(), name)
 data = {
     "model":{
         "max_size_preview": True,
-        "skip_nsfw_preview": False
+        "skip_nsfw_preview": False,
+        "check_new_ver_exist_in_all_folder": False
     },
     "general":{
         "open_url_with_js": True,
@@ -75,16 +76,20 @@ def load():
     if "proxy" not in data["general"].keys():
         data["general"]["proxy"] = ""
 
+    if "check_new_ver_exist_in_all_folder" not in data["model"].keys():
+        data["general"]["check_new_ver_exist_in_all_folder"] = False
+
 
     return
 
 # save setting from parameter
-def save_from_input(max_size_preview, skip_nsfw_preview, open_url_with_js, proxy):
+def save_from_input(max_size_preview, skip_nsfw_preview, open_url_with_js, proxy, check_new_ver_exist_in_all_folder):
     global data
     data = {
         "model":{
             "max_size_preview": max_size_preview,
-            "skip_nsfw_preview": skip_nsfw_preview
+            "skip_nsfw_preview": skip_nsfw_preview,
+            "check_new_ver_exist_in_all_folder": check_new_ver_exist_in_all_folder
         },
         "general":{
             "open_url_with_js": open_url_with_js,

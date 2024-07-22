@@ -252,7 +252,7 @@ def dl_model_new_version(msg, max_size_preview, skip_nsfw_preview):
 
     # no need to check when downloading new version, since checking new version is already checked
     # check if this model is already existed
-    # r = civitai.search_local_model_info_by_version_id(model_folder, version_id)
+    # r = civitai.search_local_model_info_by_version_id(model_folder, version_id, False)
     # if r:
     #     output = "This model version is already existed"
     #     util.printD(output)

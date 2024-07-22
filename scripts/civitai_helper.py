@@ -43,6 +43,7 @@ def on_ui_settings():
     shared.opts.add_option("ch_max_size_preview", shared.OptionInfo(True, "Download Max Size Preview", gr.Checkbox, {"interactive": True}, section=ch_section))
     shared.opts.add_option("ch_skip_nsfw_preview", shared.OptionInfo(False, "Skip NSFW Preview Images", gr.Checkbox, {"interactive": True}, section=ch_section))
     shared.opts.add_option("ch_open_url_with_js", shared.OptionInfo(True, "Open Url At Client Side", gr.Checkbox, {"interactive": True}, section=ch_section))
+    shared.opts.add_option("ch_check_new_ver_exist_in_all_folder", shared.OptionInfo(True, "When checking new model version, check new version existing in all model folders", gr.Checkbox, {"interactive": True}, section=ch_section))
     shared.opts.add_option("ch_proxy", shared.OptionInfo("", "Civitai Helper Proxy", gr.Textbox, {"interactive": True, "lines":1, "info":"format: socks5h://127.0.0.1:port"}, section=ch_section))
     shared.opts.add_option("ch_civiai_api_key", shared.OptionInfo("", "Civitai API Key", gr.Textbox, {"interactive": True, "lines":1, "info":"check doc:https://github.com/zixaphir/Stable-Diffusion-Webui-Civitai-Helper/tree/master#api-key"}, section=ch_section))
 
@@ -68,6 +69,7 @@ def on_ui_tabs():
     max_size_preview = shared.opts.data.get("ch_max_size_preview", True)
     skip_nsfw_preview = shared.opts.data.get("ch_skip_nsfw_preview", False)
     open_url_with_js = shared.opts.data.get("ch_open_url_with_js", True)
+    check_new_ver_exist_in_all_folder = shared.opts.data.get("ch_check_new_ver_exist_in_all_folder", False)
     proxy = shared.opts.data.get("ch_proxy", "")
     civitai_api_key = shared.opts.data.get("ch_civiai_api_key", "")
 
@@ -75,6 +77,7 @@ def on_ui_tabs():
     util.printD("max_size_preview: " + str(max_size_preview))
     util.printD("skip_nsfw_preview: " + str(skip_nsfw_preview))
     util.printD("open_url_with_js: " + str(open_url_with_js))
+    util.printD("check_new_ver_exist_in_all_folder: " + str(check_new_ver_exist_in_all_folder))
     util.printD("proxy: " + str(proxy))
 
     # set civitai_api_key
@@ -104,8 +107,8 @@ def on_ui_tabs():
     def dl_model_by_input(dl_model_info, dl_model_type_txtbox, dl_subfolder_drop, dl_version_drop, dl_all_ckb):
         return model_action_civitai.dl_model_by_input(dl_model_info, dl_model_type_txtbox, dl_subfolder_drop, dl_version_drop, dl_all_ckb, max_size_preview, skip_nsfw_preview)
 
-    def check_models_new_version_to_md(dl_model_info, dl_model_type_txtbox, dl_subfolder_drop, dl_version_drop, dl_all_ckb):
-        return model_action_civitai.check_models_new_version_to_md(dl_model_info, dl_model_type_txtbox, dl_subfolder_drop, dl_version_drop, dl_all_ckb, max_size_preview, skip_nsfw_preview)
+    def check_models_new_version_to_md(model_types):
+        return model_action_civitai.check_models_new_version_to_md(model_types, check_new_ver_exist_in_all_folder)
 
     def open_model_url(js_msg_txtbox):
         return js_action_civitai.open_model_url(js_msg_txtbox, open_url_with_js)
@@ -229,7 +232,7 @@ def on_ui_tabs():
         dl_civitai_model_by_id_btn.click(dl_model_by_input, inputs=[dl_model_info, dl_model_type_txtbox, dl_subfolder_drop, dl_version_drop, dl_all_ckb], outputs=dl_log_md)
 
         # Check models' new version
-        check_models_new_version_btn.click(model_action_civitai.check_models_new_version_to_md, inputs=model_types_ckbg, outputs=check_models_new_version_log_md)
+        check_models_new_version_btn.click(check_models_new_version_to_md, inputs=model_types_ckbg, outputs=check_models_new_version_log_md)
 
         # js action
         js_open_url_btn.click(open_model_url, inputs=[js_msg_txtbox], outputs=py_msg_txtbox)
