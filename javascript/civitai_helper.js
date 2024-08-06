@@ -34,9 +34,9 @@ function extract_version(text) {
     let matches;
     // for forge
     if (text[0] == 'f')
-        matches = text.match(/v[0-9]\.[0-9]\.[0-9]/);
+        matches = text.match(/v\d+\.\d+\.\d+/);
     else
-        matches = text.match(/[0-9]\.[0-9]\.[0-9]/);
+        matches = text.match(/\d+\.\d+\.\d+/);    
 
     if (matches === null || matches.length == 0) {
         return null;
