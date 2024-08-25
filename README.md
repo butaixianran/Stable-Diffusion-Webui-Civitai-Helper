@@ -245,6 +245,9 @@ Since v1.5.5, we've already optimized the SHA256 function to the top. So the onl
 
 
 # Change Log
+## v1.11.2
+* Add "install.py" to install package "pysocks" for using socks for proxy.  
+
 ## v1.11.1
 * Merged PR #299 to work with latest sd v1.10.1
 
